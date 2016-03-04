@@ -1,6 +1,19 @@
 ---
-
-
+title: "Modelling palaeoenvironmental time series and feature detection"
+author:
+- name: Gavin L Simpson
+  affiliation: Insitute of Environmental CHange and Society, University of Regina, Regina, SK
+date: March 4, 2016
+output: 
+  pdf_document:
+    keep_tex: true
+    md_extensions: +header_attributes+superscript+subscript
+#    pandoc_args: [
+#      "--no-tex-ligatures"
+#    ]
+#    template: frontiers-template.tex
+# documentclass: frontiersSCNS # not yet ready for this; need to pandoc-ify the template
+bibliography: references.bib
 ---
 
 ## Abstract
