@@ -1,0 +1,34 @@
+## Simple Age depth model for Small Water
+
+## Age Depth plotting function
+ageDepth <- function(dating, FUN, new, xlim, ylim, ...,
+                     col.lines = "blue", col = "black", col.error = "black",
+                     error.len = 0.03, pch = 21,
+                     bg = "white", cex = 0.8) {
+    if(missing(new))
+        new <- with(dating, Depth)
+    if(missing(xlim))
+        xlim <- range(new)
+    newAges <- FUN(new)
+    if(missing(ylim))
+        ylim <- with(dating, range(newAges, Date + Error, Date - Error))
+    plot(Date ~ Depth, data = dating, xlim = xlim, ylim = ylim, type = "n",
+         ...)
+    lines(newAges ~ new, col = col.lines, ...)
+    ## put observed data errors on [-1,] because surface has 0 error!
+    with(dating[-1,],
+         arrows(Depth, Date + Error, Depth, Date - Error, angle = 90,
+                code = 3, length = error.len, col = col.error))
+    points(Date ~ Depth, data = dating, pch = pch, bg = bg, col = col,
+           cex = cex)
+    return(invisible(dating))
+}
+
+## SMALL1
+small <- read.csv("small1-dating.csv")
+## spline function - natural spline allows linear extrapolation
+small.sf <- with(small, splinefun(x = Depth, y = Date, method = "natural"))
+## Plot observed and interpolated using spline interp
+newDepths <- seq(0, 20, by = 0.1)
+ageDepth(small, FUN = small.sf, new = newDepths,
+         xlab = "Depth (cm)", main = "Small Water (SMALL1)")
