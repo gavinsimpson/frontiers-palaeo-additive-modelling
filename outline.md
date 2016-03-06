@@ -4,16 +4,14 @@
 
 ## Materials and Methods
 
-### Example 1
+### d15N time series from Small Water
 
 ### Example 2
 
-### Example 3
+### Multivariate data
 
 ## Results
 
 ## Discussion
-
-### Multivariate data
 
 ### Identifiability
