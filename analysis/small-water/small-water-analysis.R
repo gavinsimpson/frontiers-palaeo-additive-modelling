@@ -3,7 +3,8 @@
 ## Packages
 library("mgcv")
 library("ggplot2")
-library("cowplot")
+## library("cowplot")
+library("gtable")
 
 ## load the simultaneous confidence interval derivatives code
 tmpf <- tempfile()
@@ -45,7 +46,7 @@ newYear <- transform(newYear,
 plt.fit <- ggplot(small, aes(x = Year, y = d15N)) +
     geom_ribbon(data = newYear, aes(y = fit, ymax = upper, ymin = lower, x = Year),
                 fill = "grey", alpha = 0.3) +
-    geom_line(data = newYear, aes(y = fit, x = Year), col = "black", size = 0.8) +
+    geom_line(data = newYear, aes(y = fit, x = Year), col = "black") +
     geom_point(col = "darkgrey") +
     theme_bw() +
     ylab(expression(delta^{15}*N ~(Bulk~Organic~Matter)))
@@ -63,7 +64,7 @@ randSims <- transform(randSims, Year = rep(newYear$Year, nsim),
 plt.sim <- ggplot(newYear, aes(x = Year, y = fit)) +
     geom_line(data = randSims, mapping = aes(y = simulated, x = Year, group = run),
               col = "black", alpha = 0.1) +
-    geom_line(size = 0.8, col = "black") +
+    geom_line() +
     theme_bw() +
     ylab(expression(delta^{15}*N ~(Bulk~Organic~Matter))) +
     xlab("Year")
@@ -87,7 +88,7 @@ derivPlt <- ggplot(newYear, aes(x = Year, y = derivative)) +
     geom_line() +
     geom_line(aes(y = increasing), col = "black", size = 1.5) +
     geom_line(aes(y = decreasing), col = "black", size = 1.5) +
-    ylab(expression(italic(hat(f)*"'"*(Year)))) +
+    ylab(expression(italic(hat(f) * "'") * (Year))) +
     xlab("Year") +
     theme_bw()
 derivPlt
@@ -106,8 +107,18 @@ plt.fit2 <- plt.fit +
     geom_line(data = newYear, mapping = aes(y = YearDecr), size = 1.5)
 plt.fit2
 
-## Cowplot
-displayPlt <- plot_grid(plt.fit, plt.sim, derivPlt, plt.fit2, labels = "AUTO")
-displayPlt
+## ## Cowplot
+## displayPlt <- plot_grid(plt.fit, plt.sim, derivPlt, plt.fit2, labels = "AUTO", ncol = 2)
+## displayPlt
 
-ggsave("./figures/small-water-display.pdf", displayPlt)
+## ggsave("./figures/small-water-display.pdf", displayPlt)
+
+
+c1 <- rbind(ggplotGrob(plt.fit), ggplotGrob(derivPlt), size = "last")
+c2 <- rbind(ggplotGrob(plt.sim), ggplotGrob(plt.fit2), size = "last")
+displayPlt <- cbind(c1, c2, size = "last")
+plot(displayPlt)
+
+pdf("./figures/small-water-display.pdf", height = 9, width = 9)
+grid.draw(displayPlt)
+dev.off()
