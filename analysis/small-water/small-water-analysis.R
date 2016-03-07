@@ -3,8 +3,7 @@
 ## Packages
 library("mgcv")
 library("ggplot2")
-## library("cowplot")
-library("gtable")
+library("cowplot")
 
 ## load the simultaneous confidence interval derivatives code
 tmpf <- tempfile()
@@ -107,18 +106,18 @@ plt.fit2 <- plt.fit +
     geom_line(data = newYear, mapping = aes(y = YearDecr), size = 1.5)
 plt.fit2
 
-## ## Cowplot
-## displayPlt <- plot_grid(plt.fit, plt.sim, derivPlt, plt.fit2, labels = "AUTO", ncol = 2)
-## displayPlt
+## library("gtable")
+## c1 <- rbind(ggplotGrob(plt.fit), ggplotGrob(derivPlt), size = "last")
+## c2 <- rbind(ggplotGrob(plt.sim), ggplotGrob(plt.fit2), size = "last")
+## displayPlt <- cbind(c1, c2, size = "last")
+## plot(displayPlt)
 
-## ggsave("./figures/small-water-display.pdf", displayPlt)
+## pdf("./figures/small-water-display.pdf", height = 9, width = 9)
+## grid.draw(displayPlt)
+## dev.off()
 
+combinedPlt <- plot_grid(plt.fit, plt.sim, derivPlt, plt.fit2, labels = "AUTO",
+                         align = "vh")
+combinedPlt
 
-c1 <- rbind(ggplotGrob(plt.fit), ggplotGrob(derivPlt), size = "last")
-c2 <- rbind(ggplotGrob(plt.sim), ggplotGrob(plt.fit2), size = "last")
-displayPlt <- cbind(c1, c2, size = "last")
-plot(displayPlt)
-
-pdf("./figures/small-water-display.pdf", height = 9, width = 9)
-grid.draw(displayPlt)
-dev.off()
+ggsave("./figures/small-water-display.pdf", combinedPlt, width = 10, height = 9)
