@@ -1,0 +1,23 @@
+`simulate.gam` <- function(object, nsim = 1, seed = NULL, newdata,
+                            freq = FALSE, unconditional = FALSE, ...) {
+    stopifnot(require("MASS"))
+    if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
+        runif(1)
+    if (is.null(seed))
+        RNGstate <- get(".Random.seed", envir = .GlobalEnv)
+    else {
+        R.seed <- get(".Random.seed", envir = .GlobalEnv)
+        set.seed(seed)
+        RNGstate <- structure(seed, kind = as.list(RNGkind()))
+        on.exit(assign(".Random.seed", R.seed, envir = .GlobalEnv))
+    }
+
+    if (missing(newdata)) {
+        newdata <- object$model
+    }
+    Rbeta <- mvrnorm(n = nsim, coef(object),
+                     vcov(object, freq = freq, unconditional = unconditional))
+    Xp <- predict(object, newdata = newdata, type = "lpmatrix")
+    sims <- Xp %*% t(Rbeta)
+    sims
+}
