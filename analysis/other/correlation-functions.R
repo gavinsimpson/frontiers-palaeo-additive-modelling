@@ -14,12 +14,13 @@ pExpdf <- transform(pExpdf, correlation = powerExp(h, phi, k),
 
 pexp.plt <- ggplot(pExpdf, aes(x = h, y = correlation, group = kfac, colour = kfac)) +
     geom_line(size = 1) +
-        facet_wrap( ~ phi, labeller = label_bquote(phi == .(phi))) +
-        ylab(expression(rho)) +
-            xlab(expression(italic(h))) +
-                scale_color_viridis(discrete=TRUE) +
-                theme_bw() +
-                    guides(colour = guide_legend(title = expression(kappa)))
+    facet_wrap( ~ phi, labeller = label_bquote(phi == .(phi))) +
+    ylab(expression(rho)) +
+    xlab(expression(italic(h))) +
+    ##scale_color_viridis(option = "viridis", discrete = TRUE) +
+    scale_colour_manual(values = viridis(11)[c(2,5,10)]) +
+    theme_bw() +
+    guides(colour = guide_legend(title = expression(kappa)))
 pexp.plt
 
 pMaternDf <- expand.grid(h = seq(0, 10, length = 100),
@@ -30,12 +31,13 @@ pMaternDf <- transform(pMaternDf, correlation = matern(h, phi, k),
 
 pmat.plt <- ggplot(pMaternDf, aes(x = h, y = correlation, group = kfac, colour = kfac)) +
     geom_line(size = 1) +
-        facet_wrap( ~ phi, labeller = label_bquote(phi == .(phi))) +
-        ylab(expression(rho)) +
-            xlab(expression(italic(h))) +
-                scale_color_viridis(discrete=TRUE) +
-                theme_bw() +
-                    guides(colour = guide_legend(title = expression(kappa)))
+    facet_wrap( ~ phi, labeller = label_bquote(phi == .(phi))) +
+    ylab(expression(rho)) +
+    xlab(expression(italic(h))) +
+    ## scale_color_viridis(discrete = TRUE) +
+    scale_colour_manual(values = viridis(11)[c(2,5,10)]) +
+    theme_bw() +
+    guides(colour = guide_legend(title = expression(kappa)))
 pmat.plt
 
 correlFuns <- plot_grid(pexp.plt, pmat.plt, ncol = 1, align = "hv",
