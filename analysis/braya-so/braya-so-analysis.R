@@ -4,6 +4,9 @@
 library("mgcv")
 library("ggplot2")
 library("cowplot")
+library("viridis")
+
+pal <- viridis(2)
 
 ## load the simultaneous confidence interval derivatives code
 tmpf <- tempfile()
@@ -23,14 +26,14 @@ head(braya)
 ## Generate a plot of the data
 ylabel <- expression(italic(U)[37]^{italic(k)})
 plt <- ggplot(braya, aes(x = Year, y = UK37)) +
-    geom_point(col = "darkgrey") +
-    geom_line(col = "darkgrey") +
+    geom_point(colour = pal[1]) +
+    geom_line(colour = pal[1]) +
     theme_bw() +
     ylab(ylabel)
 plt
 
 ## model it using gam()
-mod <- gam(UK37 ~ s(Year, k = 50, bs = "gp", m = c(3, 100)), data = braya, method = "REML")
+mod <- gam(UK37 ~ s(Year, k = 30, bs = "gp", m = c(3, 100)), data = braya, method = "REML")
 summary(mod)
 plot(mod)
 
@@ -41,8 +44,8 @@ newYear <- cbind(newYear, data.frame(predict(mod, newYear, se.fit = TRUE)))
 
 ## Draw the fitted spline on the data
 plt.fit <- ggplot(braya, aes(x = Year, y = UK37)) +
-    geom_line(data = newYear, aes(y = fit, x = Year), col = "black") +
-    geom_point(col = "darkgrey") +
+    geom_line(data = newYear, aes(y = fit, x = Year), colour = pal[1]) +
+    geom_point(colour = pal[1]) +
     theme_bw() +
     ylab(ylabel)
 plt.fit
@@ -64,8 +67,8 @@ newYear <- transform(newYear, lower = CI[1,], upper = CI[2,])
 
 plt.sim <- ggplot(newYear, aes(x = Year, y = fit)) +
     geom_line(data = randSims, mapping = aes(y = simulated, x = Year, group = run),
-              col = "black", alpha = 0.1) +
-    geom_line() +
+              colour = pal[1], alpha = 0.1) +
+    geom_line(colour = pal[1]) +
     theme_bw() +
     ylab(ylabel) +
     xlab("Year")
@@ -85,10 +88,10 @@ newYear <- transform(newYear,
 
 ## Plot it
 derivPlt <- ggplot(newYear, aes(x = Year, y = derivative)) +
-    geom_ribbon(aes(ymax = fdUpper, ymin = fdLower), alpha = 0.3, fill = "grey") +
-    geom_line() +
-    geom_line(aes(y = increasing), col = "black", size = 1.5) +
-    geom_line(aes(y = decreasing), col = "black", size = 1.5) +
+    geom_ribbon(aes(ymax = fdUpper, ymin = fdLower), alpha = 0.3, fill = pal[1]) +
+    geom_line(colour = pal[1]) +
+    geom_line(aes(y = increasing), colour = pal[1], size = 1.5) +
+    geom_line(aes(y = decreasing), colour = pal[1], size = 1.5) +
     ylab(expression(italic(hat(f) * "'") * (Year))) +
     xlab("Year") +
     theme_bw()
@@ -106,9 +109,9 @@ newYear <- transform(newYear,
 plt.fit2 <- ggplot(braya, aes(x = Year, y = UK37)) +
     geom_ribbon(data = newYear,
                 mapping = aes(ymax = upper, ymin = lower, y = fit, x = Year),
-                fill = "grey", alpha = 0.3) +
-    geom_line(data = newYear, aes(y = fit, x = Year), col = "black") +
-    geom_point(col = "darkgrey") +
+                fill = pal[1], alpha = 0.3) +
+    geom_line(data = newYear, aes(y = fit, x = Year), colour = pal[1]) +
+    geom_point(colour = pal[1]) +
     theme_bw() +
     ylab(ylabel) +
     geom_line(data = newYear, mapping = aes(y = YearIncr), size = 1.5) +

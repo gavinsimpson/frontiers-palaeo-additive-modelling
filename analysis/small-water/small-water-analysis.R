@@ -4,6 +4,9 @@
 library("mgcv")
 library("ggplot2")
 library("cowplot")
+library("viridis")
+
+pal <- viridis(3)
 
 ## load the simultaneous confidence interval derivatives code
 tmpf <- tempfile()
@@ -20,7 +23,7 @@ head(small)
 
 ## Generate a plot of the data
 plt <- ggplot(small, aes(x = Year, y = d15N)) +
-    geom_point(col = "darkgrey") +
+    geom_point(colour = pal[1]) +
     theme_bw() +
     ylab(expression(delta^{15}*N ~(Bulk~Organic~Matter)))
 plt
@@ -39,8 +42,8 @@ newYear <- cbind(newYear, data.frame(predict(mod$gam, newYear, se.fit = TRUE)))
 
 ## Draw the fitted spline on the data
 plt.fit <- ggplot(small, aes(x = Year, y = d15N)) +
-    geom_line(data = newYear, aes(y = fit, x = Year), col = "black") +
-    geom_point(col = "darkgrey") +
+    geom_line(data = newYear, aes(y = fit, x = Year), colour = pal[1]) +
+    geom_point(colour = pal[1]) +
     theme_bw() +
     ylab(expression(delta^{15}*N ~(Bulk~Organic~Matter)))
 plt.fit
@@ -62,8 +65,8 @@ newYear <- transform(newYear, lower = CI[1,], upper = CI[2,])
 
 plt.sim <- ggplot(newYear, aes(x = Year, y = fit)) +
     geom_line(data = randSims, mapping = aes(y = simulated, x = Year, group = run),
-              col = "black", alpha = 0.1) +
-    geom_line() +
+              colour = pal[1], alpha = 0.1) +
+    geom_line(colour = pal[1]) +
     theme_bw() +
     ylab(expression(delta^{15}*N ~(Bulk~Organic~Matter))) +
     xlab("Year")
@@ -83,10 +86,10 @@ newYear <- transform(newYear,
 
 ## Plot it
 derivPlt <- ggplot(newYear, aes(x = Year, y = derivative)) +
-    geom_ribbon(aes(ymax = fdUpper, ymin = fdLower), alpha = 0.3, fill = "grey") +
-    geom_line() +
-    geom_line(aes(y = increasing), col = "black", size = 1.5) +
-    geom_line(aes(y = decreasing), col = "black", size = 1.5) +
+    geom_ribbon(aes(ymax = fdUpper, ymin = fdLower), alpha = 0.3, fill = pal[1]) +
+    geom_line(colour = pal[1]) +
+    geom_line(aes(y = increasing), colour = pal[1], size = 1.5) +
+    geom_line(aes(y = decreasing), colour = pal[1], size = 1.5) +
     ylab(expression(italic(hat(f) * "'") * (Year))) +
     xlab("Year") +
     theme_bw()
@@ -104,9 +107,9 @@ newYear <- transform(newYear,
 plt.fit2 <- ggplot(small, aes(x = Year, y = d15N)) +
     geom_ribbon(data = newYear,
                 mapping = aes(ymax = upper, ymin = lower, y = fit, x = Year),
-                fill = "grey", alpha = 0.3) +
-    geom_line(data = newYear, aes(y = fit, x = Year), col = "black") +
-    geom_point(col = "darkgrey") +
+                fill = pal[1], alpha = 0.3) +
+    geom_line(data = newYear, aes(y = fit, x = Year), colour = pal[1]) +
+    geom_point(colour = pal[1]) +
     theme_bw() +
     ylab(expression(delta^{15}*N ~(Bulk~Organic~Matter))) +
     geom_line(data = newYear, mapping = aes(y = YearIncr), size = 1.5) +
