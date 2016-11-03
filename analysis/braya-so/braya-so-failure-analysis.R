@@ -45,15 +45,29 @@ summary(mod2)
 plot(mod2, n = N)
 gam.check(mod2)
 
-fit <- predict(mod2, newdata = newYear, se.fit = TRUE)
+fit2 <- predict(mod2, newdata = newYear, se.fit = TRUE)
 
-newYear <- rbind(newYear, newYear)
-newYear[seq(N+1, length.out = N, by = 1), ]$fit <- fit$fit
+mod3 <- gam(UK37 ~ s(Year, k = 30), data = braya, method = "REML")
+summary(mod3)
+plot(mod3, n = N)
+gam.check(mod3)
+
+fit3 <- predict(mod3, newdata = newYear, se.fit = TRUE)
+
+newYear <- rbind(newYear, newYear, newYear)
+## GAM GCV
+newYear[seq(N+1, length.out = N, by = 1), ]$fit <- fit2$fit
 newYear[seq(N+1, length.out = N, by = 1), ]$upper <-
-    fit$fit + (qt(0.975, df.residual(mod2)) * fit$se.fit)
-newYear[seq(301, length.out = 300, by = 1), ]$lower <-
-    fit$fit - (qt(0.975, df.residual(mod2)) * fit$se.fit)
-newYear <- transform(newYear, Method = rep(c("GAMM (REML)", "GAM (GCV)"), each = N))
+    fit2$fit + (qt(0.975, df.residual(mod2)) * fit2$se.fit)
+newYear[seq(N+1, length.out = N, by = 1), ]$lower <-
+    fit2$fit - (qt(0.975, df.residual(mod2)) * fit2$se.fit)
+## GAM REML
+newYear[seq((N*2)+1, length.out = N, by = 1), ]$fit <- fit3$fit
+newYear[seq((N*2)+1, length.out = N, by = 1), ]$upper <-
+    fit3$fit + (qt(0.975, df.residual(mod2)) * fit3$se.fit)
+newYear[seq((N*2)+1, length.out = N, by = 1), ]$lower <-
+    fit3$fit - (qt(0.975, df.residual(mod2)) * fit3$se.fit)
+newYear <- transform(newYear, Method = rep(c("GAMM (REML)", "GAM (GCV)", "GAM (REML)"), each = N))
 
 p1 <- ggplot(braya, aes(y = UK37, x = Year)) +
     geom_point() +
@@ -63,25 +77,28 @@ p1 <- ggplot(braya, aes(y = UK37, x = Year)) +
     geom_line(data = newYear, mapping = aes(y = fit, x = Year, colour = Method), size = 1) +
     ylab(ylabel) +
     theme_bw() +
-    scale_color_manual(values = viridis(11)[c(2, 6)]) +
-    scale_fill_manual(values = viridis(11)[c(2, 6)]) +
+    scale_color_manual(values = viridis(11)[c(2, 4, 6)]) +
+    scale_fill_manual(values = viridis(11)[c(2, 4, 6)]) +
     theme(legend.position = "top")
 p1
 
-tmp <- cbind(rbind(braya, braya),
-             residuals = c(resid(mod$lme), resid(mod2, type = "response")),
-             Method = rep(c("GAMM (REML)", "GAM (GCV)"), each = nrow(braya)))
+ggsave("./figures/reml-failure.png", p1)
+
+tmp <- cbind(rbind(braya, braya, braya),
+             residuals = c(resid(mod$lme), resid(mod2, type = "response"),
+                           resid(mod3, type = "response")),
+             Method = rep(c("GAMM (REML)", "GAM (GCV)", "GAM (REML)"), each = nrow(braya)))
 p2 <- ggplot(tmp,
              aes(y = residuals, x = Year, colour = Method)) +
     geom_point() +
     geom_line() +
-    ylab("Normalised residuals") +
+    ylab("Raw residuals") +
     theme_bw() +
-    scale_color_manual(values = viridis(11)[c(2, 6)]) +
+    scale_color_manual(values = viridis(11)[c(2, 4, 6)]) +
     theme(legend.position = "top")
 p2
 
 combined <- plot_grid(p1, p2, labels = "AUTO", align = "vh")
 combined
 
-ggsave("./figures/braya-so-failure-figure.pdf", width = 9, height = 4)
+ggsave("./figures/braya-so-failure-figure-simon.pdf", width = 9, height = 4)

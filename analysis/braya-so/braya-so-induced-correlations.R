@@ -1,4 +1,6 @@
-## Analyse the UK37 data for Braya So coreLook at induced correlations
+# ---- induced-correlations-plt ----
+
+## Analyse the UK37 data for Braya So core: Look at induced correlations
 
 ## Packages
 library("mgcv")
@@ -16,7 +18,6 @@ braya <- read.table("./data/braya-so/DAndrea.2011.Lake Braya So.txt",
                     skip = 84)
 names(braya) <- c("Depth", "DepthUpper", "DepthLower", "Year", "YearYoung", "YearOld", "UK37")
 braya <- transform(braya, sampleInterval = YearYoung - YearOld)
-head(braya)
 
 ## induced correlations....
 T <- 601
@@ -32,7 +33,7 @@ egData.plt <- ggplot(egData, aes(x = t, y = yt)) +
     geom_point(size = 0.9) +
         geom_line(aes(y = ft), col = "red", lwd = 1) +
             labs(x = expression(italic(t)), y = expression(y[italic(t)]))
-egData.plt
+## egData.plt
 
 m.ps <- gam(yt ~ s(t, bs = "ps", k = K), data = egData, method = "REML")
 m.tp <- gam(yt ~ s(t, bs = "tp", k = K), data = egData, method = "REML")
@@ -45,7 +46,7 @@ egDataCor <- cbind(egDataCor, Basis = rep(c("P Spline", "Thinplate Spline"), eac
 eg.plt <- ggplot(egDataCor, aes(x = t, y = correl, colour = tp)) +
     geom_line() + facet_wrap( ~ Basis) + scale_colour_discrete(guide = FALSE) +
             labs(x = expression(italic(t)), y = "Induced correlation")
-eg.plt
+## eg.plt
 
 uk.ps <- gam(UK37 ~ s(Year, k = 30, bs = "ps"), data = braya, method = "REML")
 uk.tp <- gam(UK37 ~ s(Year, k = 30, bs = "tp"), data = braya, method = "REML")
@@ -57,7 +58,7 @@ ukData <- cbind(ukData, Basis = rep(c("P Spline", "Thinplate Spline"), each = nr
 uk.plt <- ggplot(ukData, aes(x = t, y = correl, colour = tp)) +
     geom_line() + facet_wrap( ~ Basis) +
         labs(x = "Year BP", y = "Induced correlation") + scale_colour_discrete(guide = FALSE)
-uk.plt
+## uk.plt
 
 ## cowplot the panels together
 ## Need to sort out the widths of the plot elements on the left iof each plot
@@ -73,10 +74,9 @@ g.egData$widths[1:3] <- max.widths  # assign max widths to egData gtable
 g.eg$widths[1:3] <- max.widths      # assign max widths to eg.plt gtable
 g.uk$widths[1:3] <- max.widths      # assign max widths to uk.plt gtable
 
-# plot_grid() can work directly with gtables, so this works
-#plot_grid(g.iris, g.mpg, labels = "AUTO", ncol = 1)
+induced.plt <- plot_grid(g.egData, g.eg, g.uk, ncol = 1, rel_heights = c(1, 1, 1), labels = "AUTO")
 
-combined.plt <- plot_grid(g.egData, g.eg, g.uk, ncol = 1, rel_heights = c(1, 1, 1), labels = "AUTO")
-combined.plt
+## ggsave("./figures/induced-correlations.pdf", plot = induced.plt, height = 8, width = 8)
 
-ggsave("./figures/induced-correlations.pdf", plot = combined.plt, height = 8, width = 8)
+## plot it
+induced.plt
