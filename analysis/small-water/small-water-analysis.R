@@ -8,6 +8,8 @@ library("viridis")
 
 pal <- viridis(3)
 
+theme_set(theme_bw())
+
 ## load the simultaneous confidence interval derivatives code
 tmpf <- tempfile()
 download.file("https://gist.githubusercontent.com/gavinsimpson/ca18c9c789ef5237dbc6/raw/295fc5cf7366c831ab166efaee42093a80622fa8/derivSimulCI.R",
@@ -35,6 +37,22 @@ mod <- gamm(d15N ~ s(Year, k = 15), data = small,
 summary(mod$gam)
 intervals(mod$lme, which = "var-cov")
 plot(mod$gam)
+
+## plot CAR(1) process
+maxS <- with(small, diff(range(Year))) ## too large, truncate to 50
+S <- seq(0, 50, length = 100)
+phi <- intervals(mod$lme, which = "var-cov")$corStruct
+car1 <- setNames(as.data.frame(t(outer(phi, S, FUN = `^`)[1, , ])),
+                 c("Lower","Correlation","Upper"))
+car1 <- transform(car1, S = S)
+
+car1Plt <- ggplot(car1, aes(x = S, y = Correlation)) +
+    geom_ribbon(aes(ymax = Upper, ymin = Lower),
+                fill = "grey", alpha = 0.3) +
+    geom_line() +
+    ylab(expression(italic(h) * (list(Delta[t], phi))))
+car1Plt
+
 
 ## Predict from model
 newYear <- with(small, data.frame(Year = seq(min(Year), max(Year), length.out = 100)))
