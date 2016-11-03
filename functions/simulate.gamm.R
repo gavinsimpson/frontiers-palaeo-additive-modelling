@@ -1,6 +1,5 @@
 `simulate.gamm` <- function(object, nsim = 1, seed = NULL, newdata,
                             freq = FALSE, unconditional = FALSE, ...) {
-    stopifnot(require("MASS"))
     if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
         runif(1)
     if (is.null(seed))
@@ -15,8 +14,21 @@
     if (missing(newdata)) {
         newdata <- object$gam$model
     }
-    Rbeta <- mvrnorm(n = nsim, coef(object$gam),
-                     vcov(object$gam, freq = freq, unconditional = unconditional))
+
+    ## random multivariate Gaussian
+    ## From ?predict.gam in mgcv package
+    ## Copyright Simon N Wood
+    ## GPL >= 2
+    rmvn <- function(n, mu, sig) { ## MVN random deviates
+        L <- mroot(sig)
+        m <- ncol(L)
+        t(mu + L %*% matrix(rnorm(m * n), m, n))
+    }
+
+    Rbeta <- rmvn(n = nsim,
+                  mu = coef(object$gam),
+                  sig = vcov(object$gam, freq = freq,
+                             unconditional = unconditional))
     Xp <- predict(object$gam, newdata = newdata, type = "lpmatrix")
     sims <- Xp %*% t(Rbeta)
     sims
