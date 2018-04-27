@@ -21,3 +21,6 @@ correlfun: ./analysis/other/correlation-functions.R
 
 manuscript:
 	Rscript -e "library(rmarkdown); render('manuscript.Rmd')"
+
+script: manuscript.Rmd
+	Rscript -e "knitr::purl('manuscript.Rmd')"
