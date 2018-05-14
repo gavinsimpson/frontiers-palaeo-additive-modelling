@@ -129,84 +129,83 @@ leading to more a robust and reproducible palaeoscience.
 
 \section{Introduction}\label{introduction}
 
-The vast majority of data produced by palaeoecologists and
+Palaeoecology and palaeolimnology have moved away from being descriptive
+disciplines, rapidly adopting new statistical developments in the 1990s
+and beyond (@ Smol et al., 2012). Less development has been observed in
+the area of trend estimation in palaeoenvironmental time series. The
+vast majority of data produced by palaeoecologists and
 palaeolimnologists is in the form of time-ordered observations on one or
 more proxies or biological taxa (Birks, 2012b; Smol, 2008; Smol et al.,
 2012). Typically these data are arranged irregularly in time; in the
 absence of annual laminae or varves, the sediment core is sectioned at
 regular depth intervals (Glew et al., 2001), which, owing to variation
 in accumulation rates over time and compaction by overlying sediments,
-results in an uneven sampling in time. An under-appreciated secondary
-feature of such sampling is that younger sediments often have larger
-variance than older sediments; each section of core represents fewer
-lake years in newer samples, relative to older samples. This variable
-time averaging acts as a variable low-pass (high-cut) filter of the raw,
-annual depositional signal.
+results in an uneven sampling in time. An under-appreciated feature of
+such sampling is that younger sediments often have larger variance than
+older sediments; each section of core represents fewer lake years in
+newer samples, relative to older samples. This variable averaging acts
+as a time-varying low-pass (high-cut) filter of the annual depositional
+signal.
 
-The irregular intervals between samples means that the customary
-time-series analysis methods of autoregressive or moving average
-processes, in the form of autoregressive integrated moving average
-(ARIMA) models, are practically impossible to apply because software
-implementing these methods typically requires even spacing of
+Irregular intervals between samples means that the time-series analysis
+methods of autoregressive or moving average processes, in the form of
+autoregressive integrated moving average (ARIMA) models, are practically
+impossible to apply because software typically requires even spacing of
 observations in time. Dutilleul et al. (2012) and Birks (2012a),
 eschewing the term \emph{time series}, prefer to call such data
 \emph{temporal series} on account of the irregular spacing of samples, a
 distinction that I find unnecessary.
 
 Where statistical approaches have been applied to trend estimation in
-palaeoenvironmental time series, the most commonly used has been
-\loess{} (Birks, 1998, 2012a; Cleveland, 1979; Juggins and Telford,
-2012). \loess{}, or locally weighted scatterplot smoother, as it's name
-suggests, was developed to smooth x-y scatterplot data, ostensibly as
-part of exploratory data analysis (Cleveland, 1979). The method fits a
-smooth line through data by fitting weighted least squares (WLS) models
-to observations within a particular, user-specified window of the target
-point, whose width is typically expressed as a proportion \(\alpha\) of
-the \(n\) data points. Weights are determined by how close (in the
-x-axis only) an observation in the window is to the focal point, with a
-tricubic function, by default, giving greatest weight to points closest
-to the focal point. The interim \loess{}-smoothed value for the focal
-point is the predicted value from the weighted regression at the focal
-point. The interim values are updated using weights based on how far in
-the y-axis direction, the interim smoothed value lies from the observed
-value plus the x-axis distance weights; this has the effect of
-down-weighting the effects of outlier observations. The final \loess{}
-is obtained by joining up the smoothed (fitted) values. The user has to
-choose how large a window to use, whether to fit degree 1 (linear) or
-degree 2 (quadratic) polynomials in the WLS model, and how to weight
-points in the x-axis. When used in an exploratory mode, the user has
-considerable freedom to choose the detail of the \loess{} fit; the
-window width, for example, can be infinitely tweaked to give as close a
-fit to the data, as assessed by eye, as is desired. Using
-cross-validation (CV) to choose \(\alpha\) or the degree of polynomial
-in the WLS model is complicated for a number of reasons, not least that
-the CV scheme used must involve the time ordering of the data (e.g.
-Bergmeir et al., 2018). This level of subjectivity is problematic
-however once we wish to move beyond exploratory data analysis to
-statistically identify trends and to test hypotheses involving those
-trend estimates.
+palaeoenvironmental time series, a commonly-used method is \loess{}
+(Birks, 1998, 2012a; Cleveland, 1979; Juggins and Telford, 2012).
+\loess{}, locally weighted scatterplot smoother, as it's name suggests,
+was developed to smooth x-y scatterplot data (Cleveland, 1979). The
+method fits a smooth line through data by fitting weighted least squares
+(WLS) models to observations within a particular, user-specified window
+of the focal point, whose width is typically expressed as a proportion
+\(\alpha\) of the \(n\) data points. Weights are determined by how close
+(in the x-axis only) an observation in the window is to the focal point
+giving greatest weight given to points closest to the focal point. The
+interim \loess{}-smoothed value for the focal point is the predicted
+value from the weighted regression at the focal point. The interim
+values are updated using weights based on how far in the y-axis
+direction the interim smoothed value lies from the observed value plus
+the x-axis distance weights; this has the effect of down-weighting
+outlier observations. The final \loess{} is obtained by joining the
+smoothed values. The user has to choose how large a window to use,
+whether to fit degree 1 (linear) or degree 2 (quadratic) polynomials in
+the WLS model, and how to weight points in the x-axis. When used in an
+exploratory mode, the user has considerable freedom to choose the detail
+of the \loess{} fit; the window width, for example, can be infinitely
+tweaked to give as close a fit to the data, as assessed by eye, as is
+desired. Using cross-validation (CV) to choose \(\alpha\) or the degree
+of polynomial in the WLS model is complicated for a number of reasons,
+not least because the CV scheme used must involve the time ordering of
+the data (e.g. Bergmeir et al., 2018). This subjectivity is problematic
+however once we wish to move beyond exploratory analysis and
+statistically identify trends to test hypotheses involving those trend
+estimates.
 
 Running means or other types of filter (Juggins and Telford, 2012) have
 also been used extensively to smooth palaeoenvironmental time series,
 but, as with \loess{}, their behaviour depends on a number of factors,
 including the filter width. Furthermore, the width of the filter causes
-boundary issues; with a centred filter, of width five data points, the
-filtered time series would be two data points shorter at both ends of
-the series because the filter weights are not defined for the first and
-last two observations of the original series as these time points were
-not observed. Considerable research effort has been expended to identify
+boundary issues; with a centred filter, of width five, the filtered time
+series would be two data points shorter at both ends of the series
+because the filter values are not defined for the first and last two
+observations of the original series as these extra time points were not
+observed. Considerable research effort has been expended to identify
 ways to pad the original time series at one or both ends to maintain the
-original length in the filtered series, without introducing bias because
-of the method of padding (e.g. Mann, 2004, 2008; Mills, 2006, 2007,
-2010).
+original length in the filtered series, without introducing bias due to
+the padding (e.g. Mann, 2004, 2008; Mills, 2006, 2007, 2010).
 
-These are by no means the only methods that have been used to estimated
-trends in stratigraphic series. Another common approach involves fitting
-a simple linear trend using ordinary least squares regression and use
-the resulting \emph{t} statistic as evidence against the null hypothesis
-of no trend despite the statistical assumptions of the method being
-almost surely violated due to dependence among observations arising from
-temporal autocorrelation in the series. The Pearson correlation
+These are not the only methods that have been used to estimated trends
+in stratigraphic series. Another common approach involves fitting a
+simple linear trend using ordinary least squares regression and use the
+resulting \emph{t} statistic as evidence against the null hypothesis of
+no trend despite the statistical assumptions being almost surely
+violated due to dependence among observations. The Pearson correlation
 coefficient, \emph{r}, is also often used to detect trends in palaeo
 time series (Birks, 2012a), despite the fact that \emph{r} provides no
 information as to the magnitude of the estimated trend, and the same
@@ -222,26 +221,20 @@ no magnitude of the trend is provided, and the theory underlying
 significance testing of Spearman's \(\rho\) and Kendall's \(\tau\)
 assumes independent observations.
 
-Palaeoecology and palaeolimnology have moved away from being descriptive
-disciplines, rapidly adopting new statistical developments in the 1990s
-and beyond (@ Smol et al., 2012). Less development has been observed in
-the area of trend estimation in palaeoenvironmental time series. Here, I
-describe the use of generalized additive models (GAMs; Hastie and
+Here, I describe generalized additive models (GAMs; Hastie and
 Tibshirani, 1986, 1990; Ruppert et al., 2003; Wood, 2017; Yee and
 Mitchell, 1991) for trend estimation. GAMs, like simple linear
-regression, are a formal regression-based method for estimating trends,
-yet they are also, superficially at least, similar to \loess{}. GAMs and
+regression, are a regression-based method for estimating trends, yet
+they are also, superficially at least, similar to \loess{}. GAMs and
 \loess{} estimate smooth, non-linear trends in time series and both can
 handle the irregular spacing of samples in time, yet GAMs do not suffer
 from the subjectivity that plagues \loess{} as a method of formal
 statistical inference.
 
-In the subsequent sections, I present an introduction to GAMs and how
-they are able to estimate smooth, non-linear trends from time series.
-Next the issue of uncertainty in model-estimated trends is discussed, as
-is the topic of posterior simulation from a regression model. The issue
-of identifying periods of significant environmental change is considered
-and I show how this can be achieved using the first derivative of the
+In the subsequent sections, I present an introduction to GAMs and
+discuss the issue of uncertainty in model-estimated trends, the topic of
+posterior simulation from a regression model and how to identify periods
+of significant environmental change using the first derivative of the
 estimated trend. Two non-standard types of spline --- adaptive smoothers
 and Gaussian process splines --- that are especially applicable to GAMs
 in the palaeoenvironmental setting are subsequently described, followed
@@ -251,16 +244,17 @@ trend analysis to multivariate species abundance and compositional data.
 
 \subsection{Example time series}\label{example-time-series}
 
-To illustrate the estimation of trends in palaeoenvironmental data using
-GAMs, I use two proxy time series; a 150-year bulk organic matter
-δ\textsuperscript{15}N time series from Small Water, and a 3000-year
-alkenone record from Braya-Sø. Between them, the two examples, combine
-many of the features of interest to palaeoecologists that motivate the
-use of GAMs; non-linear trends and the question of when changes in the
-measured proxy occurred. The example analyses were all performed using
-the \emph{mgcv} package and R, and the supplementary material contains a
-fully annotated document showing the R code used to replicate all the
-analyses described in the remainder of the paper.
+To illustrate trend estimation in palaeoenvironmental data using GAMs, I
+use two proxy time series; a 150-year bulk organic matter
+δ\textsuperscript{15}N record from Small Water, and a 3000-year alkenone
+record from Braya-Sø. Between them, the two examples, combine many of
+the features of interest to palaeoecologists that motivate the use of
+GAMs; non-linear trends and the question of when changes in the measured
+proxy occurred. The example analyses were all performed using the
+\emph{mgcv} package (version 1.8.23; Wood, 2017) and R (version 3.4.4; R
+Core Team, 2018), and the supplementary material contains a fully
+annotated document showing the R code used to replicate all the analyses
+described in the remainder of the paper.
 
 \subsubsection{\texorpdfstring{δ\textsuperscript{15}N time series from
 Small
@@ -324,10 +318,10 @@ where \(\beta_0\) is a constant term, the model \emph{intercept},
 representing the expected value of \(y_t\) where \(x_t\) is 0.
 \(\beta_1\) is the \emph{slope} of the best fit line through the data;
 it measures the rate of change in \(y\) for a unit increase in \(x\).
-The unknowns, the \(\beta_j\) are commonly estimated using least squares
-by minimising the sum of squared errors, \(\sum_t \varepsilon_t^2\). If
-we want to ask if the estimated trend \(\beta_1\) is statistically
-significant, a process called \emph{inference}, we must make further
+The unknowns, the \(\beta_j\), are commonly estimated using least
+squares by minimising the sum of squared errors,
+\(\sum_t \varepsilon_t^2\). If we want to ask if the estimated trend
+\(\beta_1\) is statistically significant we must make further
 assumptions about the data (conditional upon the fitted model) or the
 model errors (residuals);
 \(\varepsilon_t \stackrel{iid}{\sim} \mathcal{N}(0, \sigma^2)\). This
@@ -340,8 +334,8 @@ residuals is often violated.
 The linear model described above is quite restrictive in terms of the
 types of trend it can fit; essentially linear increasing or decreasing
 trends, or, trivially, a null trend of no change. This model can be
-extended to allow for non-linear trends, most notably by making \(y_t\)
-depend on polynomials of \(x_t\), for example
+extended to allow for non-linear trends by making \(y_t\) depend on
+polynomials of \(x_t\), for example
 
 \begin{align} \label{eq:polynomial-model}
 y_t &= \beta_0 + \beta_1 x_t + \beta_2 x_t^2 + \cdots + \beta_P x_t^P + \varepsilon_t \\
@@ -351,7 +345,7 @@ y_t &= \beta_0 + \beta_1 x_t + \beta_2 x_t^2 + \cdots + \beta_P x_t^P + \varepsi
 where polynomials of \(x_t\) up to order \(P\) are used. This model
 allows for more complex trends but it remains a fully parametric model
 and suffers from several problems, especially the behaviour of the
-fitted polynomial at the start and end of the observed series.
+fitted trend at the start and end of the observed series.
 
 Linear models using a range of polynomials fitted to the Small Water
 data set are shown in Figure \ref{fig:polynomial-example-plot}. The
@@ -383,7 +377,7 @@ autocorrelation is likely present.
 Can we do better than these polynomial fits? In the remainder, I hope to
 demonstrate that the answer to that question is emphatically ``yes''!
 Below I describe a coherent and consistent approach to modelling
-palaeoenvironmental time series using generalized additive models, which
+palaeoenvironmental time series using generalized additive models that
 builds upon the linear regression framework.
 
 \section{Generalized additive models}\label{generalized-additive-models}
@@ -394,14 +388,14 @@ The GAM version of the linear model \eqref{eq:linear-model} is
 y_t = \beta_0 + f(x_t) + \varepsilon_t \, ,
 \end{equation}
 
-where the linear effect of time(the \(\beta_1 x_t\) part) has been
+where the linear effect of time (the \(\beta_1 x_t\) part) has been
 replaced by a smooth function of time, \(f(x_t)\). The immediate
 advantage of the GAM is that we are no longer restricted to the shapes
 of trends that can be fitted via global polynomial functions such as
 \eqref{eq:polynomial-model}. Instead, the shape of the fitted trend will
 be estimated from the data itself.
 
-The linear model is a special case of a broader class know as the
+The linear model is a special case of a broader class, known as the
 generalized linear model (GLM; McCullagh and Nelder, 1989). The GLM
 provides a common framework for modelling a wide range of types of data,
 such as count, proportions, or binary (presence/absence) data, that are
@@ -428,7 +422,7 @@ probability of occurrence) of the random variable \(Y_t\)
 \(y_t\). \(g\) is the link function, an invertible, monotonic function,
 such as the natural logarithm, and \(g^{-1}\) is its inverse. The link
 function maps values from the response scale on to the scale of the
-linear predictor, whilst the inverse of thew link function provides the
+linear predictor, whilst the inverse of the link function provides the
 reverse mapping. For example, count data are strictly non-negative
 integer values and are commonly modelled as a Poisson GLM/GAM using the
 natural log link function. On the log scale, the response can take any
@@ -454,41 +448,39 @@ distribution (for true proportions or other interval-bounded data).
 
 \subsection{Basis functions}\label{basis-functions}
 
-It is clear from the plots of the data that we require the fitted trends
-for the Small Water δ\textsuperscript{15}N and Braya-Sø \uk{} time
-series to be non-linear functions, but it is less clear how to specify
-the actual shape require. Ideally, we'd like to learn the shape of the
-trend from the data themselves. We will refer to these non-linear
-functions as \emph{smooth functions}, or just \emph{smooths} for short,
-and we will denote a smooth using \(f(x_t)\). Further, we would like to
-represent the smooths in a way that \eqref{eq:gam} is represented
-parametrically so that it can be estimate within the well-studied GLM
-framework. This is achieved by representing the smooth using a
-\emph{basis}. A basis is a set of functions that collectively span a
-space of smooths that, we hope, contains the true \(f(x_t)\) or a close
-approximation to it. The functions in the basis are known as \emph{basis
-functions}, and arise from a \emph{basis expansion} of a covariate.
-Writing \(b_j(x_t)\) as the \(j\)th basis function of \(x_t\), the
-smooth \(f(x_t)\) can be represented as a weighted sum of basis
-functions
+It is clear from the plots of the data (Figure~\ref{fig:data-figure})
+that we require the fitted trends for the Small Water
+δ\textsuperscript{15}N and Braya-Sø \uk{} time series to be non-linear
+functions, but it is less clear how to specify the actual shape require.
+Ideally, we'd like to learn the shape of the trend from the data
+themselves. We will refer to these non-linear functions as \emph{smooth
+functions}, or just \emph{smooths} for short, and we will denote a
+smooth using \(f(x_t)\). Further, we would like to represent the smooths
+in a way that \eqref{eq:gam} is represented parametrically so that it
+can be estimate within the well-studied GLM framework. This is achieved
+by representing the smooth using a \emph{basis}. A basis is a set of
+functions that collectively span a space of smooths that, we hope,
+contains the true \(f(x_t)\) or a close approximation to it. The
+functions in the basis are known as \emph{basis functions}, and arise
+from a \emph{basis expansion} of a covariate. Writing \(b_j(x_t)\) as
+the \(j\)th basis function of \(x_t\), the smooth \(f(x_t)\) can be
+represented as a weighted sum of basis functions
 
 \begin{equation*}
 f(x_t) = \sum_{j = 1}^{k} b_j(x_t) \beta_j \,,
 \end{equation*}
 
 where \(\beta_j\) is the weight applied to the \(j\)th basis function.
-Note that here we concern ourselves only with univariate smooths
-involving a single covariate, the time variable \(x_t\).
 
-The polynomial model we encountered earlier is an example of a
-statistical model that uses a basis expansion. For the cubic polynomial
-(\(P = 3\)) fit shown in Figure \ref{fig:polynomial-example-plot} there
-are in fact 4 basis functions: \(b_1(x_t) = x_t^0 = 1\),
-\(b_2(x_t) = x_t\), \(b_3(x_t) = x^2_t\), and \(b_4(x_t) = x_t^3\). Note
-that \(b_1(x_t)\) is constant and is linked to the model intercept,
-\(\beta_0\), in the linear model \eqref{eq:polynomial-model}, and
-further, that the weights are the estimated coefficients in the model,
-the \(\beta_j\).
+The polynomial model is an example of a statistical model that uses a
+basis expansion. For the cubic polynomial (\(P = 3\)) fit shown in
+Figure \ref{fig:polynomial-example-plot} there are in fact 4 basis
+functions: \(b_1(x_t) = x_t^0 = 1\), \(b_2(x_t) = x_t\),
+\(b_3(x_t) = x^2_t\), and \(b_4(x_t) = x_t^3\). Note that \(b_1(x_t)\)
+is constant and is linked to the model intercept, \(\beta_0\), in the
+linear model \eqref{eq:polynomial-model}, and further, that the basis
+function weights are the estimated coefficients in the model, the
+\(\beta_j\).
 
 As we have already seen, polynomial basis expansions do not necessarily
 lead to well-fitting models unless the true function \(f\) is itself a
@@ -506,12 +498,12 @@ addition, I also discuss two special types of spline basis, an adaptive
 spline basis and a Gaussian process spline basis.
 
 A cubic spline is a smooth curve comprised of sections of cubic
-polynomials (\(P = 3\)), where the sections are joined together at some
-specified locations --- known as \emph{knots} --- in such a way that at
-the joins, the two sections of cubic polynomial that meet have the same
-value as well as the same first and second derivative. These properties
-mean that the sections join smoothly and differentiably at the knots
-(Wood, 2017, 5.3.1).
+polynomials, where the sections are joined together at some specified
+locations --- known as \emph{knots} --- in such a way that at the joins,
+the two sections of cubic polynomial that meet have the same value as
+well as the same first and second derivative. These properties mean that
+the sections join smoothly and differentiably at the knots (Wood, 2017,
+5.3.1).
 
 \begin{figure}
 
@@ -540,15 +532,15 @@ parametrization, the \(j\)th basis function takes a value of 1 at the
 \(j\)th knot and at all other knots a value of 0.
 
 To estimate a model using this basis expansion each basis function forms
-a column in the model matrix \(\boldsymbol{X}\) and the weights
-\(\beta_j\) can be found using least squares regression (assuming a
-Gaussian response). Note that in order to estimate a coefficient for
-each basis function the model has to be fitted without an intercept
-term. In practice we would include an intercept term in the model and
-therefore the basis functions are modified via an identifiability
-constraint. This has the effect of making the basis orthogonal to the
-intercept but results in more complicated basis functions than those
-shown in in Figure \ref{fig:basis-function-example-plot}a.
+a column in the model matrix \textbf{X} and the weights \(\beta_j\) can
+be found using least squares regression (assuming a Gaussian response).
+Note that in order to estimate a coefficient for each basis function the
+model has to be fitted without an intercept term. In practice we would
+include an intercept term in the model and therefore the basis functions
+are modified via an identifiability constraint (@ Wood, 2017). This has
+the effect of making the basis orthogonal to the intercept but results
+in more complicated basis functions than those shown in in Figure
+\ref{fig:basis-function-example-plot}a.
 
 Having estimated the weight for each basis function, the \(j\)th basis
 function \(b_j\) is scaled (weighted) by its coefficient \(\beta_j\).
@@ -568,18 +560,18 @@ more variables, leading to smooth interactions between covariates.
 However, thin plate splines have one key disadvantage over CRS; thin
 plate splines have as many unknown parameters as there are unique
 combinations of covariate values in a data set (Wood, 2017, 5.5.1). It
-is unlikely in the extreme that any real data problem would involve
-functions of such complexity that they require as many basis functions
-as data. It is much more likely that the true functions that we attempt
-to estimate are far simpler than the set of functions representable by 1
-basis function per unique data value. From a practical point of view, it
-is also highly inefficient to carry around all these basis functions
-whilst model fitting, and the available computational resources would
-become quickly exhausted for large time series with many observations.
+is unlikely that any real data problem would involve functions of such
+complexity that they require as many basis functions as data. It is much
+more likely that the true functions that we attempt to estimate are far
+simpler than the set of functions representable by 1 basis function per
+unique data value. From a practical point of view, it is also highly
+inefficient to carry around all these basis functions whilst model
+fitting, and the available computational resources would become quickly
+exhausted for large time series with many observations.
 
-To address this issue, thin plate regression splines (TPRS) have been
-suggested which truncate the space of the thin plate spline basis to
-some lower number of basis functions whilst preserving much of the
+To address this issue low rank thin plate regression splines (TPRS) have
+been suggested which truncate the space of the thin plate spline basis
+to some lower number of basis functions whilst preserving much of the
 advantage of the original basis as an optimally-fitting spline (Wood,
 2003). A rank 7 TPRS basis (i.e.~one containing 7 basis functions) is
 shown in Figure \ref{fig:basis-function-example-plot}c for the Small
@@ -603,10 +595,10 @@ data sets. For data sets of similar size to the two examples used here,
 the additional computational effort required to set up the TPRS basis
 over the CRS basis will not be noticeable. For highly resolved series
 containing more than \textasciitilde{}1000 observations the truncation
-may be too costly computationally. In such instances, little is lost by
-moving to the CRS basis, with the same number of knots as the rank of
-the desired TPRS, with the benefit of considerably reduced set up time
-for the basis.
+may be costly computationally. In such instances, little is lost by
+moving to the CRS basis with the same number of knots as the rank of the
+desired TPRS, with the benefit of considerably reduced set up time for
+the basis.
 
 To fit a GAM using either of the two regression spline bases described
 above, the analyst is generally only required to the specify the size
@@ -619,35 +611,35 @@ constraint on the upper limit of the size of basis expansion that can be
 used.
 
 In practice, the size of the basis is an upper limit on the expected
-complexity of the trend, and a simple test is available to check if the
-basis used was sufficiently large (Pya and Wood, 2016). This test is
-available via the \texttt{gam.check()} function in \emph{mgcv} for
-example, which essentially looks at whether there is any additional
-nonlinearity or structure in the residuals that can be explained by a
-further smooth of \(x_t\). Should a smooth term in the fitted model fail
-this test the model can be refitted using a larger basis expansion, say
-by doubling the value of \emph{k} (the rank) used to fit the original.
-Note also that a smooth might fail this test whilst using fewer
-effective degrees of freedom than the maximum possible for the dimension
-of basis used. This may happen when the true function lies at the upper
-limit of the set of functions encompassed by the size of basis used.
-Additionally, a basis of size \(2k\) encompasses a richer space of
-functions of a given complexity than a basis of size \(k\) (Wood, 2017);
-increasing the basis dimension used to fit the model may unlock this
-additional function space resulting in a better fitting model whilst
-using a similar number of effective degrees of freedom.
+complexity of the trend, and a simple test to check if the basis used
+was sufficiently large (Pya and Wood, 2016). This test is available via
+the \texttt{gam.check()} function in \emph{mgcv} for example, which
+essentially looks at whether there is any additional nonlinearity or
+structure in the residuals that can be explained by a further smooth of
+\(x_t\). Should a smooth term in the fitted model fail this test the
+model can be refitted using a larger basis expansion, say by doubling
+the value of \emph{k} (the rank) used to fit the original. Note also
+that a smooth might fail this test whilst using fewer effective degrees
+of freedom than the maximum possible for the dimension of basis used.
+This may happen when the true function lies at the upper limit of the
+set of functions encompassed by the size of basis used. Additionally, a
+basis of size \(2k\) encompasses a richer space of functions of a given
+complexity than a basis of size \(k\) (Wood, 2017); increasing the basis
+dimension used to fit the model may unlock this additional function
+space resulting in a better fitting model whilst using a similar number
+of effective degrees of freedom.
 
 \subsection{Smoothness selection}\label{smoothness-selection}
 
-Having identified regression splines as a useful way to represent \(f\),
-we next need a way to decide how wiggly the fitted trend should be. A
-backwards elimination approach to sequentially remove knots or basis
-functions might seem appropriate, however such an approach would likely
-fail as the resulting sequence of models would not be strictly nested,
-precluding many forms of statistical comparison (Wood, 2017).
-Alternatively, we could keep the basis dimension at a fixed size but
-guard against fitting very complex models through the use of a
-wiggliness penalty.
+Having identified low rank regression splines as a useful way to
+represent \(f\), we next need a way to decide how wiggly the fitted
+trend should be. A backwards elimination approach to sequentially remove
+knots or basis functions might seem appropriate, however such an
+approach would likely fail as the resulting sequence of models would not
+be strictly nested, precluding many forms of statistical comparison
+(Wood, 2017). Alternatively, we could keep the basis dimension at a
+fixed size but guard against fitting very complex models through the use
+of a wiggliness penalty.
 
 The default wiggliness penalty used in GAMs is on the second derivative
 of the spline, which measures the rate of change of the slope, or the
@@ -738,7 +730,7 @@ smoothness selection is used throughout unless otherwise stated.
 
 \subsection{Small Water}\label{small-water}
 
-The trend in δ\textsuperscript{15}N values is clearly non-linear and it
+The trend in δ\textsuperscript{15}N values is clearly non-linear but it
 would be difficult to suggest a suitable polynomial model that would
 allow for periods of relatively no change in δ\textsuperscript{15}N as
 well as rapid change. Instead, a GAM is ideally suited to modelling such
@@ -752,25 +744,24 @@ series.
 y_t = \beta_0 + f(x_t) + \varepsilon, \quad \varepsilon_t \sim \mathcal(0, \boldsymbol{\Lambda}\sigma^2)
 \end{equation}
 
-Note that now I have relaxed the i.i.d. assumption and have introduced
-\(\boldsymbol{\Lambda}\), a correlation matrix that is used to model
+Now the i.i.d. assumption has been relaxed and a correlation matrix,
+\(\boldsymbol{\Lambda}\), has been introduced that is used to model
 autocorrelation in the residuals. The δ\textsuperscript{15}N values are
 irregularly spaced in time and a correlation structure that can handle
-the uneven spacing of the samples is needed (Pinheiro and Bates, 2000).
-A continuous time first-order autoregressive process (CAR(1)) is a
-reasonable choice; it is the continuous-time equivalent of the
-first-order autoregressive process (AR(1)) and, simply stated, models
-the correlation between any two residuals as and exponentially
-decreasing function of \(h\) (\(\phi^h\)), where \(h\) is the amount of
-separation in time between the residuals (Pinheiro and Bates, 2000).
-\(h\) may be a real valued number in the CAR(1), which is how it can
-accommodate the irregular separation of samples in time. \(\phi\)
-controls how quickly the correlation between any two residuals declines
-as a function of their separation in time and is an additional parameter
-that will be estimated during model fitting. The model in
-\eqref{eq:small-gam} was fitted using the \texttt{gamm()} function
-(Wood, 2004) in the \emph{mgcv} package (Wood, 2017) for R (R Core Team,
-2017).
+the uneven spacing is needed (Pinheiro and Bates, 2000). A continuous
+time first-order autoregressive process (CAR(1)) is a reasonable choice;
+it is the continuous-time equivalent of the first-order autoregressive
+process (AR(1)) and, simply stated, models the correlation between any
+two residuals as an exponentially decreasing function of \(h\)
+(\(\phi^h\)), where \(h\) is the amount of separation in time between
+the residuals (Pinheiro and Bates, 2000). \(h\) may be a real valued
+number in the CAR(1), which is how it can accommodate the irregular
+separation of samples in time. \(\phi\) controls how quickly the
+correlation between any two residuals declines as a function of their
+separation in time and is an additional parameter that will be estimated
+during model fitting. The model in \eqref{eq:small-gam} was fitted using
+the \texttt{gamm()} function (Wood, 2004) in the \emph{mgcv} package
+(Wood, 2017) for R (R Core Team, 2017).
 
 \begin{figure}
 
@@ -810,10 +801,10 @@ resulted in the same fitted trend as the GAM with CAR(1) errors (not
 shown), whilst using GCV smoothness selection resulted in a much more
 satisfactory fitted trend. There are two potential problems with the
 GCV-selected trend: i) GCV is sensitive to the profile of the GCV score
-and has been shown to badly under smooth data in situations where the
-profile is flat around the minimum GCV score, and ii) the model fitted
-assumes that the observations are independent, an assumption that is
-certainly violated in the \uk{} time series.
+and has been shown to under smooth data in situations where the profile
+is flat around the minimum GCV score, and ii) the model fitted assumes
+that the observations are independent, an assumption that is certainly
+violated in the \uk{} time series.
 
 To investigate the first issue, the GCV and REML scores for an
 increasing sequence of values of the smoothness parameter (\(\lambda\))
@@ -823,11 +814,7 @@ were evaluated for the standard GAM (equation \eqref{eq:gam}) fit to the
 parameter shown by the vertical line. The GCV score profile suggests
 that the potential for under smoothing identified by Reiss and Ogden
 (2009) is unlikely to apply here as there is a well-defined minimum in
-profile. Addressing the violation of the independence assumption is more
-difficult; the standard errors of the model coefficients are most likely
-anti-conservative, which presents a significant problem if we wish to
-determine which of the wiggles in the fitted \uk{} trend can be
-identified as real.
+profile.
 
 To understand the reason why the GAM plus CAR(1) and the simple GAM with
 REML smoothness selection performed poorly with the \uk{} time series we
@@ -845,7 +832,8 @@ these two models.
 
 The primary issue leading to poor fit is that neither model accounts for
 the different variance (known as (heteroscedasticity) of each
-observation in the \uk{} record. The sediments in Braya-Sø are not
+observation in the \uk{} record. This seemingly isn't a problem for GCV
+which minimizes prediction error. The sediments in Braya-Sø are not
 annually laminated and therefore the core was sliced at regular depth
 intervals. Owing to compaction of older sediments and variation in
 accumulation rates over time, each sediment slice represents a different
@@ -872,7 +860,7 @@ A secondary problem is the size of the basis dimension used for the time
 variable. The main user selectable option when fitting a GAM in the
 penalised likelihood framework of Wood (2004) is how many basis
 functions to use. As described above, the basis should be large enough
-to contain the true, but unknown, function, or a close approximation to
+to contain the true, but unknown, function or a close approximation to
 it. For GCV selection the basis used contained 29 basis functions,
 whilst the CAR(1) model with REML smoothness selection would only
 converge with a basis containing 20 functions. The size of the basis
@@ -881,29 +869,29 @@ Wood (2011) REML smoothness selection is preferred. Using the test of
 Pya and Wood (2016), the basis dimension for the models with REML
 smoothness selection was too small. To proceed therefore, we must drop
 the CAR(1) term and increase the basis dimension to 39 functions (by
-setting \texttt{k\ =\ 40}; I set it larger than expected wiggliness
-because the larger basis contains a richer family of functions and the
-excess complexity is reduced because of the smoothness penalty in play.)
+setting \texttt{k\ =\ 40}; I set it larger than expected because the
+larger basis contains a richer family of functions and the excess
+complexity is reduced because of the smoothness penalty.)
 
 With the larger basis dimension and accounting for the non-constant
 variance of the observations via weights, the model fitted using REML is
 indistinguishable from that obtained using GCV (Figure
 \ref{fig:plot-fitted-models}b). The trace of the REML score for this
-model (Figure \ref{fig:trace-smoothness-parameters}c) shows a pronounced
-minimum at a much smaller value of \(\lambda\) than the original REML
-fit (Figure \ref{fig:trace-smoothness-parameters}b), indicating that a
-more wiggly trend provides a better fit to the Braya-Sø time series.
-This example illustrates that some care and understanding of the
-underlying principles of GAMs is required to diagnose potential issues
-with the estimated model. After standard modelling choices (size of
-basis to use, correct selection of response distribution and link
-function, etc.) are checked, it often pays to think carefully about the
-properties of the data and ensure that the assumptions of the model are
-met. Here, despite increasing the basis size, it was the failure to
-appreciate the magnitude of the effect on fitting of the non-constant
-variance that lead to the initially poor fit and the problems associated
-with the estimation of the CAR(1) process. I return to the issue of why
-the GAM plus CAR(1) model encountered problems during fitting later
+model shows a pronounced minimum at a much smaller value of \(\lambda\)
+than the original REML fit (Figure
+\ref{fig:trace-smoothness-parameters}), indicating that a more wiggly
+trend provides a better fit to the Braya-Sø time series. This example
+illustrates that some care and understanding of the underlying
+principles of GAMs is required to diagnose potential issues with the
+estimated model. After standard modelling choices (size of basis to use,
+correct selection of response distribution and link function, etc.) are
+checked, it often pays to think carefully about the properties of the
+data and ensure that the assumptions of the model are met. Here, despite
+increasing the basis size, it was the failure to appreciate the
+magnitude of the effect on fitting of the non-constant variance that
+lead to the initially poor fit and the problems associated with the
+estimation of the CAR(1) process. I return to the issue of why the GAM
+plus CAR(1) model encountered problems during fitting later
 (\protect\hyperlink{identifiability}{see Identifiability}).
 
 \hypertarget{confints}{\subsection{Confidence intervals and uncertainty
@@ -921,25 +909,24 @@ confidence interval around the fitted trend, where \(\alpha\) is say
 normal distribution, and \(\text{SE}(\hat{y}_t)\) is the standard error
 of the estimated trend at time \(x_t\). This type of confidence interval
 would normally be described as \emph{pointwise}; the coverage properties
-of the interval are correct for a single point on the fitted trend, but,
-if we were to consider additional points on the trend, the coverage
+of the interval being correct for a single point on the fitted trend,
+but, if we were to consider additional points on the trend, the coverage
 would logically be lower than 1 - \(\alpha\). This is the traditional
-frequentist interpretation of a confidence interval. However, the
-approach to fitting GAMs described here has a Bayesian interpretation
-(Kimeldorf and Wahba, 1970; Silverman, 1985; Wahba, 1983, 1990) and
-therefore the typical frequentist interpretation does not apply. Nychka
-(1988) investigated the properties of a confidence interval created as
-described above using standard errors derived from the Bayesian
-posterior covariance matrix for the estimated mode parameters. Such
-intervals have the interesting property that they have good
-\emph{across-the-function} coverage when considered from a frequentist
-perspective. This means that, when averaged over the range of the
-function, the Bayesian credible intervals shown in Figure
-\ref{fig:plot-fitted-models} have close to the expected 95\% coverage.
-However, to achieve this some parts of the function may have more or
-less than 95\%-coverage. Marra and Wood (2012) recently explained
-Nychka's (1988) surprising results and extended them to the case of
-generalized models (non-Gaussian responses).
+frequentist interpretation of a confidence interval. However, the GAM
+described here has a Bayesian interpretation (Kimeldorf and Wahba, 1970;
+Silverman, 1985; Wahba, 1983, 1990) and therefore the typical
+frequentist interpretation does not apply. Nychka (1988) investigated
+the properties of a confidence interval created as described above using
+standard errors derived from the Bayesian posterior covariance matrix
+for the estimated mode parameters. Such intervals have the interesting
+property that they have good \emph{across-the-function} coverage when
+considered from a frequentist perspective. This means that, when
+averaged over the range of the function, the Bayesian credible intervals
+shown in Figure \ref{fig:plot-fitted-models} have close to the expected
+95\% coverage. However, to achieve this some parts of the function may
+have more or less than 95\%-coverage. Marra and Wood (2012) recently
+explained Nychka's (1988) surprising results and extended them to the
+case of generalized models (non-Gaussian responses).
 
 \begin{figure}
 
@@ -950,14 +937,13 @@ generalized models (non-Gaussian responses).
 \caption{Estimated trends (thick black lines) and 20 random draws (grey lines) from the posterior distribution of the GAM fitted to the Small Water $\delta^{15}\text{N}$ (a) and Braya-Sø \uk{} (b) time series.}\label{fig:posterior-simulation}
 \end{figure}
 
-Whilst the \emph{across-the-function} or average coverage frequentist
-interpretation of the Bayesian credible intervals is useful, if may be
-important to have an interval that contains the entirety of the true
-function with some state probability (1 - \(\alpha\)). Such an interval
-is known as a \emph{simultaneous} interval. A (1 - \(\alpha\))100\%
-\emph{simultaneous} confidence interval contains \emph{in their
-entirety} 1 - \(\alpha\) of all random draws from the posterior
-distribution of the fitted model.
+Whilst the \emph{across-the-function} frequentist interpretation of the
+Bayesian credible intervals is useful, if may be important to have an
+interval that contains the entirety of the true function with some state
+probability (1 - \(\alpha\)). Such an interval is known as a
+\emph{simultaneous} interval. A (1 - \(\alpha\))100\% simultaneous
+confidence interval contains \emph{in their entirety} 1 - \(\alpha\) of
+all random draws from the posterior distribution of the fitted model.
 
 Fitting a GAM involves finding estimates for coefficients of the basis
 functions. Together, these coefficients are distributed multivariate
@@ -965,7 +951,7 @@ normal with mean vector and covariance matrix specified by the model
 estimates of the coefficients and their covariances respectively. Random
 draws from this distribution can be taken, where each random draw
 represents a new trend that is consistent with the fitted trend but also
-includes the uncertainty in the estimated trend. This process is known
+reflects the uncertainty in the estimated trend. This process is known
 as \emph{posterior simulation}.
 
 Figure \ref{fig:posterior-simulation} shows 20 random draws from the
@@ -991,8 +977,9 @@ constrained with the ends of the record in particular showing
 considerable variation in the strength, timing, and even sign of
 simulated trends, reflecting the greater uncertainty in estimated trend
 during these periods. For the random draws illustrated in Figure
-\ref{fig:posterior-simulation}, a simultaneous interval should contain
-the entire function for on average 19 of the 20 draws.
+\ref{fig:posterior-simulation}, a (1 - \(\alpha\))100\% simultaneous
+interval should contain the entire function for on average 19 of the 20
+draws.
 
 There are a number of ways in which a simultaneous interval can be
 computed. Here I follow the simulation approach described by Ruppert et
@@ -1080,27 +1067,27 @@ fitted trend in the Small Water (\ref{fig:derivatives}a) and Braya-Sø
 suggests a slight increase in δ\textsuperscript{15}N from the start of
 the record to \textasciitilde{}1940, the estimated trend is sufficiently
 uncertain that the simultaneous interval on the first derivative
-includes 0 throughout this period. We can understand why this is so by
-looking at the posterior simulations in
-Figure~\ref{fig:posterior-simulation}a; there is considerable variation
-in the shape of the simulated trends throughout this period. From
-\textasciitilde{}1925 the derivative of the trend becomes negative,
-however it is not until \textasciitilde{}1940 that the simultaneous
-interval doesn't include \(0\). At this point we have evidence to reject
-the null hypothesis of no change. This time point may be taken as the
-first evidence for change in δ\textsuperscript{15}N in the Small Water
-core. The simultaneous interval on the first derivative of the trend in
-δ\textsuperscript{15}N is bounded away from \(0\) between
-\textasciitilde{}1940 and \textasciitilde{}1975, covering the major
-decline in values evident in the observations. The simultaneous interval
-includes \(0\) from \textasciitilde{}1975 onward, suggesting that,
-whilst quite pronounced, the recent increase in δ\textsuperscript{15}N
-is not statistically significant. To determine whether or not the recent
-increase is real, we would require considerably more samples with which
-to (hopefully) more-precisely estimate the trend during this period.
-Alternatively, we might just have to wait until sufficient additional
-sedimentation has occurred to warrant recoring Small Water and
-reestimating the trend in δ\textsuperscript{15}N.
+includes 0 throughout. We can understand why this is so by looking at
+the posterior simulations in Figure~\ref{fig:posterior-simulation}a;
+there is considerable variation in the shape of the simulated trends
+throughout this period. From \textasciitilde{}1925 the derivative of the
+trend becomes negative, however it is not until \textasciitilde{}1940
+that the simultaneous interval doesn't include \(0\). At this point we
+have evidence to reject the null hypothesis of no change. This time
+point may be taken as the first evidence for change in
+δ\textsuperscript{15}N in the Small Water core. The simultaneous
+interval on the first derivative of the trend in δ\textsuperscript{15}N
+is bounded away from \(0\) between \textasciitilde{}1940 and
+\textasciitilde{}1975, covering the major decline in values evident in
+the observations. The simultaneous interval includes \(0\) from
+\textasciitilde{}1975 onward, suggesting that, whilst quite pronounced,
+the recent increase in δ\textsuperscript{15}N is not statistically
+significant. To determine whether or not the recent increase is real, we
+would require considerably more samples with which to (hopefully)
+more-precisely estimate the trend during this period. Alternatively, we
+might just have to wait until sufficient additional sedimentation has
+occurred to warrant recoring Small Water and reestimating the trend in
+δ\textsuperscript{15}N.
 
 The estimated trend at Braya-Sø exhibited a number of oscillations in
 \uk{}. As we saw previously in Figures~\ref{fig:posterior-simulation}b
@@ -1141,7 +1128,7 @@ the parameter \(\phi\). The estimated value of \(\phi\) for the
 0.28--0.85, indicating moderate to strong residual autocorrelation about
 the fitted trend. The correlation function is an exponentially
 decreasing function of temporal separation (\(\Delta_t\)), and whilst
-observations that are a few year apart are quite strongly dependent on
+observations that are a few years apart are quite strongly dependent on
 one another, this dependence drops off rapidly as \(\Delta_t\) increases
 and is effectively zero when samples are separated by a decade or more
 (Figure~\ref{fig:car1-plot}).
@@ -1149,7 +1136,7 @@ and is effectively zero when samples are separated by a decade or more
 Failure to account for the dependencies in the δ\textsuperscript{15}N
 time series could lead to the estimation of a more wiggly trend than the
 one shown in Figure \ref{fig:plot-fitted-models}a which would negatively
-impact the confidence place on the inferences we might draw from the
+impact the confidence placed on the inferences we might draw from the
 fitted model. Importantly, failing to account for the strong dependency
 in the residuals would lead to smaller uncertainties in the estimated
 spline coefficients, which would propagate through to narrower
@@ -1170,10 +1157,10 @@ of false positive results.
 \end{figure}
 
 Problems estimating the GAM plus CAR(1) model were encountered when this
-was fitted to the \uk{} time series; both a smooth trend in the mean
-\uk{} and a CAR(1) process in the residuals lead to an unidentifiable
-model. What makes a model with a spline-based trend and an
-autocorrelation process like the CAR(1) potentially unidentifiable?
+was fitted to the \uk{} time series; including both a smooth trend in
+the mean \uk{} and a CAR(1) process in the residuals lead to an
+unidentifiable model. What makes a model with a spline-based trend and
+an autocorrelation process like the CAR(1) potentially unidentifiable?
 
 Consider again the basic GAM for a smooth trend,
 \eqref{eq:additive-model}. In that equation the correlation matrix
@@ -1220,8 +1207,8 @@ large (small) value at time \(x_{t+1}\). This leads to runs of values
 that are consistently greater (less) than the overall mean. Short runs
 would indicate weaker autocorrelation whilst longer runs are associated
 with stronger autocorrelation, and long runs of values greater (less)
-than the mean would evident as non-linear trends in the time series. As
-a result, a wiggly trend and an autocorrelation function with large
+than the mean would be evident as non-linear trends in the time series.
+As a result, a wiggly trend and an autocorrelation function with large
 \(\phi\) are two ways to describe the same pattern of values in a time
 series, and without any further information to constrain either the
 model is unable to distinguish both components uniquely.
@@ -1251,24 +1238,10 @@ of spatial statistics, Gaussian processes are known by name
 
 With a Gaussian process we are interested in fitting a smooth temporal
 trend by modelling the way the correlation between pairs of observations
-varies as a function of the distance, \(h\), in time that separates
-(\(h\)) the observations. The correlation between pairs of observations
-decreases with increasing separation, which is modelled using a
-correlation function, \(c(h)\). Figure
-\ref{fig:gp-correlation-functions} shows examples of two different
-correlation functions; the \emph{power exponential} (Figure
-\ref{fig:gp-correlation-functions}a), and the Matérn (Figure
-\ref{fig:gp-correlation-functions}b) correlation functions. These
-functions are smooth and monotonic-decreasing, meaning that the value of
-the correlation function decreases with increasing separation (\(h\)).
-When \(h\) = 0, the correlation is equal to 1 (\(c(0) = 1\)); two
-samples taken at exactly the same time point are perfectly correlated.
-As \(h \rightarrow \infty\), the correlation tends to zero
-(\(c(h) \rightarrow 0\)); two samples separated by a large amount of
-time tend to be uncorrelated. Often we are interested in learning how
-large the separation in time needs to be before, on average, a pair of
-observations is effectively uncorrelated (i.e.~where \(c(h)\) is
-sufficiently close to zero).
+varies as a function of the distance, \(h\), in time that separates the
+observations. The correlation between pairs of observations decreases
+with increasing separation, which is modelled using a correlation
+function, \(c(h)\).
 
 \begin{figure}
 
@@ -1303,32 +1276,48 @@ distance beyond which the correlation function is effectively zero.
 \caption{Gaussian process smooths fitted to the \uk{} time series. REML score traces for GAMs fitted using power exponential ($\kappa = 1$) or Matérn ($\kappa = 1.5$) correlation functions as a function of the effective range parameter ($\phi$) are shown (a). The optimal model for each function is that with the lowest REML score. b) shows the resulting trends estimated using the respective correlation function with the value of $\phi$ set to the optimal value.}\label{fig:gp-gam-detail-plot}
 \end{figure}
 
+Figure \ref{fig:gp-correlation-functions} shows examples of two
+different correlation functions; the \emph{power exponential} (Figure
+\ref{fig:gp-correlation-functions}a), and the Matérn (Figure
+\ref{fig:gp-correlation-functions}b) correlation functions. These
+functions are smooth and monotonic-decreasing, meaning that the value of
+the correlation function decreases with increasing separation (\(h\)).
+When \(h\) = 0, the correlation is equal to 1 (\(c(0) = 1\)); two
+samples taken at exactly the same time point are perfectly correlated.
+As \(h \rightarrow \infty\), the correlation tends to zero
+(\(c(h) \rightarrow 0\)); two samples separated by a large amount of
+time tend to be uncorrelated. Often we are interested in learning how
+large the separation in time needs to be before, on average, a pair of
+observations is effectively uncorrelated (i.e.~where \(c(h)\) is
+sufficiently close to zero).
+
 Gaussian processes and GAMs share many similarities and we can fit a
 Gaussian process using the techniques already described above for
 splines (Handcock et al., 1994; Kammann and Wand, 2003). It can be shown
-(e.g. Fahrmeir et al., 2013 section/pages) that the Gaussian process
-model has the same penalised likelihood form as the GAM that we
-discussed earlier; the observations are the knots of the smoother and
-each has a basis function in the form of a correlation function. The
-equivalence is only true if the basis functions do not depend on any
-other parameters of the model, which is only achievable if the value of
-\(\phi\) is fixed and known (Fahrmeir et al., 2013). In general,
-however, we would like to estimate \(\phi\) as part of model fitting. To
-achieve this we can maximise the profile likelihood or score statistic
-of the model over a range of values of \(\phi\) (Wood, 2017, 362--363).
-This involves proposing a value of \(\phi\) for the effective range of
-the correlation function and then estimating the resulting GAM by
-minimising the penalised log-likehood conditional upon this value of
-\(\phi\). The model, and its corresponding value of \(\phi\), with
-lowest penalised log-likelihood or score statistic is then retained as
-the estimated GAM. Figure~\ref{fig:gp-gam-detail-plot}a shows the REML
-score for models estimated using a Gaussian process smooth with a Matérn
-correlation function (\(\kappa\) = 1.5) for a sequence of values of
-\(\phi\) between 15 and 1000 years. There is a clear minimum around 40
-years separation, with the minimum REML score being observed at
-\(\phi = 41.81)\). Also shown are the REML scores for models using the
-power exponential function (\(\kappa\) = 1) with the minimum score
-observed at a somewhat higher effective range of \(\phi = 71.06\).
+(e.g. Fahrmeir et al., 2013) that the Gaussian process model has the
+same penalised likelihood form as the GAM that we discussed earlier; the
+observations are the knots of the smoother and each has a basis function
+in the form of a correlation function. The equivalence is only true if
+the basis functions do not depend on any other parameters of the model,
+which is only achievable if the value of \(\phi\) is fixed and known
+(Fahrmeir et al., 2013). In general, however, we would like to estimate
+\(\phi\) as part of model fitting. To achieve this we can maximise the
+profile likelihood or score statistic of the model over a range of
+values of \(\phi\) (Wood, 2017, 362--363). This involves proposing a
+value of \(\phi\) for the effective range of the correlation function
+and then estimating the resulting GAM by minimising the penalised
+log-likehood conditional upon this value of \(\phi\) and repeating for a
+range of values for \(\phi\). The model, and its corresponding value of
+\(\phi\), with lowest penalised log-likelihood or score statistic is
+then retained as the estimated GAM. Figure~\ref{fig:gp-gam-detail-plot}a
+shows the REML score for models estimated using a Gaussian process
+smooth with a Matérn correlation function (\(\kappa\) = 1.5) for a
+sequence of values of \(\phi\) between 15 and 1000 years. There is a
+clear minimum around 40 years separation, with the minimum REML score
+being observed at \(\phi = 41.81)\). Also shown are the REML scores for
+models using the power exponential function (\(\kappa\) = 1) with the
+minimum score observed at a somewhat higher effective range of
+\(\phi = 71.06\).
 
 Figure \ref{fig:gp-gam-detail-plot}b shows the estimated trends for the
 \uk{} time series using Gaussian process smooths with exponential and
@@ -1361,12 +1350,12 @@ Each of the spline types that I have discussed so far share a common
 feature; the degree of wiggliness over the time series is fixed due to
 the use of a single smoothness parameter, \(\lambda\). The definition of
 wiggliness, as the integrated squared second derivative of the spline,
-ensures that fitted smoother does not jump about wildly. This assumes
-that the data themselves are well described by a smoothly varying trend.
-If we anticipate abrupt change or step-like responses to environmental
-forcing this underlying assumption of the GAM would suggest that the
-method is ill-suited to modelling palaeo time series in which such
-features are evident or expected.
+ensures that the fitted smoother does not jump about wildly. This
+assumes that the data themselves are well described by a smoothly
+varying trend. If we anticipate abrupt change or step-like responses to
+environmental forcing this underlying assumption of the GAM would
+suggest that the method is ill-suited to modelling palaeo time series in
+which such features are evident or expected.
 
 While there is not much we can do within the GAM framework to model a
 series that contains both smooth trends and step-like responses, an
@@ -1378,7 +1367,7 @@ series. This adaptive behaviour is achieved by making the smoothness
 parameter \(\lambda\) itself depend smoothly on \(x_t\) (Ruppert et al.,
 2003, 17; Wood, 2017, 5.3.5); in other words, the adaptive smoother
 allows the wiggliness of the estimated trend to vary smoothly over time.
-Whilst this does allow the estimated trend to adapt to periods of rapid
+Whilst this allows the estimated trend to adapt to periods of rapid
 change in the response, adaptive smoothers make significant demands on
 the data (Wood, 2017, 5.3.5); if we used \(m\) smoothness penalties to
 allow the wiggliness to vary over a time series, it would be like
@@ -1422,16 +1411,16 @@ also a plausible explanation of the data. The trend estimated using the
 adaptive smooth reflects this. Therefore, should we conclude that there
 is no trend in \uk{} and thence climate in this period? I believe that
 to be too-strong a statement; those oscillations in \uk{} may be real
-responses to climate forcing but we may simply lack the statistical
-power to distinguish them from the null hypothesis of no trend through
-this period. The adaptive smoother is only adjusting to the data
-available to it; just because it does not detect a trend during this
-period does not lend itself to an interpretation of stable climate
-forcing or complacency in the lake's response to forcing. If there were
-particular interest in the climate of this particular period we might
-take from the Braya-Sø record that there is potential early variation in
-climate forcing, but that additional data from this or other sites is
-required before any definitive conclusion can be drawn.
+responses to climate forcing but may simply lack the statistical power
+to distinguish them from the null hypothesis of no trend through this
+period. The adaptive smoother is only adjusting to the data available to
+it; just because it does not detect a trend during this period does not
+lend itself to an interpretation of stable climate forcing or
+complacency in the lake's response to forcing. If there were particular
+interest in the climate of this particular period we might take from the
+Braya-Sø record that there is potential early variation in climate
+forcing, but that additional data from this or other sites is required
+before any definitive conclusion can be drawn.
 
 \subsection{Accounting for age model
 uncertainty}\label{accounting-for-age-model-uncertainty}
@@ -1471,11 +1460,11 @@ additive model fitted to the observations, with prior weights given by
 the estimated age uncertainties. The fitted age-depth model is
 constrained to be monotonically decreasing with increasing depth,
 following the method of (Pya and Wood, 2015) using the \emph{scam}
-package (Pya, 2017). Also shown are 25 simulations from the model
-posterior of the monotonically-constrained GAM. Each simulation from the
-posterior distribution of the age-model is itself a potential age-depth
-model, which can be used to assign dates to the Small Water core. The
-trend model in \eqref{eq:gam} can be fitted to the
+package (Pya, 2017). Also shown are 25 simulations from the posterior
+distribution of the monotonically-constrained GAM. Each simulation from
+the posterior distribution of the age-model is itself a potential
+age-depth model, which can be used to assign dates to the Small Water
+core. The trend model in \eqref{eq:gam} can be fitted to the
 δ\textsuperscript{15}N data using these new dates as \(x_t\), and the
 whole process repeated for a large number of simulations from the age
 model.
@@ -1518,7 +1507,7 @@ were univariate. Can the approach described here be used for
 multivariate data? Yes, and no. With one main exception it is not
 possible to directly apply the GAM methodology described here to
 multivariate abundance data, where the aim is to model all species at
-once. The \emph{mgcv} software for example, is not able to estimate the
+once. The \emph{mgcv} software, for example, is not able to estimate the
 penalized GAM for multiple non-Gaussian responses. The exception is for
 a small number of correlated Gaussian responses; these could be modelled
 as being distributed multivariate normal conditional upon the
@@ -1573,7 +1562,7 @@ correlations or simple linear regression models, where the assumptions
 of the method are often grossly violated by the dependencies inherent to
 time series data. GAMs, whilst similar to the popular \loess{} smoother,
 provide a superior alternative approach to trend estimation in
-palaeoenvironmental time series. They can estimate non-linear trends,
+palaeoenvironmental time series. GAMs can estimate non-linear trends,
 provide estimates of the magnitude of change as well as allow the
 identification of periods of change, can account for the lack of
 independence (either via autocorrelation processes or via the fitting of
@@ -1584,7 +1573,7 @@ In presenting the GAM with specific palaeoenvironmental examples and
 addressing the issues that arise in palaeoenvironmental time series, it
 is hoped that palaeoecologists and palaeolimnologists will be motivated
 to give greater consideration to the estimation of trends and the
-identification of change.
+identification of change in stratigraphic time series.
 
 \section*{Conflict of interest
 statement}\label{conflict-of-interest-statement}
@@ -1601,11 +1590,11 @@ The ideas expressed in this paper are the result of many fruitful
 conversations with colleagues at the Environmental Change Research
 Centre, UCL, and the University of Regina. In particular I am indebted
 to Helen Bennion, Rick Battarbee, and Peter Leavitt for their
-collaborations on projects over many years. Without Simon Wood's
-\emph{mgcv} software and his research on GAMs, the application of these
-models to palaeo time series would not be as straight forward. I also
-thank David Miller, Eric Pedersen, and Noam Ross, my GAM workshop
-partners in crime. This work was supported by a Natural Sciences and
+collaborations on projects over many years, and to David Miller, Eric
+Pedersen, and Noam Ross, my GAM workshop partners in crime. Without
+Simon Wood's \emph{mgcv} software and his research on GAMs, the
+application of these models to palaeo time series would not be as
+straight forward. This work was supported by a Natural Sciences and
 Engineering Council of Canada (NSERC) Discovery Grant to the author
 (RGPIN-2014-04032).
 
@@ -1847,6 +1836,11 @@ generalized additive modelling. \emph{ArXiv e-prints}.
 
 \hypertarget{ref-R-core-team}{}
 R Core Team (2017). \emph{R: A language and environment for statistical
+computing}. Vienna, Austria: R Foundation for Statistical Computing
+Available at: \url{https://www.R-project.org/}.
+
+\hypertarget{ref-Rcore}{}
+R Core Team (2018). \emph{R: A language and environment for statistical
 computing}. Vienna, Austria: R Foundation for Statistical Computing
 Available at: \url{https://www.R-project.org/}.
 
