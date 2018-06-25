@@ -864,8 +864,17 @@ plt3 <- ggplot(simSimulate, aes(x = Year, y = Trend, group = Group)) +
     geom_line(data = newYear, mapping = aes(x = Year, y = fit), inherit.aes = FALSE) +
     labs(x = "Year", y = d15n_label)
 
-plot_grid(plt1, plt2, plt3, ncol = 1, labels = "auto", align = "hv", axis = "lrtb",
-          rel_widths = c(0.5, 1, 1))
+## align all plots vertically
+plots <- align_plots(plt1, plt2, plt3, align = 'v', axis = 'l')
+
+
+## create the two rows of figures, from `plots`
+top_row <- plot_grid(plots[[1]], NULL, ncol = 2, labels = "a")
+bot_row <- plot_grid(plots[[2]], plots[[3]], ncol = 1, labels = c("b", "c"))
+
+## combine the two rows, top row has 1 row of plots, bottom row has 2, hence
+## the rel_heights to even this out
+plot_grid(top_row, bot_row, ncol = 1, rel_heights = c(0.5, 1))
 ```
 
 Figure \ref{fig:small-scam-fit-plots}a shows the estimated dates (in Years CE) for `r nrow(swAge)` levels in the Small Water core dated using ^210^Pb. The vertical bars show the estimated age uncertainty of each level. The solid line through the data points is an additive model fitted to the observations, with prior weights given by the estimated age uncertainties. The fitted age-depth model is constrained to be monotonically decreasing with increasing depth, following the method of [@Pya2015-wr] using the *scam* package [@pya-scam-pkg]. Also shown are 25 simulations from the posterior distribution of the monotonically-constrained GAM. Each simulation from the posterior distribution of the age-model is itself a potential age-depth model, which can be used to assign dates to the Small Water core. The trend model in \eqref{eq:gam} can be fitted to the δ^15^N data using these new dates as $x_t$, and the whole process repeated for a large number of simulations from the age model.
