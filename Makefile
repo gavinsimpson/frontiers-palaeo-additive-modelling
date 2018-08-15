@@ -36,3 +36,7 @@ script: manuscript.Rmd
 
 supplement:
 	Rscript -e "library(rmarkdown); render('supplementary-materials.Rmd')"
+
+preprint: manuscript.pdf supplementary-materials.pdf
+	pdfjam manuscript.pdf supplementary-materials.pdf -o preprint.pdf
+
