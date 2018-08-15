@@ -3,7 +3,7 @@ title: "Modelling palaeoecological time series using generalized additive models
 author: Gavin L. Simpson
 affiliation: "Institute of Environmental Change and Society, \\ University of Regina, Regina, Saskatchewan, Canada, S4S 0A2"
 mail: "gavin.simpson@uregina.ca"
-date: August 14, 2018
+date: August 15, 2018
 keywords: time series; generalized additive model; simultaneous interval; spline; environmental change 
 bibliography: references.bib
 csl: frontiers-in-ecology-and-evolution.csl
@@ -77,7 +77,16 @@ These are not the only methods that have been used to estimated trends in strati
 
 Here, I describe generalized additive models [GAMs; @Hastie1986-xs; @Hastie1990-bx; @Ruppert2003-pt; @Wood2017-qi; @Yee1991-mg] for trend estimation. GAMs, like simple linear regression, are a regression-based method for estimating trends, yet they are also, superficially at least, similar to \loess{}. GAMs and \loess{} estimate smooth, non-linear trends in time series and both can handle the irregular spacing of samples in time, yet GAMs do not suffer from the subjectivity that plagues \loess{} as a method of formal statistical inference.
 
-In the subsequent sections, I present an introduction to GAMs and discuss the issue of uncertainty in model-estimated trends, the topic of posterior simulation from a regression model and how to identify periods of significant environmental change using the first derivative of the estimated trend. Two non-standard types of spline --- adaptive smoothers and Gaussian process splines --- that are especially applicable to GAMs in the palaeoenvironmental setting are subsequently described, followed by an assessment of the the impact of age-model uncertainty on trend estimation via GAMs. Finally, I briefly discuss the application of GAM trend analysis to multivariate species abundance and compositional data.
+In the subsequent sections, I present an introduction to GAMs and discuss the issue of uncertainty in model-estimated trends, the topic of posterior simulation from a regression model and how to identify periods of significant environmental change using the first derivative of the estimated trend. The main steps in the analysis of palaeoenvironmental time series using GAMs are illustrated in Figure \ref{fig:flowchart}. Two non-standard types of spline --- adaptive smoothers and Gaussian process splines --- that are especially applicable to GAMs in the palaeoenvironmental setting are subsequently described, followed by an assessment of the the impact of age-model uncertainty on trend estimation via GAMs. Finally, I briefly discuss the application of GAM trend analysis to multivariate species abundance and compositional data.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.4\linewidth]{manual-figures/flow-diagram} 
+
+}
+
+\caption{Flowchart showing the main steps in the analysis of time series using generalized additive models.}\label{fig:flowchart}
+\end{figure}
 
 ## Example time series
 
