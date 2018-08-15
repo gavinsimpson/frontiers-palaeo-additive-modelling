@@ -3,7 +3,7 @@ title: "Supplementary materials for: Modelling palaeoecological time series usin
 author: Gavin L. Simpson
 affiliation: "Institute of Environmental Change and Society, \\ University of Regina, Regina, Saskatchewan, Canada, S4S 0A2"
 mail: "gavin.simpson@uregina.ca"
-date: August 14, 2018
+date: August 15, 2018
 keywords: time series; generalized additive model; simultaneous interval; spline; environmental change 
 bibliography: references.bib
 csl: frontiers-in-ecology-and-evolution.csl
