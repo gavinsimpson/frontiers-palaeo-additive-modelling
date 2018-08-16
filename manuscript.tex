@@ -59,7 +59,7 @@
 \affil[1]{Institute of Environmental Change and Society, ~University of Regina,
 Regina, Saskatchewan, Canada, S4S 0A2}
 
-\date{August 15, 2018}
+\date{August 16, 2018}
 
 %\setromanfont{Constantia}
 %\setromanfont{texgyrepagella.otf}
@@ -131,7 +131,7 @@ leading to more a robust and reproducible palaeoscience.
 
 Palaeoecology and palaeolimnology have moved away from being descriptive
 disciplines, rapidly adopting new statistical developments in the 1990s
-and beyond (@ Smol et al., 2012). Less development has been observed in
+and beyond (Smol et al., 2012). Less development has been observed in
 the area of trend estimation in palaeoenvironmental time series. The
 vast majority of data produced by palaeoecologists and
 palaeolimnologists is in the form of time-ordered observations on one or
@@ -154,7 +154,7 @@ impossible to apply because software typically requires even spacing of
 observations in time. Dutilleul et al. (2012) and Birks (2012a),
 eschewing the term \emph{time series}, prefer to call such data
 \emph{temporal series} on account of the irregular spacing of samples, a
-distinction that I find unnecessary.
+distinction that I find unnecessary, however.
 
 Where statistical approaches have been applied to trend estimation in
 palaeoenvironmental time series, a commonly-used method is \loess{}
@@ -162,27 +162,27 @@ palaeoenvironmental time series, a commonly-used method is \loess{}
 \loess{}, locally weighted scatterplot smoother, as it's name suggests,
 was developed to smooth x-y scatterplot data (Cleveland, 1979). The
 method fits a smooth line through data by fitting weighted least squares
-(WLS) models to observations within a particular, user-specified window
-of the focal point, whose width is typically expressed as a proportion
-\(\alpha\) of the \(n\) data points. Weights are determined by how close
-(in the x-axis only) an observation in the window is to the focal point
-giving greatest weight given to points closest to the focal point. The
-interim \loess{}-smoothed value for the focal point is the predicted
-value from the weighted regression at the focal point. The interim
-values are updated using weights based on how far in the y-axis
-direction the interim smoothed value lies from the observed value plus
-the x-axis distance weights; this has the effect of down-weighting
-outlier observations. The final \loess{} is obtained by joining the
-smoothed values. The user has to choose how large a window to use,
-whether to fit degree 1 (linear) or degree 2 (quadratic) polynomials in
-the WLS model, and how to weight points in the x-axis. When used in an
-exploratory mode, the user has considerable freedom to choose the detail
-of the \loess{} fit; the window width, for example, can be infinitely
-tweaked to give as close a fit to the data, as assessed by eye, as is
-desired. Using cross-validation (CV) to choose \(\alpha\) or the degree
-of polynomial in the WLS model is complicated for a number of reasons,
-not least because the CV scheme used must involve the time ordering of
-the data (e.g. Bergmeir et al., 2018). This subjectivity is problematic
+(WLS) models to observations within a user-specified window of the focal
+point, whose width is typically expressed as a proportion \(\alpha\) of
+the \(n\) data points. Weights are determined by how close (in the
+x-axis only) an observation in the window is to the focal point giving
+greatest weight given to points closest to the focal point. The interim
+\loess{}-smoothed value for the focal point is the predicted value from
+the weighted regression at the focal point. The interim values are
+updated using weights based on how far in the y-axis direction the
+interim smoothed value lies from the observed value plus the x-axis
+distance weights; this has the effect of down-weighting outlier
+observations. The final \loess{} is obtained by joining the smoothed
+values. The user has to choose how large a window to use, whether to fit
+degree 1 (linear) or degree 2 (quadratic) polynomials in the WLS model,
+and how to weight points in the x-axis. When used in an exploratory
+mode, the user has considerable freedom to choose the detail of the
+\loess{} fit; the window width, for example, can be infinitely tweaked
+to give as close a fit to the data, as assessed by eye, as is desired.
+Using cross-validation (CV) to choose \(\alpha\) or the degree of
+polynomial in the WLS model is complicated for a number of reasons, not
+least because the CV scheme used must involve the time ordering of the
+data (e.g. Bergmeir et al., 2018). This subjectivity is problematic
 however once we wish to move beyond exploratory analysis and
 statistically identify trends to test hypotheses involving those trend
 estimates.
@@ -262,7 +262,7 @@ record from Braya-Sø. Between them, the two examples, combine many of
 the features of interest to palaeoecologists that motivate the use of
 GAMs; non-linear trends and the question of when changes in the measured
 proxy occurred. The example analyses were all performed using the
-\emph{mgcv} package (version 1.8.23; Wood, 2017) and R (version 3.4.4; R
+\emph{mgcv} package (version 1.8.24; Wood, 2017) and R (version 3.4.4; R
 Core Team, 2018), and the supplementary material contains a fully
 annotated document showing the R code used to replicate all the analyses
 described in the remainder of the paper.
@@ -290,7 +290,7 @@ The second example time series is a 3,000 year record of alkenone
 unsaturation, \uk, from Braya-Sø, a meromictic lake in West Greenland
 (D'Andrea et al., 2011). Alkenones are long-chained unsaturated organic
 compounds that are produced by a small number of planktonic organisms
-known as haptophytes. The \uk{} unsaturation index is (Brassell, 1993)
+known as haptophytes. The \uk{} unsaturation index (Brassell, 1993) is
 
 \begin{equation*}
 \uk{} = \frac{[C_{37:2}] - [C_{37:4}]}{[C_{37:2}] + [C_{37:3}]+ [C_{37:4}]}
@@ -459,23 +459,23 @@ distribution (for true proportions or other interval-bounded data).
 
 \subsection{Basis functions}\label{basis-functions}
 
-It is clear from the plots of the data (Figure~\ref{fig:data-figure})
-that we require the fitted trends for the Small Water
-δ\textsuperscript{15}N and Braya-Sø \uk{} time series to be non-linear
-functions, but it is less clear how to specify the actual shape require.
-Ideally, we'd like to learn the shape of the trend from the data
-themselves. We will refer to these non-linear functions as \emph{smooth
-functions}, or just \emph{smooths} for short, and we will denote a
-smooth using \(f(x_t)\). Further, we would like to represent the smooths
-in a way that \eqref{eq:gam} is represented parametrically so that it
-can be estimate within the well-studied GLM framework. This is achieved
-by representing the smooth using a \emph{basis}. A basis is a set of
-functions that collectively span a space of smooths that, we hope,
-contains the true \(f(x_t)\) or a close approximation to it. The
-functions in the basis are known as \emph{basis functions}, and arise
-from a \emph{basis expansion} of a covariate. Writing \(b_j(x_t)\) as
-the \(j\)th basis function of \(x_t\), the smooth \(f(x_t)\) can be
-represented as a weighted sum of basis functions
+It is clear from plots of the data (Figure~\ref{fig:data-figure}) that
+we require the fitted trends for the Small Water δ\textsuperscript{15}N
+and Braya-Sø \uk{} time series to be non-linear functions, but it is
+less clear how to specify the actual shape require. Ideally, we'd like
+to learn the shape of the trend from the data themselves. We will refer
+to these non-linear functions as \emph{smooth functions}, or just
+\emph{smooths} for short, and we will denote a smooth using \(f(x_t)\).
+Further, we would like to represent the smooths in a way that
+\eqref{eq:gam} is represented parametrically so that it can be estimate
+within the well-studied GLM framework. This is achieved by representing
+the smooth using a \emph{basis}. A basis is a set of functions that
+collectively span a space of smooths that, we hope, contains the true
+\(f(x_t)\) or a close approximation to it. The functions in the basis
+are known as \emph{basis functions}, and arise from a \emph{basis
+expansion} of a covariate. Writing \(b_j(x_t)\) as the \(j\)th basis
+function of \(x_t\), the smooth \(f(x_t)\) can be represented as a
+weighted sum of basis functions
 
 \begin{equation*}
 f(x_t) = \sum_{j = 1}^{k} b_j(x_t) \beta_j \,,
@@ -532,7 +532,7 @@ terms of the value of the spline at the knots. Typically in this
 parametrization there are many fewer knots than unique data, with the
 knots distributed evenly over the range of \(x_t\) or at the quantiles
 of \(x_t\). Placing knots at the quantiles of \(x_t\) has the effect of
-placing a greater number of knots where the data is densest.
+placing a greater number of knots where the data is most dense.
 
 A CRS basis expansion comprised of 7 basis functions for the time
 covariate in the Small Water series, is shown in Figure
@@ -548,7 +548,7 @@ be found using least squares regression (assuming a Gaussian response).
 Note that in order to estimate a coefficient for each basis function the
 model has to be fitted without an intercept term. In practice we would
 include an intercept term in the model and therefore the basis functions
-are modified via an identifiability constraint (@ Wood, 2017). This has
+are modified via an identifiability constraint (Wood, 2017). This has
 the effect of making the basis orthogonal to the intercept but results
 in more complicated basis functions than those shown in in Figure
 \ref{fig:basis-function-example-plot}a.
@@ -557,8 +557,9 @@ Having estimated the weight for each basis function, the \(j\)th basis
 function \(b_j\) is scaled (weighted) by its coefficient \(\beta_j\).
 The scaled CRS basis functions for the Small Water time series are shown
 in Figure \ref{fig:basis-function-example-plot}b. The solid line passing
-through the data points is formed by summing up the values of the scaled
-basis functions (\(b_j(x_t) \beta_j\)) at any value of \(x_t\) (time).
+through the data points is formed by summing up the values of the seven
+scaled basis functions (\(b_j(x_t) \beta_j\)) at any value of \(x_t\)
+(time).
 
 Cubic regression splines, as well as many other types of spline, require
 the analyst to choose the number and location of the knots that
@@ -617,28 +618,28 @@ above, the analyst is generally only required to the specify the size
 approximate the true function \(f\). With practice and some knowledge of
 the system from which the observations arise, it can be relatively easy
 to put an upper limit on the expected complexity of the true trend in
-the data. Additionally, the number available data points places a
+the data. Additionally, the number of available data points places a
 constraint on the upper limit of the size of basis expansion that can be
 used.
 
 In practice, the size of the basis is an upper limit on the expected
-complexity of the trend, and a simple test to check if the basis used
-was sufficiently large (Pya and Wood, 2016). This test is available via
-the \texttt{gam.check()} function in \emph{mgcv} for example, which
-essentially looks at whether there is any additional nonlinearity or
-structure in the residuals that can be explained by a further smooth of
-\(x_t\). Should a smooth term in the fitted model fail this test the
-model can be refitted using a larger basis expansion, say by doubling
-the value of \emph{k} (the rank) used to fit the original. Note also
-that a smooth might fail this test whilst using fewer effective degrees
-of freedom than the maximum possible for the dimension of basis used.
-This may happen when the true function lies at the upper limit of the
-set of functions encompassed by the size of basis used. Additionally, a
-basis of size \(2k\) encompasses a richer space of functions of a given
-complexity than a basis of size \(k\) (Wood, 2017); increasing the basis
-dimension used to fit the model may unlock this additional function
-space resulting in a better fitting model whilst using a similar number
-of effective degrees of freedom.
+complexity of the trend, and a simple test can be used to check if the
+basis used was sufficiently large (Pya and Wood, 2016). This test is
+available via the \texttt{gam.check()} function in \emph{mgcv} for
+example, which essentially looks at whether there is any additional
+nonlinearity or structure in the residuals that can be explained by a
+further smooth of \(x_t\). Should a smooth term in the fitted model fail
+this test the model can be refitted using a larger basis expansion, say
+by doubling the value of \emph{k} (the rank) used to fit the original.
+Note also that a smooth might fail this test whilst using fewer
+effective degrees of freedom than the maximum possible for the dimension
+of basis used. This may happen when the true function lies at the upper
+limit of the set of functions encompassed by the size of basis used.
+Additionally, a basis of size \(2k\) encompasses a richer space of
+functions of a given complexity than a basis of size \(k\) (Wood, 2017);
+increasing the basis dimension used to fit the model may unlock this
+additional function space resulting in a better fitting model whilst
+using a similar number of effective degrees of freedom.
 
 \subsection{Smoothness selection}\label{smoothness-selection}
 
@@ -899,26 +900,33 @@ correct selection of response distribution and link function, etc.) are
 checked, it often pays to think carefully about the properties of the
 data and ensure that the assumptions of the model are met. Here, despite
 increasing the basis size, it was the failure to appreciate the
-magnitude of the effect on fitting of the non-constant variance that
-lead to the initially poor fit and the problems associated with the
-estimation of the CAR(1) process. I return to the issue of why the GAM
-plus CAR(1) model encountered problems during fitting later
-(\protect\hyperlink{identifiability}{see Identifiability}).
+magnitude of the effect of the non-constant variance that lead to the
+initially poor fit and the problems associated with the estimation of
+the CAR(1) process. I return to the issue of why the GAM plus CAR(1)
+model encountered problems during fitting later
+(\protect\hyperlink{identifiability}{see section Residual
+autocorrelation and model identification}).
 
 \hypertarget{confints}{\subsection{Confidence intervals and uncertainty
 estimation}\label{confints}}
 
 If we want to ask whether either of the estimated trends is
-statistically interesting or proceed to identifying periods of
-significant change, we must address the issue of uncertainty in the
-estimated model. What uncertainty is associated with the trend
-estimates? One way to visualise this is through a 1 - \(\alpha\)
-confidence interval around the fitted trend, where \(\alpha\) is say
-0.05 leading to a 95\% interval. A 95\% interval would be drawn at
+statistically interesting or proceed to identify periods of significant
+change, we must address the issue of uncertainty in the estimated model.
+What uncertainty is associated with the trend estimates? One way to
+visualise this is through a 1 - \(\alpha\) confidence interval around
+the fitted trend, where \(\alpha\) is say 0.05 leading to a 95\%
+interval. A 95\% interval would be drawn at
 \(\hat{y}_t \pm (m_{1-\alpha} \times \text{SE}(\hat{y}_t))\), with
 \(m_{1-\alpha} = 1.96\), the 0.95 probability quantile of a standard
-normal distribution, and \(\text{SE}(\hat{y}_t)\) is the standard error
-of the estimated trend at time \(x_t\). This type of confidence interval
+normal distribution\footnote{The 0.95 probability quantile of the
+  \emph{t} distribution may be used instead, which will account for
+  estimation of \(\sigma\), the variance of the data. However, given the
+  number of observations, and hence residual degrees of freedom, needed
+  to motivate fitting GAMs, differences between intervals computed using
+  extreme quantiles of the standard normal or the \emph{t} distribution
+  will be tiny.}, and \(\text{SE}(\hat{y}_t)\) is the standard error of
+the estimated trend at time \(x_t\). This type of confidence interval
 would normally be described as \emph{pointwise}; the coverage properties
 of the interval being correct for a single point on the fitted trend,
 but, if we were to consider additional points on the trend, the coverage
@@ -966,7 +974,7 @@ reflects the uncertainty in the estimated trend. This process is known
 as \emph{posterior simulation}.
 
 Figure \ref{fig:posterior-simulation} shows 20 random draws from the
-posterior distribution of the GAMs fitted to the Small Water and
+posterior distributions of the GAMs fitted to the Small Water and
 Braya-Sø data sets. In the early period of the δ\textsuperscript{15}N
 time series many of the posterior simulations exhibit short periods of
 increasing and decreasing trend, balancing out to the relatively flat
@@ -1022,8 +1030,8 @@ Figure \ref{fig:compare-intervals} alongside the
 both example data sets. As expected, the simultaneous interval is
 somewhat wider than the \emph{across-the-function} interval. The
 critical value \(m_{1-\alpha}\) for the simultaneous interval of the
-estimated trend in δ\textsuperscript{15}N is 3.08, whilst the same value
-for the \uk{} series is 3.42, leading to intervals that are
+estimated trend in δ\textsuperscript{15}N is 3.07, whilst the same value
+for the \uk{} series is 3.43, leading to intervals that are
 approximately ±50\% and ±75\% wider than the equivalent
 across-the-function intervals.
 
@@ -1221,8 +1229,8 @@ with stronger autocorrelation, and long runs of values greater (less)
 than the mean would be evident as non-linear trends in the time series.
 As a result, a wiggly trend and an autocorrelation function with large
 \(\phi\) are two ways to describe the same pattern of values in a time
-series, and without any further information to constrain either the
-model is unable to distinguish both components uniquely.
+series, and, without any further information to constrain either of
+these, the model is unable to distinguish both components uniquely.
 
 Situations where it may be possible to uniquely identify separate wiggly
 trends and autocorrelation are exemplified by the Small Water
@@ -1244,7 +1252,7 @@ In the world of machine learning, Gaussian processes (Golding and Purse,
 2016; Rasmussen and Williams, 2006) are a widely-used method for fitting
 smooth non-parametric regression models. A Gaussian process is a
 distribution over all possible smooth functions \(f(x)\). In the field
-of spatial statistics, Gaussian processes are known by name
+of spatial statistics, Gaussian processes are known by the name
 \emph{kriging}.
 
 With a Gaussian process we are interested in fitting a smooth temporal
@@ -1357,7 +1365,7 @@ estimated using the Matérn correlation function.
 \caption{Comparison of trends estimated using i) adaptive smooth, ii) Gaussian process, and iii) thin plate regression spline bases for the \uk{} time series.}\label{fig:braya-so-model-comparisons}
 \end{figure}
 
-Each of the spline types that I have discussed so far share a common
+Each of the spline types that I have discussed so far shares a common
 feature; the degree of wiggliness over the time series is fixed due to
 the use of a single smoothness parameter, \(\lambda\). The definition of
 wiggliness, as the integrated squared second derivative of the spline,
@@ -1422,14 +1430,15 @@ also a plausible explanation of the data. The trend estimated using the
 adaptive smooth reflects this. Therefore, should we conclude that there
 is no trend in \uk{} and thence climate in this period? I believe that
 to be too-strong a statement; those oscillations in \uk{} may be real
-responses to climate forcing but may simply lack the statistical power
-to distinguish them from the null hypothesis of no trend through this
-period. The adaptive smoother is only adjusting to the data available to
-it; just because it does not detect a trend during this period does not
-lend itself to an interpretation of stable climate forcing or
-complacency in the lake's response to forcing. If there were particular
+responses to climate forcing but we may simply lack the statistical
+power to distinguish them from the null hypothesis of no trend through
+this period. The adaptive smoother is only adjusting to the data
+available to it; just because it does not detect a trend during this
+period does not lend itself to an interpretation of stable climate
+forcing or complacency in the lake's response to forcing (although that
+is a justifiable interpretation of the result). If there were particular
 interest in the climate of this particular period we might take from the
-Braya-Sø record that there is potential early variation in climate
+Braya-Sø record that there is potential early variation due to climate
 forcing, but that additional data from this or other sites is required
 before any definitive conclusion can be drawn.
 
@@ -1438,7 +1447,7 @@ uncertainty}\label{accounting-for-age-model-uncertainty}
 
 Thus far, the trend models that I have described and illustrated assumed
 that the time covariate (\(x_t\)) was fixed and known. In both examples,
-and more generally for most palaeoecological records, this assumption is
+and generally for most palaeoecological records, this assumption is
 violated. Unless the record is annually laminated, assigning an age to a
 sediment interval requires the development of an age model from
 observations of the relationship between depth down the sediment core
@@ -1567,18 +1576,19 @@ Formal statistical estimation of trends in palaeoenvironmental data has
 been hampered by the nature of the data that comprise the time series;
 the uneven spacing of samples in time makes it, if not impossible,
 difficult to fit classical statistical time series models like ARIMA.
-This has lead palaeoecologists and palaeolimnologists to fall back on
-basic statistical methods such as linear parametric and non-parametric
-correlations or simple linear regression models, where the assumptions
-of the method are often grossly violated by the dependencies inherent to
-time series data. GAMs, whilst similar to the popular \loess{} smoother,
-provide a superior alternative approach to trend estimation in
-palaeoenvironmental time series. GAMs can estimate non-linear trends,
-provide estimates of the magnitude of change as well as allow the
-identification of periods of change, can account for the lack of
-independence (either via autocorrelation processes or via the fitting of
-a wiggly trend), and provide a formal framework for statistical
-inference on each of these features.
+This has led palaeoecologists and palaeolimnologists to either ignore
+statistical estimation of trends or fall back on basic statistical
+methods such as linear parametric and non-parametric correlations or
+simple linear regression models, where the assumptions of the method are
+often grossly violated by the dependencies inherent to time series data.
+GAMs, whilst similar to the popular \loess{} smoother, provide a
+superior alternative approach to trend estimation in palaeoenvironmental
+time series. GAMs can estimate non-linear trends, provide estimates of
+the magnitude of change as well as allow the identification of periods
+of change, can account for the lack of independence (either via
+autocorrelation processes or via the fitting of a wiggly trend), and
+provide a formal framework for statistical inference on each of these
+features.
 
 In presenting the GAM with specific palaeoenvironmental examples and
 addressing the issues that arise in palaeoenvironmental time series, it
@@ -1598,11 +1608,11 @@ potential conflict of interest.
 \addcontentsline{toc}{section}{Acknowledgements}
 
 The ideas expressed in this paper are the result of many fruitful
-conversations with colleagues at the Environmental Change Research
-Centre, UCL, and the University of Regina. In particular I am indebted
-to Helen Bennion, Rick Battarbee, and Peter Leavitt for their
-collaborations on projects over many years, and to David Miller, Eric
-Pedersen, and Noam Ross, my GAM workshop partners in crime. Without
+conversations with colleagues past and present at the Environmental
+Change Research Centre, UCL, and the University of Regina. In particular
+I am indebted to Helen Bennion, Rick Battarbee, and Peter Leavitt for
+their collaborations on projects over many years, and to David Miller,
+Eric Pedersen, and Noam Ross, my GAM workshop partners in crime. Without
 Simon Wood's \emph{mgcv} software and his research on GAMs, the
 application of these models to palaeo time series would not be as
 straight forward. This work was supported by a Natural Sciences and

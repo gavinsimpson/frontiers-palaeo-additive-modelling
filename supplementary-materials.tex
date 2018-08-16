@@ -126,7 +126,7 @@ using generalized additive models}
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{August 15, 2018}
+    \date{August 16, 2018}
 
 %\setromanfont{Constantia}
 %\setromanfont{texgyrepagella.otf}
@@ -204,27 +204,27 @@ The following packages are required: \emph{mgcv}, \emph{scam},
 \end{Highlighting}
 \end{Shaded}
 
-In addition, the \emph{schoenberg} package is required; this
-in-development package is not on CRAN but can be installed directly from
-GitHub using functions from the \emph{devtools} package. To install the
-package, install \emph{devtools} and then use
-\texttt{devtools::install\_github()} to install \emph{schoenberg}, as
-shown below:
+In addition, the \emph{gratia} package is required; this in-development
+package is not on CRAN but can be installed directly from GitHub using
+functions from the \emph{devtools} package. To install the package,
+install \emph{devtools} and then use
+\texttt{devtools::install\_github()} to install \emph{gratia}, as shown
+below:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## schoenberg is not on CRAN, install from github:}
+\NormalTok{## gratia is not on CRAN, install from github:}
 \KeywordTok{install.packages}\NormalTok{(}\StringTok{"devtools"}\NormalTok{)}
-\NormalTok{devtools::}\KeywordTok{install_github}\NormalTok{(}\StringTok{"gavinsimpson/schoenberg"}\NormalTok{)}
+\NormalTok{devtools::}\KeywordTok{install_github}\NormalTok{(}\StringTok{"gavinsimpson/gratia"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-Assuming that the installation of \emph{schoenberg} completes without
-error, the package can be loaded as usual
+Assuming that the installation of \emph{gratia} completes without error,
+the package can be loaded as usual
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(}\StringTok{"schoenberg"}\NormalTok{) }\CommentTok{# need to change the name of the package}
+\KeywordTok{library}\NormalTok{(}\StringTok{"gratia"}\NormalTok{) }\CommentTok{# need to change the name of the package}
 \end{Highlighting}
 \end{Shaded}
 
@@ -312,7 +312,7 @@ Plots of the two data sets are prepared using \emph{ggplot2}
 \StringTok{    }\KeywordTok{geom_point}\NormalTok{() +}
 \StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \NormalTok{d15n_label, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
 
-\NormalTok{## Generate a plot of the data}
+\NormalTok{## plot Braya-So data}
 \NormalTok{braya_plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(braya, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{UK37)) +}
 \StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"grey"}\NormalTok{) +}
 \StringTok{    }\KeywordTok{geom_point}\NormalTok{() +}
@@ -389,8 +389,8 @@ correlation structure component.
 \end{Shaded}
 
 \begin{verbatim}
-#>         lower      est.     upper
-#> Phi 0.2811107 0.6026967 0.8547543
+#>        lower      est.     upper
+#> Phi 0.282388 0.6026967 0.8539689
 #> attr(,"label")
 #> [1] "Correlation structure:"
 \end{verbatim}
@@ -438,7 +438,7 @@ associated \(F\) statistic and test of the null hypothesis of no trend
 (effect) are also shown. Here the estimated trend provides strong
 evidence against this null.
 
-The CAR(1) process plotted in Figure 10 of the manuscript was prepared
+The CAR(1) process plotted in Figure 11 of the manuscript was prepared
 using
 
 \begin{Shaded}
@@ -503,12 +503,13 @@ asymptotic normality
 
 \subsection{Braya-Sø}\label{braya-s}
 
-The same model is fitted to the Braya-Sø data set. Note however that in
-order to even fit the model with both a smooth and the CAR(1) process, I
-have had to change the default optimiser used to estimate the model
-parameters, and reduce the basis dimension to a small number. We also
-fit the model using GCV, which is the defaut, hence no \texttt{method}
-argument
+The same model as used for Small Water was also initially attempted with
+the Braya-Sø data. However, in order to even fit the model with both a
+smooth and the CAR(1) process, I had to change the default optimizer
+used to estimate the model parameters, and reduce the basis dimension,
+\texttt{k}, to a small number. I also fit the model using GCV, which is,
+at the time of writing, the default in \texttt{gam()}, hence no
+\texttt{method} argument
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -531,7 +532,7 @@ argument
 
 \begin{verbatim}
 #>            lower      est. upper
-#> Phi 1.611049e-22 0.2000156     1
+#> Phi 2.680033e-31 0.2000156     1
 #> attr(,"label")
 #> [1] "Correlation structure:"
 \end{verbatim}
@@ -542,9 +543,10 @@ in the \texttt{s(Year)} above, the model will fit but a warning message
 will be emitted when trying to extract \(\phi\) due to a non-positive
 definite model covariance matrix, indicating problems with the model.
 
-For Braya-Sø, we repeat the process, but we do so for both models (GAMM
-+ CAR(1) and GCV), and use a critical value from the \(t\) distribution
-to form the confidence interval
+To plot the GAMs fitted to the Braya-Sø time series, we repeat the
+process used with the Small Water GAM, but we do this for both models
+(GAMM + CAR(1) and GCV), using a critical value from the \(t\)
+distribution to form the confidence interval
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -596,7 +598,7 @@ to form the confidence interval
 
 \begin{center}\includegraphics[width=0.8\linewidth]{supplementary-materials_files/figure-latex/braya-plot-fitted-models-1} \end{center}
 
-Figure 5 in the manuscript was produced using:
+Figure 6 in the manuscript was produced using:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -608,10 +610,11 @@ Figure 5 in the manuscript was produced using:
 \subsubsection{Checking if the size of the basis expansion is
 sufficient}\label{checking-if-the-size-of-the-basis-expansion-is-sufficient}
 
-Clearly we are not able to identify both the wiggly trend and the CAR(1)
-process in a single model. We might proceed by fitting a simple GAM via
-\texttt{gam()} with REML smoothness selection and moderate number of
-basis functions --- here we set \texttt{k\ =\ 15} for illustration.
+For the Braya-Sø data, clearly we are not able to identify both the
+wiggly trend and the CAR(1) process in a single model. We proceed by
+fitting a simple GAM via \texttt{gam()} with REML smoothness selection
+and a moderate number of basis functions --- here we set
+\texttt{k\ =\ 15} for illustration.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -633,7 +636,7 @@ the data. This test is provided by \texttt{gam.check()}
 #> 
 #> Method: REML   Optimizer: outer newton
 #> full convergence after 6 iterations.
-#> Gradient range [-4.468978e-08,8.696688e-10]
+#> Gradient range [-4.468978e-08,8.696768e-10]
 #> (score -187.2524 & scale 0.000689802).
 #> Hessian positive definite, eigenvalue range [0.5525272,43.5153].
 #> Model rank =  15 / 15 
@@ -647,63 +650,71 @@ the data. This test is provided by \texttt{gam.check()}
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 \end{verbatim}
 
-In the output, the column labelled \texttt{k\textquotesingle{}} is the
-size of the basis used (the number of basis functions) --- note that it
-is 14 and not the requested 15 functions as the constant basis function
-has been removed as it is confounded with the model constant term, the
-intercept. The column labelled \texttt{edf} indicates the
-\emph{effective degrees of freedom} for the estimated smooth. The
-\texttt{k-index} column contains the value of a test statistic for a
-test of sufficient number of basis functions --- ideally, we'd like the
-value of \texttt{k-index} to be close to or greater than 1. The quoted
-\emph{p} value measures the support for the null hypothesis that enough
-basis functions were available. In practial terms, the low
-\texttt{k-index} and very low \emph{p} value suggest that the requested
-number of basis functions used to fit the model was too low.
+The first few lines of output from \texttt{gam.check()} include
+information on the model fit, whether the algorithm converged, and some
+diagnostics from the optimization at convergence --- you are unlikely to
+need this information, but it can be useful in diagnosing problems with
+model fitting or when reporting problems to Simon Wood, the developer of
+the \emph{mgcv} package. In the table at the bottom of the output from
+\texttt{gam.check()}, the column labelled \texttt{k\textquotesingle{}}
+is the size of the basis used to fit the model (the number of basis
+functions). Note that the stated value is 14 and not the requested 15
+functions because the constant basis function has been removed due to it
+being confounded with the model constant term, the intercept. The column
+labelled \texttt{edf} indicates the \emph{effective degrees of freedom}
+for the estimated smooth, which is a measure of the complexity or
+wiggliness of the final smooth. The \texttt{k-index} column contains the
+value of a test statistic for a test of a sufficient number of basis
+functions --- ideally, we'd like the value of \texttt{k-index} to be
+close to or greater than 1. The quoted \emph{p} value measures the
+support for the null hypothesis that enough basis functions were
+available. In practial terms, the low \texttt{k-index} and very low
+\emph{p} value shown above strongly suggest that the requested number of
+basis functions used to fit the model was too low.
 
 The solution is to increase \texttt{k}, say by doubling the original
 value, and refit the model and perform the basis dimension check using
 \texttt{gam.check()}, repeating this process until \texttt{k-index} is
 close to or greater than 1 and the \emph{p} value is larger than a
-desired threshold. In my experience, it may not be possible with some
-data sets to increase \texttt{k} large enough to result in a
-\texttt{k-index} \textgreater{} 1 and a \emph{p} value \textgreater{}
-0.05, given the available. It is important to remember that the test
-provided by \texttt{gam.check()} is only an heuristic one and shouldn't
-be seen as infallible. If you find yourself increasing \texttt{k} to
-large values relative to the number of samples in your data set without
-achieving a \texttt{k-index} \textgreater{} 1 or \emph{p} \textgreater{}
-0.05, then note the value in the \texttt{edf} column as you increase
-\texttt{k}. If the \texttt{edf} of the model changes little as you
-continue to increase \texttt{k}, this may be evidence that the test is
-failing in this particular instance and that the estimated smooth is not
-dependent on the value of \texttt{k} chosen.
+desired threshold. In my experience fitting GAMs to palaeoenvironmental
+time series, it may not be possible with some data sets to increase
+\texttt{k} large enough to result in a \texttt{k-index} \textgreater{} 1
+and a \emph{p} value \textgreater{} 0.05, given the available number of
+samples. It is important to remember that the test provided by
+\texttt{gam.check()} is only an heuristic one and shouldn't be seen as
+infallible. If you find yourself increasing \texttt{k} to large values
+relative to the number of samples in your data set without achieving a
+\texttt{k-index} \textgreater{} 1 or \emph{p} \textgreater{} 0.05, then
+note the value in the \texttt{edf} column as you increase \texttt{k}. If
+the \texttt{edf} of the model changes little as you continue to increase
+\texttt{k}, this may be evidence that the test is failing in this
+particular instance and that the estimated smooth is not dependent on
+the value of \texttt{k} chosen.
 
 \subsection{Accounting for heteroscedasticity due to time
 averaging}\label{accounting-for-heteroscedasticity-due-to-time-averaging}
 
 To proceed with the Braya-Sø example, we need to increase the basis
-dimension (\texttt{k\ =\ 45}), fit using \texttt{method\ =\ "REML"}. As
-discussed in the manuscript, we should also account for the non-constant
-variance, or \emph{heteroscedasticity}, that may arise due to variation
-in the amount of time (or ``lake years'') that each sample represents.
-All else equal, we expect that samples that average more time have
-smaller variance than those that average a smaller amount of time. To
-include information about the expected heteroscedasticity in the GAM we
-can use observational weights\footnote{This simple solution is for a
-  Gaussian GAM. For models with other distributions, the exact
-  interpretation of observational weights will vary. For such data,
-  where the conditional mean and variance of the observations are
-  linked, the use of location-scale, or distributional, models may be
-  more apporpriate and informative.}. Here I use the
-\texttt{sampleInterval} variable that I created earlier as the measure
-of lake years per sample, and to avoid changing the model likelihood,
-the weights use are the values of \texttt{sampleInterval} divided by the
-mean of \texttt{sampleInterval}:
+dimension, fit using \texttt{method\ =\ "REML"}. As discussed in the
+manuscript, we should also account for the non-constant variance, or
+\emph{heteroscedasticity}, that may arise due to variation in the amount
+of time (or ``lake years'') that each sample represents. All else equal,
+we expect that samples that average more time have lower variance than
+those that average a smaller amount of time. To include information
+about the expected heteroscedasticity in the GAM we can use
+observational weights\footnote{This simple solution is for a Gaussian
+  GAM. For models with other distributions, the exact interpretation of
+  observational weights will vary. For such data, where the conditional
+  mean and variance of the observations are linked, the use of
+  location-scale, or distributional, models may be more apporpriate and
+  informative.}. Here, I use the \texttt{sampleInterval} variable that I
+created earlier as the measure of lake years per sample, and, to avoid
+changing the model likelihood, the weights use are the values of
+\texttt{sampleInterval} divided by the mean of \texttt{sampleInterval}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{braya_reml <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{), }\DataTypeTok{data =} \NormalTok{braya,}
+\NormalTok{braya_reml <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{40}\NormalTok{), }\DataTypeTok{data =} \NormalTok{braya,}
                   \DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
                   \DataTypeTok{weights =} \NormalTok{sampleInterval /}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
 \KeywordTok{summary}\NormalTok{(braya_reml)}
@@ -716,25 +727,25 @@ mean of \texttt{sampleInterval}:
 #> Link function: identity 
 #> 
 #> Formula:
-#> UK37 ~ s(Year, k = 45)
+#> UK37 ~ s(Year, k = 40)
 #> 
 #> Parametric coefficients:
 #>              Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept) -0.633734   0.001901  -333.3   <2e-16 ***
+#> (Intercept) -0.633741   0.001929  -328.5   <2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
 #> Approximate significance of smooth terms:
 #>           edf Ref.df     F p-value    
-#> s(Year) 28.49  33.99 7.755  <2e-16 ***
+#> s(Year) 27.45  32.36 7.782  <2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
-#> R-sq.(adj) =  0.751   Deviance explained = 83.2%
-#> -REML = -175.68  Scale est. = 0.00024036  n = 89
+#> R-sq.(adj) =  0.744   Deviance explained = 82.4%
+#> -REML = -175.61  Scale est. = 0.00024757  n = 89
 \end{verbatim}
 
-If we now check if 44 (\texttt{k\ =\ 45}) basis functions is sufficient
+If we now check if 39 (\texttt{k\ =\ 40}) basis functions is sufficient
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -745,37 +756,40 @@ If we now check if 44 (\texttt{k\ =\ 45}) basis functions is sufficient
 \begin{verbatim}
 #> 
 #> Method: REML   Optimizer: outer newton
-#> full convergence after 7 iterations.
-#> Gradient range [-2.210576e-06,-5.181457e-08]
-#> (score -175.684 & scale 0.0002403604).
-#> Hessian positive definite, eigenvalue range [2.524305,48.11146].
-#> Model rank =  45 / 45 
+#> full convergence after 9 iterations.
+#> Gradient range [-1.105422e-06,1.500959e-07]
+#> (score -175.6093 & scale 0.0002475669).
+#> Hessian positive definite, eigenvalue range [2.644434,47.78257].
+#> Model rank =  40 / 40 
 #> 
 #> Basis dimension (k) checking results. Low p-value (k-index<1) may
 #> indicate that k is too low, especially if edf is close to k'.
 #> 
 #>           k'  edf k-index p-value
-#> s(Year) 44.0 28.5    1.27    0.99
+#> s(Year) 39.0 27.5    1.27    0.99
 \end{verbatim}
 
 we note that the value of \texttt{k-index} is now greater than 1 and the
 \emph{p} value suggests there is very little evidence against the null
-hypothesis. Also note that the \texttt{edf} of the estimated smooth is
-considerably below the maximum (\texttt{k\textquotesingle{}}). This is
-the effect of the smoothness penalty removing the excessive wiggliness
-possible with 44 basis functions. If the \texttt{edf} were close to
+hypothesis. This result strongly suggests that there were sufficient
+basis functions used to estimated the trend.
+
+Also note that the \texttt{edf} of the estimated smooth is considerably
+below the maximum (\texttt{k\textquotesingle{}}). This is the effect of
+the smoothness penalty removing the excessive wiggliness possible with
+39 basis functions. If the \texttt{edf} were close to
 \texttt{k\textquotesingle{}}, you might consider increasing \texttt{k}
 by a modest amount (in this instance by 5 or 10 additional basis
 functions) to assure yourself that you have sufficient basis functions.
 This has the additional advantage of allowing a richer set of smooths of
-a given complexity (\texttt{edf}) to be represented using the basis
-functions, which may improve the model fit to the data without changing
-the \texttt{edf} too much.
+a given complexity (\texttt{edf}) to be represented using this larger
+set of basis functions, which may improve the model fit to the data
+without changing the \texttt{edf} too much.
 
 \section{Posterior simulation}\label{posterior-simulation}
 
 Samples from the posterior distribution of a GAM can be drawn using the
-\texttt{simulate()} methods from the \emph{schoenberg} package.
+\texttt{simulate()} methods from the \emph{gratia} package.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -808,8 +822,7 @@ We repeat the same simulation for Braya-Sø
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## posterior simulation}
-\NormalTok{## need to reset-up newBraya}
+\NormalTok{## data points to simulate at}
 \NormalTok{newBraya <-}\StringTok{ }\KeywordTok{with}\NormalTok{(braya,}
                  \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Year =} \KeywordTok{seq}\NormalTok{(}\KeywordTok{min}\NormalTok{(Year), }\KeywordTok{max}\NormalTok{(Year),}
                                        \DataTypeTok{length.out =} \NormalTok{N)))}
@@ -821,11 +834,13 @@ We repeat the same simulation for Braya-Sø
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 \NormalTok{sims2 <-}\StringTok{ }\KeywordTok{simulate}\NormalTok{(braya_reml, }\DataTypeTok{nsim =} \NormalTok{nsim, }\DataTypeTok{newdata =} \NormalTok{newBraya,}
                   \DataTypeTok{unconditional =} \OtherTok{TRUE}\NormalTok{)}
+
+\NormalTok{## rearrange the output into a long/tidy format}
 \KeywordTok{colnames}\NormalTok{(sims2) <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}\StringTok{"sim"}\NormalTok{, }\KeywordTok{seq_len}\NormalTok{(nsim))}
 \NormalTok{sims2 <-}\StringTok{ }\KeywordTok{setNames}\NormalTok{(}\KeywordTok{stack}\NormalTok{(}\KeywordTok{as.data.frame}\NormalTok{(sims2)),}
-                      \KeywordTok{c}\NormalTok{(}\StringTok{"simulated"}\NormalTok{, }\StringTok{"run"}\NormalTok{))}
+                  \KeywordTok{c}\NormalTok{(}\StringTok{"simulated"}\NormalTok{, }\StringTok{"run"}\NormalTok{))}
 \NormalTok{sims2 <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(sims2, }\DataTypeTok{Year =} \KeywordTok{rep}\NormalTok{(newBraya$Year, nsim),}
-                       \DataTypeTok{simulated =} \NormalTok{simulated)}
+                   \DataTypeTok{simulated =} \NormalTok{simulated)}
 
 \NormalTok{brayaSim.plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(braya_pred, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{fit)) +}
 \StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =} \NormalTok{sims2,}
@@ -839,7 +854,7 @@ We repeat the same simulation for Braya-Sø
 
 \begin{center}\includegraphics[width=0.8\linewidth]{supplementary-materials_files/figure-latex/braya-posterior-simulation-1} \end{center}
 
-Figure 7 in the manuscript was prepared using
+Figure 8 in the manuscript was prepared using
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -854,7 +869,7 @@ intervals}\label{confidence-and-simultaneous-intervals}
 Across-the-function and simultaneous confidence intervals are computed
 using the \texttt{confint()} method. The type of interval required is
 given via the \texttt{type} argument with options \texttt{"confidence"}
-and \texttt{"simultaneous"}. Fro example, for Small Water we would use
+and \texttt{"simultaneous"}. For example, for Small Water we would use
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -868,12 +883,12 @@ and \texttt{"simultaneous"}. Fro example, for Small Water we would use
 
 \begin{verbatim}
 #>    smooth     Year      est        se     crit    lower    upper
-#> 1 s(Year) 1846.319 3.787215 0.1616144 3.087688 3.288200 4.286230
-#> 2 s(Year) 1847.128 3.789747 0.1509100 3.087688 3.323784 4.255710
-#> 3 s(Year) 1847.937 3.792304 0.1411439 3.087688 3.356496 4.228112
-#> 4 s(Year) 1848.745 3.794914 0.1324961 3.087688 3.385807 4.204020
-#> 5 s(Year) 1849.554 3.797602 0.1251070 3.087688 3.411310 4.183893
-#> 6 s(Year) 1850.363 3.800394 0.1190552 3.087688 3.432788 4.167999
+#> 1 s(Year) 1846.319 3.787215 0.1616144 3.072403 3.290671 4.283760
+#> 2 s(Year) 1847.128 3.789747 0.1509100 3.072403 3.326090 4.253403
+#> 3 s(Year) 1847.937 3.792304 0.1411439 3.072403 3.358653 4.225955
+#> 4 s(Year) 1848.745 3.794914 0.1324961 3.072403 3.387832 4.201995
+#> 5 s(Year) 1849.554 3.797602 0.1251070 3.072403 3.413222 4.181981
+#> 6 s(Year) 1850.363 3.800394 0.1190552 3.072403 3.434608 4.166180
 \end{verbatim}
 
 The \texttt{confint()} methods return data frames suitable for
@@ -930,7 +945,7 @@ and plotted
 
 in the same way
 
-Figure 8 in the manuscript was prepared using
+Figure 9 in the manuscript was prepared using
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -946,7 +961,7 @@ The first derivative of the estimated trend is calculated using finite
 differences using the \texttt{fderiv()} function. There is also a
 \texttt{confint()} method for objects produced by \texttt{fderiv()}. The
 first derivatives and a 95\% simultaneous confidence interval for the
-Small Water trend we computed and plotted using
+Small Water trend were computed and plotted using
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -982,7 +997,7 @@ whilst for Braya-Sø, the following was used
 \end{Highlighting}
 \end{Shaded}
 
-Figure 9 in the manuscript was prepared using
+Figure 10 in the manuscript was prepared using
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -991,7 +1006,7 @@ Figure 9 in the manuscript was prepared using
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{supplementary-materials_files/figure-latex/figure 9-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{supplementary-materials_files/figure-latex/figure-10-1} \end{center}
 
 \section{Gaussian process smooths}\label{gaussian-process-smooths}
 
@@ -1000,13 +1015,13 @@ described in the manuscript, we need to supply the value of \(\phi\) for
 the effective range of the correlation function. To estimate \(\phi\),
 we need to repeatedly fit the required GAM using a range of plausible
 values for \(\phi\), which we do using a loop. In the chunk below I fit
-200 models with \(\phi\) in the range 15--500. For value of \(\phi\) I
-fit the required GAM and extract the REML score (from component
-\texttt{gcv.ubre}) and store it in the numeric vectors \texttt{Mat} or
-\texttt{SEx}, for Matérn and Squared Exponential correlation functions,
-respectively. The final line of the chunk prepares the REML scores for
-the two correlation functions in long or tidy format suitable for
-plotting with \emph{ggplot2}.
+200 models with \(\phi\) in the range 15--500. For each value of
+\(\phi\) I fit the required GAM and extract the REML score (from
+component \texttt{gcv.ubre}) and store it in the numeric vectors
+\texttt{Mat} or \texttt{SEx}, for Matérn and Squared Exponential
+correlation functions, respectively. The final line of the chunk
+prepares the REML scores in long or tidy format suitable for plotting
+with \emph{ggplot2}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1106,7 +1121,7 @@ The estimated Gaussian process trends are plotted using
 
 \begin{center}\includegraphics[width=0.8\linewidth]{supplementary-materials_files/figure-latex/plot-both-gp-smooth-trends-1} \end{center}
 
-whilst Figure 12 in the manuscript was prepared using
+whilst Figure 13 in the manuscript was prepared using
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1133,7 +1148,7 @@ REML smoothness selection and observational weights:
 
 \section{Comparing trends}\label{comparing-trends}
 
-For the model comparison, I refitted all the models for consistency; the
+For the model comparison I refitted all the models for consistency; the
 code to fit each of the
 
 \begin{enumerate}
@@ -1172,9 +1187,8 @@ is shown below.
 \end{Highlighting}
 \end{Shaded}
 
-We write a small function to predict from each model over the range of
-\texttt{Year} and return the data in tidy format for plotting. The plot
-produce reproduces figure 13 in the manuscript.
+I wrote a small function to predict from each model over the range of
+\texttt{Year} and return the data in tidy format for plotting.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1198,8 +1212,9 @@ produce reproduces figure 13 in the manuscript.
 
 \NormalTok{pltData <-}\StringTok{ }\KeywordTok{do.call}\NormalTok{(}\StringTok{"rbind"}\NormalTok{, }\KeywordTok{lapply}\NormalTok{(}\KeywordTok{list}\NormalTok{(plts_gp, plts_ad, plts_tprs),}
                                    \StringTok{`}\DataTypeTok{[[}\StringTok{`}\NormalTok{, }\StringTok{"objects"}\NormalTok{))}
-\NormalTok{pltData <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(pltData, }\DataTypeTok{Model =} \KeywordTok{rep}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"GP"}\NormalTok{, }\StringTok{"Adaptive"}\NormalTok{, }\StringTok{"TPRS"}\NormalTok{),}
-                              \DataTypeTok{each =} \KeywordTok{nrow}\NormalTok{(plts_gp$objects)))}
+\NormalTok{pltData <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(pltData,}
+                     \DataTypeTok{Model =} \KeywordTok{rep}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"GP"}\NormalTok{, }\StringTok{"Adaptive"}\NormalTok{, }\StringTok{"TPRS"}\NormalTok{),}
+                                 \DataTypeTok{each =} \KeywordTok{nrow}\NormalTok{(plts_gp$objects)))}
 
 \NormalTok{allFits <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(pltData, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{fit)) +}
 \StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{UK37), }\DataTypeTok{data =} \NormalTok{braya) +}
@@ -1213,6 +1228,8 @@ produce reproduces figure 13 in the manuscript.
 
 \begin{center}\includegraphics[width=0.8\linewidth]{supplementary-materials_files/figure-latex/process-models-1} \end{center}
 
+The plot produced reproduces Figure 14 in the manuscript.
+
 \section{Accounting for age-model
 uncertainty}\label{accounting-for-age-model-uncertainty}
 
@@ -1224,7 +1241,16 @@ new age models. This was done using the \emph{scam} package for a
 be monotonic decreasing (\texttt{bs\ =\ "mpd"}).
 
 To make this section self-contained, I refitted the Small Water GAM plus
-CAR(1) model
+CAR(1) model. Because we will be sampling ages for each observation from
+the posterior of the age-model GAM, the oldest sample will will be
+somewhat younger than the expected value from the model in some samples.
+This will cause problems when we come to simulate from the GAMs fitted
+to the resampled age-models as each GAM will cover a slightly different
+range of time. To avoid this problem I fix the knots at the extremes of
+the observed values of \texttt{Year} and spread the remaining 12 knots
+evenly inbetween. The knot locations are stored in the vector
+\texttt{knots}, which is passed to the argument \texttt{knots} when
+fitting the GAM
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1235,8 +1261,13 @@ CAR(1) model
 \end{Highlighting}
 \end{Shaded}
 
-and then we load the \textsuperscript{210}Pb dating results for the
-dated core sections.
+Setting the knots like this doesn't change the model estimated above;
+I'm only repeating what happens internally if you don't supply
+\texttt{knots}. However, later we will need to specify this set of knots
+explicitly when accounting for age model uncertainty.
+
+Next we load the \textsuperscript{210}Pb dating results for the dated
+core sections.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1325,11 +1356,11 @@ updated age information.
 \end{Shaded}
 
 The next chunk does the final step in the process. For each of the
-models we just fitted to include age model uncertainty, we simulate 50
-draws from the model posterior distribution. We start with a wrapper
-function around the \texttt{simulate()} code we want to run on each
-model, then do the actual posterior draws for each model using
-\texttt{lapply()}. The final step just arranges data for plotting.
+models we just fitted, we simulate 50 draws from the model posterior
+distribution. We start with a wrapper function around the
+\texttt{simulate()} code we want to run on each model, then do the
+actual posterior draws for each model using \texttt{lapply()}. The final
+step just arranges data for plotting.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1358,6 +1389,7 @@ Each of the steps is visualized using the plot code shown below.
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{## plot the estimated age model ad posterior simulations from it}
 \NormalTok{plt1 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(swAge, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =} \NormalTok{Date, }\DataTypeTok{x =} \NormalTok{Depth)) +}
 \StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =} \NormalTok{newSims,}
               \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =} \NormalTok{Age, }\DataTypeTok{x =} \NormalTok{Depth, }\DataTypeTok{group =} \NormalTok{Simulation),}
@@ -1368,6 +1400,7 @@ Each of the steps is visualized using the plot code shown below.
                   \DataTypeTok{colour =} \StringTok{"red"}\NormalTok{) +}
 \StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{"Year CE"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Depth (cm)"}\NormalTok{)}
 
+\NormalTok{## plot the simulated trends showing the effect of age-model uncertainty}
 \NormalTok{plt2 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(simTrends, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{Trend, }\DataTypeTok{group =} \NormalTok{Group)) +}
 \StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"grey80"}\NormalTok{) +}
 \StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =} \NormalTok{newYear,}
@@ -1377,6 +1410,8 @@ Each of the steps is visualized using the plot code shown below.
                \DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{size =} \FloatTok{0.7}\NormalTok{) +}
 \StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Year"}\NormalTok{, }\DataTypeTok{y =} \NormalTok{d15n_label)}
 
+\NormalTok{## plot simulated trends showing the effect of age-model uncertainty and}
+\NormalTok{## the effect of uncertainty in the estimated trend itself}
 \NormalTok{plt3 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(simSimulate, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{Trend, }\DataTypeTok{group =} \NormalTok{Group)) +}
 \StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.2}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"grey80"}\NormalTok{) +}
 \StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data =} \NormalTok{small,}
@@ -1404,7 +1439,7 @@ Each of the steps is visualized using the plot code shown below.
 
 \begin{center}\includegraphics[width=0.8\linewidth]{supplementary-materials_files/figure-latex/small-scam-fit-plots-1} \end{center}
 
-This reproduces figure 14 from the manuscript.
+This reproduces Figure 15 from the manuscript.
 
 \section{Session information}\label{session-information}
 
@@ -1420,13 +1455,13 @@ This reproduces figure 14 from the manuscript.
 
 \begin{verbatim}
 #>  setting  value                                      
-#>  version  R version 3.4.4 Patched (2018-03-17 r74422)
+#>  version  R version 3.4.3 Patched (2018-01-16 r74126)
 #>  system   x86_64, linux-gnu                          
 #>  ui       X11                                        
 #>  language (EN)                                       
 #>  collate  en_CA.UTF-8                                
 #>  tz       America/Regina                             
-#>  date     2018-05-14
+#>  date     2018-08-16
 \end{verbatim}
 
 \begin{verbatim}
@@ -1434,56 +1469,64 @@ This reproduces figure 14 from the manuscript.
 \end{verbatim}
 
 \begin{verbatim}
-#>  package    * version date       source                                  
-#>  backports    1.1.2   2017-12-13 CRAN (R 3.4.3)                          
-#>  base       * 3.4.4   2018-03-18 local                                   
-#>  codetools    0.2-15  2016-10-05 CRAN (R 3.4.4)                          
-#>  colorspace   1.3-2   2016-12-14 CRAN (R 3.4.1)                          
-#>  compiler     3.4.4   2018-03-18 local                                   
-#>  cowplot    * 0.9.2   2017-12-17 CRAN (R 3.4.3)                          
-#>  datasets   * 3.4.4   2018-03-18 local                                   
-#>  devtools     1.13.5  2018-02-18 CRAN (R 3.4.4)                          
-#>  digest       0.6.15  2018-01-28 CRAN (R 3.4.4)                          
-#>  evaluate     0.10.1  2017-06-24 CRAN (R 3.4.1)                          
-#>  ggplot2    * 2.2.1   2016-12-30 CRAN (R 3.4.1)                          
-#>  glue         1.2.0   2017-10-29 CRAN (R 3.4.2)                          
-#>  graphics   * 3.4.4   2018-03-18 local                                   
-#>  grDevices  * 3.4.4   2018-03-18 local                                   
-#>  grid         3.4.4   2018-03-18 local                                   
-#>  gtable       0.2.0   2016-02-26 CRAN (R 3.4.1)                          
-#>  htmltools    0.3.6   2017-04-28 CRAN (R 3.4.1)                          
-#>  knitr        1.20    2018-02-20 CRAN (R 3.4.4)                          
-#>  labeling     0.3     2014-08-23 CRAN (R 3.4.1)                          
-#>  lattice      0.20-35 2017-03-25 CRAN (R 3.4.4)                          
-#>  lazyeval     0.2.1   2017-10-29 CRAN (R 3.4.2)                          
-#>  magrittr     1.5     2014-11-22 CRAN (R 3.4.1)                          
-#>  MASS         7.3-49  2018-02-23 CRAN (R 3.4.4)                          
-#>  Matrix       1.2-14  2018-04-09 CRAN (R 3.4.4)                          
-#>  memoise      1.1.0   2017-04-21 CRAN (R 3.4.1)                          
-#>  methods      3.4.4   2018-03-18 local                                   
-#>  mgcv       * 1.8-23  2018-01-21 CRAN (R 3.4.4)                          
-#>  munsell      0.4.3   2016-02-13 CRAN (R 3.4.1)                          
-#>  nlme       * 3.1-137 2018-04-07 CRAN (R 3.4.4)                          
-#>  pillar       1.2.1   2018-02-27 CRAN (R 3.4.4)                          
-#>  plyr         1.8.4   2016-06-08 CRAN (R 3.4.1)                          
-#>  purrr        0.2.4   2017-10-18 CRAN (R 3.4.2)                          
-#>  Rcpp         0.12.16 2018-03-13 CRAN (R 3.4.4)                          
-#>  rlang        0.2.0   2018-02-20 CRAN (R 3.4.4)                          
-#>  rmarkdown  * 1.9     2018-03-01 CRAN (R 3.4.4)                          
-#>  rprojroot    1.3-2   2018-01-03 CRAN (R 3.4.3)                          
-#>  scales       0.5.0   2017-08-24 CRAN (R 3.4.1)                          
-#>  scam       * 1.2-2   2017-09-24 CRAN (R 3.4.3)                          
-#>  schoenberg * 0.0-6   2018-04-12 Github (gavinsimpson/schoenberg@f9b8a84)
-#>  splines      3.4.4   2018-03-18 local                                   
-#>  stats      * 3.4.4   2018-03-18 local                                   
-#>  stringi      1.1.7   2018-03-12 CRAN (R 3.4.4)                          
-#>  stringr      1.3.0   2018-02-19 CRAN (R 3.4.4)                          
-#>  tibble       1.4.2   2018-01-22 CRAN (R 3.4.3)                          
-#>  tidyr      * 0.8.0   2018-01-29 CRAN (R 3.4.4)                          
-#>  tools        3.4.4   2018-03-18 local                                   
-#>  utils      * 3.4.4   2018-03-18 local                                   
-#>  withr        2.1.2   2018-03-15 CRAN (R 3.4.4)                          
-#>  yaml         2.1.18  2018-03-08 CRAN (R 3.4.4)
+#>  package    * version date       source        
+#>  assertthat   0.2.0   2017-04-11 CRAN (R 3.4.3)
+#>  backports    1.1.2   2017-12-13 CRAN (R 3.4.3)
+#>  base       * 3.4.3   2018-01-16 local         
+#>  bindr        0.1.1   2018-03-13 CRAN (R 3.4.3)
+#>  bindrcpp     0.2.2   2018-03-29 CRAN (R 3.4.3)
+#>  codetools    0.2-15  2016-10-05 CRAN (R 3.4.3)
+#>  colorspace   1.3-2   2016-12-14 CRAN (R 3.4.3)
+#>  compiler     3.4.3   2018-01-16 local         
+#>  cowplot    * 0.9.3   2018-07-15 CRAN (R 3.4.3)
+#>  crayon       1.3.4   2017-09-16 CRAN (R 3.4.3)
+#>  datasets   * 3.4.3   2018-01-16 local         
+#>  devtools     1.13.6  2018-06-27 CRAN (R 3.4.3)
+#>  digest       0.6.15  2018-01-28 CRAN (R 3.4.3)
+#>  dplyr        0.7.6   2018-06-29 CRAN (R 3.4.3)
+#>  evaluate     0.11    2018-07-17 CRAN (R 3.4.3)
+#>  ggplot2    * 3.0.0   2018-07-03 CRAN (R 3.4.3)
+#>  glue         1.3.0   2018-07-17 CRAN (R 3.4.3)
+#>  graphics   * 3.4.3   2018-01-16 local         
+#>  gratia     * 0.0-6   2018-08-16 local         
+#>  grDevices  * 3.4.3   2018-01-16 local         
+#>  grid         3.4.3   2018-01-16 local         
+#>  gtable       0.2.0   2016-02-26 CRAN (R 3.4.3)
+#>  htmltools    0.3.6   2017-04-28 CRAN (R 3.4.3)
+#>  knitr        1.20    2018-02-20 CRAN (R 3.4.3)
+#>  labeling     0.3     2014-08-23 CRAN (R 3.4.3)
+#>  lattice      0.20-35 2017-03-25 CRAN (R 3.4.3)
+#>  lazyeval     0.2.1   2017-10-29 CRAN (R 3.4.3)
+#>  magrittr     1.5     2014-11-22 CRAN (R 3.4.3)
+#>  MASS         7.3-50  2018-04-30 CRAN (R 3.4.3)
+#>  Matrix       1.2-14  2018-04-09 CRAN (R 3.4.3)
+#>  memoise      1.1.0   2017-04-21 CRAN (R 3.4.3)
+#>  methods      3.4.3   2018-01-16 local         
+#>  mgcv       * 1.8-24  2018-06-18 CRAN (R 3.4.3)
+#>  munsell      0.5.0   2018-06-12 CRAN (R 3.4.3)
+#>  nlme       * 3.1-137 2018-04-07 CRAN (R 3.4.3)
+#>  pillar       1.3.0   2018-07-14 CRAN (R 3.4.3)
+#>  pkgconfig    2.0.1   2017-03-21 CRAN (R 3.4.3)
+#>  plyr         1.8.4   2016-06-08 CRAN (R 3.4.3)
+#>  purrr        0.2.5   2018-05-29 CRAN (R 3.4.3)
+#>  R6           2.2.2   2017-06-17 CRAN (R 3.4.3)
+#>  Rcpp         0.12.18 2018-07-23 CRAN (R 3.4.3)
+#>  rlang        0.2.1   2018-05-30 CRAN (R 3.4.3)
+#>  rmarkdown  * 1.10    2018-06-11 CRAN (R 3.4.3)
+#>  rprojroot    1.3-2   2018-01-03 CRAN (R 3.4.3)
+#>  scales       0.5.0   2017-08-24 CRAN (R 3.4.3)
+#>  scam       * 1.2-2   2017-09-24 CRAN (R 3.4.3)
+#>  splines      3.4.3   2018-01-16 local         
+#>  stats      * 3.4.3   2018-01-16 local         
+#>  stringi      1.2.4   2018-07-20 CRAN (R 3.4.3)
+#>  stringr      1.3.1   2018-05-10 CRAN (R 3.4.3)
+#>  tibble       1.4.2   2018-01-22 CRAN (R 3.4.3)
+#>  tidyr      * 0.8.1   2018-05-18 CRAN (R 3.4.3)
+#>  tidyselect   0.2.4   2018-02-26 CRAN (R 3.4.3)
+#>  tools        3.4.3   2018-01-16 local         
+#>  utils      * 3.4.3   2018-01-16 local         
+#>  withr        2.1.2   2018-03-15 CRAN (R 3.4.3)
+#>  yaml         2.2.0   2018-07-25 CRAN (R 3.4.3)
 \end{verbatim}
 
 

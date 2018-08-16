@@ -3,7 +3,7 @@ title: "Supplementary materials for: Modelling palaeoecological time series usin
 author: Gavin L. Simpson
 affiliation: "Institute of Environmental Change and Society, \\ University of Regina, Regina, Saskatchewan, Canada, S4S 0A2"
 mail: "gavin.simpson@uregina.ca"
-date: August 15, 2018
+date: August 16, 2018
 keywords: time series; generalized additive model; simultaneous interval; spline; environmental change 
 bibliography: references.bib
 csl: frontiers-in-ecology-and-evolution.csl
@@ -45,16 +45,16 @@ library("ggplot2")
 library("cowplot")
 library("tidyr")
 ```
-In addition, the *schoenberg* package is required; this in-development package is not on CRAN but can be installed directly from GitHub using functions from the *devtools* package. To install the package, install *devtools* and then use `devtools::install_github()` to install *schoenberg*, as shown below:
+In addition, the *gratia* package is required; this in-development package is not on CRAN but can be installed directly from GitHub using functions from the *devtools* package. To install the package, install *devtools* and then use `devtools::install_github()` to install *gratia*, as shown below:
 
-```{r install-schoenberg, eval = FALSE}
-## schoenberg is not on CRAN, install from github:
+```{r install-gratia, eval = FALSE}
+## gratia is not on CRAN, install from github:
 install.packages("devtools")
-devtools::install_github("gavinsimpson/schoenberg")
+devtools::install_github("gavinsimpson/gratia")
 ```
-Assuming that the installation of *schoenberg* completes without error, the package can be loaded as usual
-```{r load-schoenberg, cache = FALSE}
-library("schoenberg") # need to change the name of the package
+Assuming that the installation of *gratia* completes without error, the package can be loaded as usual
+```{r load-gratia, cache = FALSE}
+library("gratia") # need to change the name of the package
 ```
 
 The final environment-preparation step is to set the default *ggplot* theme, which the loading of *cowplot* has over-ridden. Here I use the more-minimal black-and-white theme (`theme_bw()`)
@@ -96,7 +96,7 @@ small_plt <- ggplot(small, aes(x = Year, y = d15N)) +
     geom_point() +
     labs(y = d15n_label, x = "Year CE")
 
-## Generate a plot of the data
+## plot Braya-So data
 braya_plt <- ggplot(braya, aes(x = Year, y = UK37)) +
     geom_line(colour = "grey") +
     geom_point() +
@@ -150,7 +150,7 @@ summary(mod$gam)
 
 The output shows the estimated complexity of the fitted smooth, expressed in terms of the effective degrees of freedom of the spline. An associated $F$ statistic and test of the null hypothesis of no trend (effect) are also shown. Here the estimated trend provides strong evidence against this null.
 
-The CAR(1) process plotted in Figure 10 of the manuscript was prepared using 
+The CAR(1) process plotted in Figure 11 of the manuscript was prepared using 
 
 ```{r car1-plot, dependson = 'extract-phi'}
 ## plot CAR(1) process
@@ -199,7 +199,7 @@ small_fitted
 
 ## Braya-Sø
 
-The same model is fitted to the Braya-Sø data set. Note however that in order to even fit the model with both a smooth and the CAR(1) process, I have had to change the default optimiser used to estimate the model parameters, and reduce the basis dimension to a small number. We also fit the model using GCV, which is the defaut, hence no `method` argument
+The same model as used for Small Water was also initially attempted with the Braya-Sø data. However, in order to even fit the model with both a smooth and the CAR(1) process, I had to change the default optimizer used to estimate the model parameters, and reduce the basis dimension, `k`, to a small number. I also fit the model using GCV, which is, at the time of writing, the default in `gam()`, hence no `method` argument
 
 ```{r fit-braya-so-car1-and-gcv-models}
 ## fit the car(1) model --- needs optim as this is not a stable fit!
@@ -220,7 +220,7 @@ brayaPhi
 
 Note the wide confidence interval --- effectively 0--1 --- on $\phi$. If you were to increase the value of `k` to be `k = 10` in the `s(Year)` above, the model will fit but a warning message will be emitted when trying to extract $\phi$ due to a non-positive definite model covariance matrix, indicating problems with the model.
 
-For Braya-Sø, we repeat the process, but we do so for both models (GAMM + CAR(1) and GCV), and use a critical value from the $t$ distribution to form the confidence interval
+To plot the GAMs fitted to the Braya-Sø time series, we repeat the process used with the Small Water GAM, but we do this for both models (GAMM + CAR(1) and GCV), using a critical value from the $t$ distribution to form the confidence interval
 
 ```{r braya-plot-fitted-models}
 N <- 300   # number of points at which to evaluate the smooth
@@ -268,16 +268,16 @@ braya_fitted <- ggplot(braya, aes(y = UK37, x = Year)) +
 braya_fitted
 ```
 
-Figure 5 in the manuscript was produced using:
+Figure 6 in the manuscript was produced using:
 
-```{r manuscript-fig-2, fig.show = "hide"}
+```{r manuscript-fig-6, fig.show = "hide"}
 plot_grid(small_fitted, braya_fitted, ncol = 1, labels = "auto",
           align = "hv", axis = "lr")
 ```
 
 ### Checking if the size of the basis expansion is sufficient
 
-Clearly we are not able to identify both the wiggly trend and the CAR(1) process in a single model. We might proceed by fitting a simple GAM via `gam()` with REML smoothness selection and moderate number of basis functions --- here we set `k = 15` for illustration.
+For the Braya-Sø data, clearly we are not able to identify both the wiggly trend and the CAR(1) process in a single model. We proceed by fitting a simple GAM via `gam()` with REML smoothness selection and a moderate number of basis functions --- here we set `k = 15` for illustration.
 
 ```{r braya-fit-k-too-small}
 braya_low_k <- gam(UK37 ~ s(Year, k = 15), data = braya, method = "REML")
@@ -289,16 +289,16 @@ Before proceeding, we should perform a check to determine if the number of basis
 gam.check(braya_low_k)
 ```
 
-In the output, the column labelled `k'` is the size of the basis used (the number of basis functions) --- note that it is 14 and not the requested 15 functions as the constant basis function has been removed as it is confounded with the model constant term, the intercept. The column labelled `edf` indicates the *effective degrees of freedom* for the estimated smooth. The `k-index` column contains the value of a test statistic for a test of sufficient number of basis functions --- ideally, we'd like the value of `k-index` to be close to or greater than 1. The quoted *p* value measures the support for the null hypothesis that enough basis functions were available. In practial terms, the low `k-index` and very low *p* value suggest that the requested number of basis functions used to fit the model was too low.
+The first few lines of output from `gam.check()` include information on the model fit, whether the algorithm converged, and some diagnostics from the optimization at convergence --- you are unlikely to need this information, but it can be useful in diagnosing problems with model fitting or when reporting problems to Simon Wood, the developer of the *mgcv* package. In the table at the bottom of the output from `gam.check()`, the column labelled `k'` is the size of the basis used to fit the model (the number of basis functions). Note that the stated value is 14 and not the requested 15 functions because the constant basis function has been removed due to it being confounded with the model constant term, the intercept. The column labelled `edf` indicates the *effective degrees of freedom* for the estimated smooth, which is a measure of the complexity or wiggliness of the final smooth. The `k-index` column contains the value of a test statistic for a test of a sufficient number of basis functions --- ideally, we'd like the value of `k-index` to be close to or greater than 1. The quoted *p* value measures the support for the null hypothesis that enough basis functions were available. In practial terms, the low `k-index` and very low *p* value shown above strongly suggest that the requested number of basis functions used to fit the model was too low.
 
-The solution is to increase `k`, say by doubling the original value, and refit the model and perform the basis dimension check using `gam.check()`, repeating this process until `k-index` is close to or greater than 1 and the *p* value is larger than a desired threshold. In my experience, it may not be possible with some data sets to increase `k` large enough to result in a `k-index` > 1 and a *p* value > 0.05, given the available. It is important to remember that the test provided by `gam.check()` is only an heuristic one and shouldn't be seen as infallible. If you find yourself increasing `k` to large values relative to the number of samples in your data set without achieving a `k-index` > 1 or *p* > 0.05, then note the value in the `edf` column as you increase `k`. If the `edf` of the model changes little as you continue to increase `k`, this may be evidence that the test is failing in this particular instance and that the estimated smooth is not dependent on the value of `k` chosen.
+The solution is to increase `k`, say by doubling the original value, and refit the model and perform the basis dimension check using `gam.check()`, repeating this process until `k-index` is close to or greater than 1 and the *p* value is larger than a desired threshold. In my experience fitting GAMs to palaeoenvironmental time series, it may not be possible with some data sets to increase `k` large enough to result in a `k-index` > 1 and a *p* value > 0.05, given the available number of samples. It is important to remember that the test provided by `gam.check()` is only an heuristic one and shouldn't be seen as infallible. If you find yourself increasing `k` to large values relative to the number of samples in your data set without achieving a `k-index` > 1 or *p* > 0.05, then note the value in the `edf` column as you increase `k`. If the `edf` of the model changes little as you continue to increase `k`, this may be evidence that the test is failing in this particular instance and that the estimated smooth is not dependent on the value of `k` chosen.
 
 ## Accounting for heteroscedasticity due to time averaging
 
-To proceed with the Braya-Sø example, we need to increase the basis dimension (`k = 45`), fit using `method = "REML"`. As discussed in the manuscript, we should also account for the non-constant variance, or *heteroscedasticity*, that may arise due to variation in the amount of time (or "lake years") that each sample represents. All else equal, we expect that samples that average more time have smaller variance than those that average a smaller amount of time. To include information about the expected heteroscedasticity in the GAM we can use observational weights[^2]. Here I use the `sampleInterval` variable that I created earlier as the measure of lake years per sample, and to avoid changing the model likelihood, the weights use are the values of `sampleInterval` divided by the mean of `sampleInterval`:
+To proceed with the Braya-Sø example, we need to increase the basis dimension, fit using `method = "REML"`. As discussed in the manuscript, we should also account for the non-constant variance, or *heteroscedasticity*, that may arise due to variation in the amount of time (or "lake years") that each sample represents. All else equal, we expect that samples that average more time have lower variance than those that average a smaller amount of time. To include information about the expected heteroscedasticity in the GAM we can use observational weights[^2]. Here, I use the `sampleInterval` variable that I created earlier as the measure of lake years per sample, and, to avoid changing the model likelihood, the weights use are the values of `sampleInterval` divided by the mean of `sampleInterval`:
 
 ```{r final-braya-reml-fit}
-braya_reml <- gam(UK37 ~ s(Year, k = 45), data = braya,
+braya_reml <- gam(UK37 ~ s(Year, k = 40), data = braya,
                   method = "REML",
                   weights = sampleInterval / mean(sampleInterval))
 summary(braya_reml)
@@ -306,15 +306,17 @@ summary(braya_reml)
 
 [^2]: This simple solution is for a Gaussian GAM. For models with other distributions, the exact interpretation of observational weights will vary. For such data, where the conditional mean and variance of the observations are linked, the use of location-scale, or distributional, models may be more apporpriate and informative.
 
-If we now check if 44 (`k = 45`) basis functions is sufficient
+If we now check if 39 (`k = 40`) basis functions is sufficient
 ```{r final-braya-gam-check, fig.show = "hide"}
 gam.check(braya_reml)
 ```
-we note that the value of `k-index` is now greater than 1 and the *p* value suggests there is very little evidence against the null hypothesis. Also note that the `edf` of the estimated smooth is considerably below the maximum (`k'`). This is the effect of the smoothness penalty removing the excessive wiggliness possible with 44 basis functions. If the `edf` were close to `k'`, you might consider increasing `k` by a modest amount (in this instance by 5 or 10 additional basis functions) to assure yourself that you have sufficient basis functions. This has the additional advantage of allowing a richer set of smooths of a given complexity (`edf`) to be represented using the basis functions, which may improve the model fit to the data without changing the `edf` too much.
+we note that the value of `k-index` is now greater than 1 and the *p* value suggests there is very little evidence against the null hypothesis. This result strongly suggests that there were sufficient basis functions used to estimated the trend.
+
+Also note that the `edf` of the estimated smooth is considerably below the maximum (`k'`). This is the effect of the smoothness penalty removing the excessive wiggliness possible with 39 basis functions. If the `edf` were close to `k'`, you might consider increasing `k` by a modest amount (in this instance by 5 or 10 additional basis functions) to assure yourself that you have sufficient basis functions. This has the additional advantage of allowing a richer set of smooths of a given complexity (`edf`) to be represented using this larger set of basis functions, which may improve the model fit to the data without changing the `edf` too much.
 
 # Posterior simulation
 
-Samples from the posterior distribution of a GAM can be drawn using the `simulate()` methods from the *schoenberg* package.
+Samples from the posterior distribution of a GAM can be drawn using the `simulate()` methods from the *gratia* package.
 
 ```{r small-posterior-simulation}
 set.seed(1) # set the random seed to make this reproducible
@@ -342,8 +344,7 @@ smallSim.plt
 We repeat the same simulation for Braya-Sø
 
 ```{r braya-posterior-simulation}
-## posterior simulation
-## need to reset-up newBraya
+## data points to simulate at
 newBraya <- with(braya,
                  data.frame(Year = seq(min(Year), max(Year),
                                        length.out = N)))
@@ -355,11 +356,13 @@ braya_pred <- cbind(newBraya,
 set.seed(1)
 sims2 <- simulate(braya_reml, nsim = nsim, newdata = newBraya,
                   unconditional = TRUE)
+
+## rearrange the output into a long/tidy format
 colnames(sims2) <- paste0("sim", seq_len(nsim))
 sims2 <- setNames(stack(as.data.frame(sims2)),
-                      c("simulated", "run"))
+                  c("simulated", "run"))
 sims2 <- transform(sims2, Year = rep(newBraya$Year, nsim),
-                       simulated = simulated)
+                   simulated = simulated)
 
 brayaSim.plt <- ggplot(braya_pred, aes(x = Year, y = fit)) +
     geom_line(data = sims2,
@@ -370,16 +373,16 @@ brayaSim.plt <- ggplot(braya_pred, aes(x = Year, y = fit)) +
 brayaSim.plt
 ```
 
-Figure 7 in the manuscript was prepared using
+Figure 8 in the manuscript was prepared using
 
-```{r figure-7, fig.show = "hide"}
+```{r figure-8, fig.show = "hide"}
 plot_grid(smallSim.plt, brayaSim.plt, ncol = 1, labels = "auto",
           align = "hv", axis = "lr")
 ```
 
 # Confidence and simultaneous intervals
 
-Across-the-function and simultaneous confidence intervals are computed using the `confint()` method. The type of interval required is given via the `type` argument with options `"confidence"` and `"simultaneous"`. Fro example, for Small Water we would use
+Across-the-function and simultaneous confidence intervals are computed using the `confint()` method. The type of interval required is given via the `type` argument with options `"confidence"` and `"simultaneous"`. For example, for Small Water we would use
 
 ```{r small-compare-intervals}
 sw.cint <- confint(mod, parm = "Year", newdata = newYear,
@@ -424,15 +427,15 @@ brayaInt.plt
 ```
 in the same way
 
-Figure 8 in the manuscript was prepared using
-```{r figure-8, fig.show = "hide"}
+Figure 9 in the manuscript was prepared using
+```{r figure-9, fig.show = "hide"}
 plot_grid(smallInt.plt, brayaInt.plt, ncol = 1, labels = "auto",
           align = "hv", axis = "lr")
 ```
 
 # Derivatives of the estimated trend
 
-The first derivative of the estimated trend is calculated using finite differences using the `fderiv()` function. There is also a `confint()` method for objects produced by `fderiv()`. The first derivatives and a 95% simultaneous confidence interval for the Small Water trend we computed and plotted using
+The first derivative of the estimated trend is calculated using finite differences using the `fderiv()` function. There is also a `confint()` method for objects produced by `fderiv()`. The first derivatives and a 95% simultaneous confidence interval for the Small Water trend were computed and plotted using
 
 ```{r small-derivatives}
 small.d <- fderiv(mod, newdata = newYear, n = N)
@@ -462,16 +465,16 @@ braya_deriv_plt <- ggplot(braya.sint, aes(x = Year, y = est)) +
     labs(x = "Year CE", y = "First derivative")
 ```
 
-Figure 9 in the manuscript was prepared using
+Figure 10 in the manuscript was prepared using
 
-```{r figure 9}
+```{r figure-10}
 plot_grid(small_deriv_plt, braya_deriv_plt, ncol = 1, labels = "auto",
           align = "hv", axis = "lr")
 ```
 
 # Gaussian process smooths
 
-For the Gaussian process smooth to fit within the GAM framework described in the manuscript, we need to supply the value of $\phi$ for the effective range of the correlation function. To estimate $\phi$, we need to repeatedly fit the required GAM using a range of plausible values for $\phi$, which we do using a loop. In the chunk below I fit 200 models with $\phi$ in the range 15--500. For value of $\phi$ I fit the required GAM and extract the REML score (from component `gcv.ubre`) and store it in the numeric vectors `Mat` or `SEx`, for Matérn and Squared Exponential correlation functions, respectively. The final line of the chunk prepares the REML scores for the two correlation functions in long or tidy format suitable for plotting with *ggplot2*.
+For the Gaussian process smooth to fit within the GAM framework described in the manuscript, we need to supply the value of $\phi$ for the effective range of the correlation function. To estimate $\phi$, we need to repeatedly fit the required GAM using a range of plausible values for $\phi$, which we do using a loop. In the chunk below I fit 200 models with $\phi$ in the range 15--500. For each value of $\phi$ I fit the required GAM and extract the REML score (from component `gcv.ubre`) and store it in the numeric vectors `Mat` or `SEx`, for Matérn and Squared Exponential correlation functions, respectively. The final line of the chunk prepares the REML scores in long or tidy format suitable for plotting with *ggplot2*.
 
 ```{r profile-range-parameter-in-gp-smooth-model}
 nn <- 200    # number of points at which to evaluate profile likelihood
@@ -554,9 +557,9 @@ gp.plt2 <- ggplot(pred, aes(x = Year, y = fitted, colour = cor)) +
 gp.plt2
 ```
 
-whilst Figure 12 in the manuscript was prepared using
+whilst Figure 13 in the manuscript was prepared using
 
-```{r figure-12, fig.show = "hide"}
+```{r figure-13, fig.show = "hide"}
 plot_grid(proflik.plt, gp.plt2, ncol = 1, labels = c("a","b"),
           align = "hv", axis = "lr")
 ```
@@ -574,7 +577,7 @@ mod_ad <- gam(UK37 ~ s(Year, k = 45, bs = "ad"), data = braya,
 
 # Comparing trends
 
-For the model comparison, I refitted all the models for consistency; the code to fit each of the
+For the model comparison I refitted all the models for consistency; the code to fit each of the
 
 1. Thin plate regression spline (TPRS),
 2. Gaussian process spline (Matérn correlation functions), and
@@ -603,7 +606,7 @@ mod_ad <- gam(UK37 ~ s(Year, k = 45, bs = "ad"), data = braya,
               weights = sampleInterval / mean(sampleInterval))
 ```
 
-We write a small function to predict from each model over the range of `Year` and return the data in tidy format for plotting. The plot produce reproduces figure 13 in the manuscript.
+I wrote a small function to predict from each model over the range of `Year` and return the data in tidy format for plotting.
 
 ```{r process-models, dependson = -1}
 ## wrap this in a function that will return all the plots & derived objects
@@ -626,8 +629,9 @@ plts_tprs <- processGAM(mod = mod_tprs) # TPRS with weights
 
 pltData <- do.call("rbind", lapply(list(plts_gp, plts_ad, plts_tprs),
                                    `[[`, "objects"))
-pltData <- transform(pltData, Model = rep(c("GP", "Adaptive", "TPRS"),
-                              each = nrow(plts_gp$objects)))
+pltData <- transform(pltData,
+                     Model = rep(c("GP", "Adaptive", "TPRS"),
+                                 each = nrow(plts_gp$objects)))
 
 allFits <- ggplot(pltData, aes(x = Year, y = fit)) +
     geom_point(aes(x = Year, y = UK37), data = braya) +
@@ -637,12 +641,13 @@ allFits <- ggplot(pltData, aes(x = Year, y = fit)) +
                         values = c("#e66101", "#fdb863", "#5e3c99"))
 allFits
 ```
+The plot produced reproduces Figure 14 in the manuscript.
 
 # Accounting for age-model uncertainty
 
 The manuscript proposed to simulate from the posterior distribution of the fitted age model as a way to account for age-model uncertainty. The first step in the process is to fit the age model from which to simulate new age models. This was done using the *scam* package for a *shape-constrained GAM*, with the age-model spline constrained to be monotonic decreasing (`bs = "mpd"`).
 
-To make this section self-contained, I refitted the Small Water GAM plus CAR(1) model
+To make this section self-contained, I refitted the Small Water GAM plus CAR(1) model. Because we will be sampling ages for each observation from the posterior of the age-model GAM, the oldest sample will will be somewhat younger than the expected value from the model in some samples. This will cause problems when we come to simulate from the GAMs fitted to the resampled age-models as each GAM will cover a slightly different range of time. To avoid this problem I fix the knots at the extremes of the observed values of `Year` and spread the remaining 12 knots evenly inbetween. The knot locations are stored in the vector `knots`, which is passed to the argument `knots` when fitting the GAM
 
 ```{r small-scam-fit}
 knots <- with(small, list(Year = seq(min(Year), max(Year), length = 14)))
@@ -651,7 +656,9 @@ mod <- gamm(d15N ~ s(Year, k = 15), data = small, method = "REML",
             knots = knots)
 ```
 
-and then we load the ^210^Pb dating results for the dated core sections.
+Setting the knots like this doesn't change the model estimated above; I'm only repeating what happens internally if you don't supply `knots`. However, later we will need to specify this set of knots explicitly when accounting for age model uncertainty.
+
+Next we load the ^210^Pb dating results for the dated core sections.
 
 ```{r}
 swAge <- read.csv("./data/small-water/small1-dating.csv")
@@ -716,7 +723,7 @@ simTrends <- data.frame(Year  = with(newYear, rep(Year, length(simTrends))),
                                     times = lengths(simTrends)))
 ```
 
-The next chunk does the final step in the process. For each of the models we just fitted to include age model uncertainty, we simulate 50 draws from the model posterior distribution. We start with a wrapper function around the `simulate()` code we want to run on each model, then do the actual posterior draws for each model using `lapply()`. The final step just arranges data for plotting.
+The next chunk does the final step in the process. For each of the models we just fitted, we simulate 50 draws from the model posterior distribution. We start with a wrapper function around the `simulate()` code we want to run on each model, then do the actual posterior draws for each model using `lapply()`. The final step just arranges data for plotting.
 
 ```{r, dependson = -1}
 ## wrapper to simulate from a fitted GAM with the required arguments
@@ -742,6 +749,7 @@ simSimulate <-
 Each of the steps is visualized using the plot code shown below.
 
 ```{r small-scam-fit-plots, dependson = -1}
+## plot the estimated age model ad posterior simulations from it
 plt1 <- ggplot(swAge, aes(y = Date, x = Depth)) +
     geom_line(data = newSims,
               mapping = aes(y = Age, x = Depth, group = Simulation),
@@ -752,6 +760,7 @@ plt1 <- ggplot(swAge, aes(y = Date, x = Depth)) +
                   colour = "red") +
     labs(y = "Year CE", x = "Depth (cm)")
 
+## plot the simulated trends showing the effect of age-model uncertainty
 plt2 <- ggplot(simTrends, aes(x = Year, y = Trend, group = Group)) +
     geom_line(alpha = 0.1, colour = "grey80") +
     geom_line(data = newYear,
@@ -761,6 +770,8 @@ plt2 <- ggplot(simTrends, aes(x = Year, y = Trend, group = Group)) +
                inherit.aes = FALSE, size = 0.7) +
     labs(x = "Year", y = d15n_label)
 
+## plot simulated trends showing the effect of age-model uncertainty and
+## the effect of uncertainty in the estimated trend itself
 plt3 <- ggplot(simSimulate, aes(x = Year, y = Trend, group = Group)) +
     geom_line(alpha = 0.2, colour = "grey80") +
     geom_point(data = small,
@@ -785,7 +796,7 @@ bot_row <- plot_grid(plots[[2]], plots[[3]], ncol = 1, labels = c("b", "c"))
 plot_grid(top_row, bot_row, ncol = 1, rel_heights = c(0.5, 1))
 ```
 
-This reproduces figure 14 from the manuscript.
+This reproduces Figure 15 from the manuscript.
 
 # Session information
 
