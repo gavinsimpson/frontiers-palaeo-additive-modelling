@@ -59,7 +59,7 @@
 \affil[1]{Institute of Environmental Change and Society, ~University of Regina,
 Regina, Saskatchewan, Canada, S4S 0A2}
 
-\date{August 16, 2018}
+\date{September 19, 2018}
 
 %\setromanfont{Constantia}
 %\setromanfont{texgyrepagella.otf}
@@ -75,8 +75,8 @@ Regina, Saskatchewan, Canada, S4S 0A2}
 
 \newcommand{\loess}{\textsc{Loess}}
 
-\usepackage{lineno}
-\linenumbers
+%\usepackage{lineno}
+%\linenumbers
 
 \begin{document}
 \maketitle
@@ -250,7 +250,7 @@ trend analysis to multivariate species abundance and compositional data.
 
 }
 
-\caption{Flowchart showing the main steps in the analysis of time series using generalized additive models.}\label{fig:flowchart}
+\caption{Flowchart showing the main steps in the analysis of time series using generalized additive models. The main R functions associated with each step or decision are shown in bold.}\label{fig:flowchart}
 \end{figure}
 
 \subsection{Example time series}\label{example-time-series}
@@ -312,7 +312,7 @@ Figure \ref{fig:data-figure}b.
 
 }
 
-\caption{Example time series; a) Small Water bulk organic matter $\delta^{15}\text{N}$ time series on a ${}^{210}\text{Pb}$ time scale, and b) Braya-Sø \uk{} time series on a calibrated ${}^{14}\text{C}$ time scale. The observations \uk{} time series have been joined by lines purely as a visual aid to highlight potential trends.}\label{fig:data-figure}
+\caption{Example time series; a) Small Water bulk organic matter $\delta^{15}\text{N}$ time series on a ${}^{210}\text{Pb}$ time scale, and b) Braya-Sø \uk{} time series on a calibrated ${}^{14}\text{C}$ time scale. The observations in the \uk{} time series have been joined by lines purely as a visual aid to highlight potential trends.}\label{fig:data-figure}
 \end{figure}
 
 \section{Regression models for palaeoenvironmental time
@@ -446,16 +446,17 @@ values to the interval 0--\(\infty\) (equation \eqref{eq:gam-inverse}).
 
 In \eqref{eq:gam-ef}, we further assume that the observations are drawn
 from a member of the exponential family of distributions --- such as the
-Poisson for count data, the binomial for presence/absence or counts from
-a total --- with expected value \(\mu_t\) and possibly some additional
-parameters \(\Theta\) (\(y_t \sim \text{EF}(\mu_t, \Theta)\)).
-Additionally, many software implementations of the above model also
-allow for distributions that are not within the exponential family but
-which can be fitted using an algorithm superficially similar to the one
-used to fit GAMs to members of the exponential family (e.g. Wood et al.,
-2016). Common examples of such extended families include the negative
-binomial distribution (for overdispersed counts) and the beta
-distribution (for true proportions or other interval-bounded data).
+Poisson for count data, or the binomial for presence/absence or counts
+from a total --- with expected value \(\mu_t\) and possibly some
+additional parameters \(\Theta\)
+(\(y_t \sim \text{EF}(\mu_t, \Theta)\)). Additionally, many software
+implementations of the above model also allow for distributions that are
+not within the exponential family but which can be fitted using an
+algorithm superficially similar to the one used to fit GAMs to members
+of the exponential family (e.g. Wood et al., 2016). Common examples of
+such extended families include the negative binomial distribution (for
+overdispersed counts) and the beta distribution (for true proportions or
+other interval-bounded data).
 
 \subsection{Basis functions}\label{basis-functions}
 
@@ -496,9 +497,9 @@ function weights are the estimated coefficients in the model, the
 As we have already seen, polynomial basis expansions do not necessarily
 lead to well-fitting models unless the true function \(f\) is itself a
 polynomial. One of the primary criticisms is that polynomial basis
-functions are global (Magee, 1998); the value of \(f\) at time point
-\(x_t\) affects the value of \(f\) at time point \(x_{t+s}\) even if the
-two time points are at opposite ends of the series. There are many other
+functions are global (Magee, 1998); the value of \(f\) at time \(x_t\)
+affects the value of \(f\) at time point \(x_{t+s}\) even if the two
+time points are at opposite ends of the series. There are many other
 bases we could use; here I discuss one such set of bases, that of
 splines.
 
@@ -522,7 +523,7 @@ the sections join smoothly and differentiably at the knots (Wood, 2017,
 
 }
 
-\caption{Basis functions for the time covariate and the Small Water $\delta^{15}\text{N}$ time series. A rank (size) 7 cubic regression spline (CRS) basis expansion is show in a), with knots, indicated by tick marks on the x-axis, spread evenly through the rang of the data. b) shows the same CRS basis functions weighted by the estimated coefficients $\beta_j$, plus the resulting GAM trend line (black line drawn through the data). The grey points in both panels are the observed $\delta^{15}\text{N}$ values. c) A rank 7 thin plate regression spline basis for the same data.}\label{fig:basis-function-example-plot}
+\caption{Basis functions for the time covariate and the Small Water $\delta^{15}\text{N}$ time series. A rank (size) 7 cubic regression spline (CRS) basis expansion is show in a), with knots, indicated by tick marks on the x-axis, spread evenly through the range of the data. b) shows the same CRS basis functions weighted by the estimated coefficients $\beta_j$, plus the resulting GAM trend line (black line drawn through the data). The grey points in both panels are the observed $\delta^{15}\text{N}$ values. c) A rank 7 thin plate regression spline basis for the same data.}\label{fig:basis-function-example-plot}
 \end{figure}
 
 The CRS can be parameterized in a number of different ways. One requires
@@ -537,7 +538,7 @@ placing a greater number of knots where the data is most dense.
 A CRS basis expansion comprised of 7 basis functions for the time
 covariate in the Small Water series, is shown in Figure
 \ref{fig:basis-function-example-plot}a. The tick marks on the x-axis
-show the locations of the knots, which are located at the ends of the
+show the positions of the knots, which are located at the ends of the
 series and evenly in between. Notice that in this particular
 parametrization, the \(j\)th basis function takes a value of 1 at the
 \(j\)th knot and at all other knots a value of 0.
@@ -773,7 +774,7 @@ correlation between any two residuals declines as a function of their
 separation in time and is an additional parameter that will be estimated
 during model fitting. The model in \eqref{eq:small-gam} was fitted using
 the \texttt{gamm()} function (Wood, 2004) in the \emph{mgcv} package
-(Wood, 2017) for R (R Core Team, 2017).
+(Wood, 2017) for R (R Core Team, 2018).
 
 \begin{figure}
 
@@ -786,7 +787,7 @@ the \texttt{gamm()} function (Wood, 2004) in the \emph{mgcv} package
 
 The fitted trend is shown in Figure \ref{fig:plot-fitted-models}a, and
 well-captures the strong pattern in the data. The trend is statistically
-significant (estimated degrees of freedom = 7.95; \(F\) = 47.44,
+significant (effective degrees of freedom = 7.95; \(F\) = 47.44,
 approximate \(p\) value = \(\ll\) 0.0001). However further analysis of
 the fitted model is required to answer the other questions posed earlier
 about the timing of change and whether features in the trend can be
@@ -843,20 +844,20 @@ these two models.
 \end{figure}
 
 The primary issue leading to poor fit is that neither model accounts for
-the different variance (known as (heteroscedasticity) of each
-observation in the \uk{} record. This seemingly isn't a problem for GCV
-which minimizes prediction error. The sediments in Braya-Sø are not
-annually laminated and therefore the core was sliced at regular depth
-intervals. Owing to compaction of older sediments and variation in
-accumulation rates over time, each sediment slice represents a different
-number of ``lake years''. We can think of older samples as representing
-some average of many years of sediment deposition, whilst younger
-samples are representative of fewer of these lake years. The average of
-a larger set of numbers is estimated more precisely than the average of
-a smaller set, all things equal. A direct result of this variable
-averaging of lake years it that some samples are more precise and
-therefore have lower variance than other samples and yet the model
-assumed that the variance was constant across samples.
+the different variance (known as heteroscedasticity) of each observation
+in the \uk{} record. This seemingly isn't a problem for GCV which
+minimizes prediction error. The sediments in Braya-Sø are not annually
+laminated and therefore the core was sliced at regular depth intervals.
+Owing to compaction of older sediments and variation in accumulation
+rates over time, each sediment slice represents a different number of
+``lake years''. We can think of older samples as representing some
+average of many years of sediment deposition, whilst younger samples are
+representative of fewer of these lake years. The average of a larger set
+of numbers is estimated more precisely than the average of a smaller
+set, all things equal. A direct result of this variable averaging of
+lake years it that some samples are more precise and therefore have
+lower variance than other samples and yet the model assumed that the
+variance was constant across samples.
 
 Accounting for heteroscedasticity within the model is relatively simple
 via the use of observational weights. The number of lake years
@@ -937,7 +938,7 @@ Silverman, 1985; Wahba, 1983, 1990) and therefore the typical
 frequentist interpretation does not apply. Nychka (1988) investigated
 the properties of a confidence interval created as described above using
 standard errors derived from the Bayesian posterior covariance matrix
-for the estimated mode parameters. Such intervals have the interesting
+for the estimated model parameters. Such intervals have the interesting
 property that they have good \emph{across-the-function} coverage when
 considered from a frequentist perspective. This means that, when
 averaged over the range of the function, the Bayesian credible intervals
@@ -1010,7 +1011,7 @@ standard Bayesian credible interval by some amount. We could simulate a
 large number of functions from the posterior distribution of the model
 and then search for the value of \(m_{1-\alpha}\) that when multiplied
 by \(\text{SE}(\hat{f}(x_t))\) yielded an interval that contained the
-whole function for \((1-\alpha)\) 100\% of the functions simulated. In
+whole function for \$(1-\alpha)\$100\% of the functions simulated. In
 practice, the simulation method of Ruppert et al. (2003) does not
 involve a direct search, but yields the critical value \(m_{1-\alpha}\)
 required.
@@ -1072,7 +1073,7 @@ derivative of the fitted trend is evaluated using finite differences at
 a large number of points in the time series. An approximate (1 -
 \(\alpha\))100\% pointwise confidence interval can be calculated for the
 derivative estimates using standard theory
-(i.e.~\(\pm 1.96 \times \text{SE}(\hat{y}_t)\) for a 85\% interval) and
+(i.e.~\(\pm 1.96 \times \text{SE}(\hat{y}_t)\) for a 95\% interval) and
 the covariance matrix of the spline coefficients. A (1 -
 \(\alpha\))100\% simultaneous interval for the derivatives can also be
 computed using the method described
@@ -1146,10 +1147,10 @@ the parameter \(\phi\). The estimated value of \(\phi\) for the
 δ\textsuperscript{15}N series is 0.6 with 95\% confidence interval
 0.28--0.85, indicating moderate to strong residual autocorrelation about
 the fitted trend. The correlation function is an exponentially
-decreasing function of temporal separation (\(\Delta_t\)), and whilst
+decreasing function of temporal separation (\(h\)), and whilst
 observations that are a few years apart are quite strongly dependent on
-one another, this dependence drops off rapidly as \(\Delta_t\) increases
-and is effectively zero when samples are separated by a decade or more
+one another, this dependence drops off rapidly as \(h\) increases and is
+effectively zero when samples are separated by a decade or more
 (Figure~\ref{fig:car1-plot}).
 
 Failure to account for the dependencies in the δ\textsuperscript{15}N
@@ -1172,7 +1173,7 @@ of false positive results.
 
 }
 
-\caption{Estimated CAR(1) process from the GAM fitted to the Small Water $\delta^{15}\text{N}$ time series. $h(\Delta_t, \phi)$ is the correlation between residuals separated by $\Delta_t$ years, where $\hat{\phi} = \text{0.6}$. The shaded band is a 95\% pointwise confidence interval on the estimated correlation $h$.}\label{fig:car1-plot}
+\caption{Estimated CAR(1) process from the GAM fitted to the Small Water $\delta^{15}\text{N}$ time series. $c(h, \phi)$ is the correlation between residuals separated by $h$ years, where $\hat{\phi} = \text{0.6}$. The shaded band is a 95\% pointwise confidence interval on the estimated correlation $c$.}\label{fig:car1-plot}
 \end{figure}
 
 Problems estimating the GAM plus CAR(1) model were encountered when this
@@ -1469,7 +1470,7 @@ for a similar, non-GAM related idea).
 
 }
 
-\caption{Accounting for uncertainty in age estimates whilst fitting a smooth trend to the Small Water $\delta^{15}\text{N}$ time series. (a) Estimated age model using a monotonically-constrained spline fitted to ${}^{210}\text{Pb}$ inferred ages for selected depths in the sediment core (red points). The uncertainty in the ${}^{210}\text{Pb}$ inferred age is show by the red vertical bars. The fitted age model is illustrated by the solid black line. The faint grey lines are 25 random draws from the posterior distribution of the monotonically constrained GAM. The effect of age uncertainty on trend estimation is shown in b); for 100 simulations from the posterior distribution of the age model in a) a trend was estimated using a GAM with a thin plate regression spline basis and a CAR(1) process in the residuals. These trends are shown as grey lines. The combined effect of age model and fitted GAM uncertainty on the trends for the $\delta^{15}\text{N}$ time series is shown in c). The grey lines in c) are based on 50 random draws from the model posterior distribution for each of the 100 trends shown in b). For both b) and c) the black line shows the trend estimated assuming the ages of each sediment sample are known and fixed.}\label{fig:small-scam-fit-plots}
+\caption{Accounting for uncertainty in age estimates whilst fitting a smooth trend to the Small Water $\delta^{15}\text{N}$ time series. (a) Estimated age model using a monotonically-constrained spline fitted to ${}^{210}\text{Pb}$ inferred ages for selected depths in the sediment core (red points). The uncertainty in the ${}^{210}\text{Pb}$ inferred age is shown by the red vertical bars. The fitted age model is illustrated by the solid black line. The faint grey lines are 25 random draws from the posterior distribution of the monotonically constrained GAM. The effect of age uncertainty on trend estimation is shown in b); for 100 simulations from the posterior distribution of the age model in a) a trend was estimated using a GAM with a thin plate regression spline basis and a CAR(1) process in the residuals. These trends are shown as grey lines. The combined effect of age model and fitted GAM uncertainty on the trends for the $\delta^{15}\text{N}$ time series is shown in c). The grey lines in c) are based on 50 random draws from the model posterior distribution for each of the 100 trends shown in b). For both b) and c) the black line shows the trend estimated assuming the ages of each sediment sample are known and fixed.}\label{fig:small-scam-fit-plots}
 \end{figure}
 
 Figure \ref{fig:small-scam-fit-plots}a shows the estimated dates (in
@@ -1854,11 +1855,6 @@ doi:\href{https://doi.org/10.1007/s11222-013-9448-7}{10.1007/s11222-013-9448-7}.
 \hypertarget{ref-Pya2016-rk}{}
 Pya, N., and Wood, S. N. (2016). A note on basis dimension selection in
 generalized additive modelling. \emph{ArXiv e-prints}.
-
-\hypertarget{ref-R-core-team}{}
-R Core Team (2017). \emph{R: A language and environment for statistical
-computing}. Vienna, Austria: R Foundation for Statistical Computing
-Available at: \url{https://www.R-project.org/}.
 
 \hypertarget{ref-Rcore}{}
 R Core Team (2018). \emph{R: A language and environment for statistical

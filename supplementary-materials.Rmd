@@ -3,7 +3,7 @@ title: "Supplementary materials for: Modelling palaeoecological time series usin
 author: Gavin L. Simpson
 affiliation: "Institute of Environmental Change and Society, \\ University of Regina, Regina, Saskatchewan, Canada, S4S 0A2"
 mail: "gavin.simpson@uregina.ca"
-date: August 16, 2018
+date: October 16, 2023
 keywords: time series; generalized additive model; simultaneous interval; spline; environmental change 
 bibliography: references.bib
 csl: frontiers-in-ecology-and-evolution.csl
@@ -36,7 +36,7 @@ knitr::knit_hooks$set(crop.plot = knitr::hook_pdfcrop)
 
 This document is an annotated version of the R code used to fit the GAMs and related analyses to the Small Water and Braya-Sø example data sets.
 
-The following packages are required: *mgcv*, *scam*, *ggplot2*, *cowplot*, and *tidyr*.
+The following packages are required: *mgcv*, *scam*, *ggplot2*, *cowplot*, *dplyr*, and *tidyr*.
 
 ```{r load-packages, cache = FALSE}
 library("mgcv")
@@ -44,13 +44,15 @@ library("scam")
 library("ggplot2")
 library("cowplot")
 library("tidyr")
+library("dplyr")
 ```
-In addition, the *gratia* package is required; this in-development package is not on CRAN but can be installed directly from GitHub using functions from the *devtools* package. To install the package, install *devtools* and then use `devtools::install_github()` to install *gratia*, as shown below:
+In addition, the *gratia* package is required; install *gratia*, using:
 
 ```{r install-gratia, eval = FALSE}
-## gratia is not on CRAN, install from github:
-install.packages("devtools")
-devtools::install_github("gavinsimpson/gratia")
+## requires development version of gratia that is not on CRAN, install from github:
+install.packages("gratia", repos = c("https://gavinsimpson.r-universe.dev",
+    "https://cloud.r-project.org"))
+stopifnot(packageVersion("gratia") >= "0.8.1.42")
 ```
 Assuming that the installation of *gratia* completes without error, the package can be loaded as usual
 ```{r load-gratia, cache = FALSE}
@@ -163,8 +165,8 @@ car1Plt <- ggplot(car1, aes(x = S, y = Correlation)) +
     geom_ribbon(aes(ymax = Upper, ymin = Lower),
                 fill = "black", alpha = 0.2) +
     geom_line() +
-    ylab(expression(italic(h) * (list(Delta[t], varphi)))) +
-    xlab(expression(Delta[t] ~ (years)))
+    ylab(expression(italic(c) * (list(h, varphi)))) +
+    xlab(expression(h ~ (years)))
 car1Plt
 ```
 The exponential decline in correlation with increasing separation is evident here; once samples are ~10 years apart, there is little estimated dependence between them.
@@ -199,16 +201,14 @@ small_fitted
 
 ## Braya-Sø
 
-The same model as used for Small Water was also initially attempted with the Braya-Sø data. However, in order to even fit the model with both a smooth and the CAR(1) process, I had to change the default optimizer used to estimate the model parameters, and reduce the basis dimension, `k`, to a small number. I also fit the model using GCV, which is, at the time of writing, the default in `gam()`, hence no `method` argument
+The same model as used for Small Water was also initially attempted with the Braya-Sø data. I also fit the model using GCV, which is, at the time of writing, the default in `gam()`, hence no `method` argument
 
-```{r fit-braya-so-car1-and-gcv-models}
+```{r fit-braya-so-car1-and-gcv-models, error = TRUE}
 ## fit the car(1) model --- needs optim as this is not a stable fit!
 ## also needs k setting lower than default
-braya.car1 <- gamm(UK37 ~ s(Year, k = 5), data = braya, 
+braya.car1 <- gamm(UK37 ~ s(Year, k = 10), data = braya,
                    correlation = corCAR1(form = ~ Year),
-                   method = "REML",
-		           control = list(niterEM = 0, optimMethod = "BFGS", 
-                                  opt = "optim"))
+                   method = "REML")
 
 ## fit model using GCV
 braya.gcv <- gam(UK37 ~ s(Year, k = 30), data = braya)
@@ -323,18 +323,14 @@ set.seed(1) # set the random seed to make this reproducible
 nsim <- 20  # how many simulations to draw
 
 ## do the simulations
-sims <- simulate(mod, nsim = nsim, newdata = newYear, unconditional = TRUE)
-
-## rearrange the output into a long/tidy format
-colnames(sims) <- paste0("sim", seq_len(nsim))
-sims <- setNames(stack(as.data.frame(sims)), c("simulated", "run"))
-sims <- transform(sims, Year = rep(newYear$Year, nsim),
-                  simulated = simulated)
+sims <- smooth_samples(mod$gam, n = nsim, data = newYear,
+    unconditional = TRUE)
+sims <- mutate(sims, value = value + coef(mod$gam)[1L]) # add intercept
 
 ## Plot simulated trends
 smallSim.plt <- ggplot(newYear, aes(x = Year, y = fit)) +
     geom_line(data = sims,
-              mapping = aes(y = simulated, x = Year, group = run),
+              mapping = aes(y = value, x = Year, group = draw),
               colour = "grey80") +
     geom_line(lwd = 1) +
     labs(y = d15n_label, x = "Year CE")
@@ -354,19 +350,13 @@ braya_pred <- cbind(newBraya,
 
 ## simulate
 set.seed(1)
-sims2 <- simulate(braya_reml, nsim = nsim, newdata = newBraya,
-                  unconditional = TRUE)
-
-## rearrange the output into a long/tidy format
-colnames(sims2) <- paste0("sim", seq_len(nsim))
-sims2 <- setNames(stack(as.data.frame(sims2)),
-                  c("simulated", "run"))
-sims2 <- transform(sims2, Year = rep(newBraya$Year, nsim),
-                   simulated = simulated)
+sims2 <- smooth_samples(braya_reml, n = nsim, data = newBraya,
+    unconditional = TRUE)
+sims2 <- mutate(sims2, value = value + coef(braya_reml)[1L]) # add intercept
 
 brayaSim.plt <- ggplot(braya_pred, aes(x = Year, y = fit)) +
     geom_line(data = sims2,
-              mapping = aes(y = simulated, x = Year, group = run),
+              mapping = aes(y = value, x = Year, group = draw),
               colour = "grey80") +
     geom_line(lwd = 1) +
     labs(y = braya_ylabel, x = "Year CE")
@@ -385,21 +375,19 @@ plot_grid(smallSim.plt, brayaSim.plt, ncol = 1, labels = "auto",
 Across-the-function and simultaneous confidence intervals are computed using the `confint()` method. The type of interval required is given via the `type` argument with options `"confidence"` and `"simultaneous"`. For example, for Small Water we would use
 
 ```{r small-compare-intervals}
-sw.cint <- confint(mod, parm = "Year", newdata = newYear,
-                   type = "confidence")
-sw.sint <- confint(mod, parm = "Year", newdata = newYear,
-                   type = "simultaneous")
-head(sw.sint)
+sw.cint <- confint(mod, parm = "s(Year)", data = newYear, type = "confidence")
+sw.sint <- confint(mod, parm = "s(Year)", data = newYear, type = "simultaneous")
+sw.sint
 ```
 
 The `confint()` methods return data frames suitable for subsequent plotting with **ggplot**. The columns labelled `est` and `se` are the estimate values of the smooth and its standard error, respectively. The variables `lower` and `upper` contain the values of the lower and upper bounds on the requested interval. The intervals can be plotted as follows
 
 ```{r plot-small-water-intervals}
-smallInt.plt <- ggplot(sw.cint, aes(x = Year, y = est)) +
+smallInt.plt <- ggplot(sw.cint, aes(x = Year, y = .estimate)) +
     geom_ribbon(data = sw.sint,
-                mapping = aes(ymin = lower, ymax = upper, x = Year),
+                mapping = aes(ymin = .lower_ci, ymax = .upper_ci, x = Year),
                 fill = "grey80", inherit.aes = FALSE) +
-    geom_ribbon(mapping = aes(ymin = lower, ymax = upper, x = Year),
+    geom_ribbon(mapping = aes(ymin = .lower_ci, ymax = .upper_ci, x = Year),
                 fill = "grey60", inherit.aes = FALSE) +
     geom_line(lwd = 1) +
     labs(y = d15n_label, x = "Year CE")
@@ -408,18 +396,18 @@ smallInt.plt
 
 The intervals for Braya-Sø are created
 ```{r braya-compare-intervals}
-bs.cint <- confint(braya_reml, parm = "Year", newdata = newBraya,
+bs.cint <- confint(braya_reml, parm = "s(Year)", data = newBraya,
                    type = "confidence")
-bs.sint <- confint(braya_reml, parm = "Year", newdata = newBraya,
+bs.sint <- confint(braya_reml, parm = "s(Year)", data = newBraya,
                    type = "simultaneous")
 ```
 and plotted
 ```{r plot-braya-so-intervals}
-brayaInt.plt <- ggplot(bs.cint, aes(x = Year, y = est)) +
+brayaInt.plt <- ggplot(bs.cint, aes(x = Year, y = .estimate)) +
     geom_ribbon(data = bs.sint,
-                mapping = aes(ymin = lower, ymax = upper, x = Year),
+                mapping = aes(ymin = .lower_ci, ymax = .upper_ci, x = Year),
                 fill = "grey80", inherit.aes = FALSE) +
-    geom_ribbon(mapping = aes(ymin = lower, ymax = upper, x = Year),
+    geom_ribbon(mapping = aes(ymin = .lower_ci, ymax = .upper_ci, x = Year),
                 fill = "grey60", inherit.aes = FALSE) +
     geom_line(lwd = 1) +
     labs(y = braya_ylabel, x = "Year CE")
@@ -668,43 +656,40 @@ before fitting the shape-constrained GAM. Currently, *scam* can only fit models 
 
 ```{r}
 ## monotonic spline age-depth model
-swAge$Error[1] <- 1.1
-swAgeMod <- scam(Date ~ s(Depth, k = 5, bs = "mpd"), data = swAge,
-                 weights = 1 / swAge$Error, gamma = 1.4)
+swAge$Error[1] <- 1
+swAgeMod <- scam(Date ~ s(Depth, k = 5, bs = "cv"), data = swAge,
+    weights = (1 / swAge$Error) / mean(1 / swAge$Error), gamma = 1)
 ```
 
 Note that I added a small amount of error to the surface sample age as the model cannot be fitted if an observation has `0` weight.
 
-Next, predict from the estimated age model, and draw 25 samples from the posterior distribution using `simulate()`. The results are tidied into a format suitable for further processing and plotting. Note that the posterior samples here are only used for plotting.
+Next, predict from the estimated age model, and draw 25 samples from the posterior distribution using `smooth_samples()`. Note that the posterior samples here are only used for plotting.
 
 ```{r, dependson = -1}
 ## predict from the age model for a smooth set of points in `Depth`
-newAge <- with(swAge, data.frame(Depth = seq(min(Depth), max(Depth),
-                                             length.out = 200)))
-newAge <- transform(newAge,
-                    fitted = predict(swAgeMod, newdata = newAge, 
-                                     type = "response"))
-newSims <- as.data.frame(simulate(swAgeMod, nsim = 25, newdata = newAge))
-newSims <- cbind(Depth = newAge$Depth, newSims)
-newSims <- gather(newSims, Simulation, Age, -Depth)
+newAge <- data_slice(swAgeMod, Depth = evenly(Depth, n = 200))
+newAgeFit <- fitted_values(swAgeMod, data = newAge)
+newSims <- smooth_samples(swAgeMod, n = 25, data = newAge) %>%
+    mutate(value = value + coef(swAgeMod)[1L]) # %>%
+    #left_join(mutate(newAge, .row = row_number()), by = join_by(.row == .row))
 ```
 
-In the next code chunk, I draw 100 samples from the posterior distribution of the age model, but notice that I pass in the `small` data to `newdata` in the call to `simulate()` as the locations I want new age estimates for are the depths for which we have δ^15^N values. A small function (`fitSWModels`) is written to prepare each simulation for fitting and then actually fit the GAM plus CAR(1) model using the updated age information.
+In the next code chunk, I draw 100 samples from the posterior distribution of the age model, but notice that I pass in the `small` data to `data` in the call to `smooth_samples()` as the locations I want new age estimates for the depths for which we have δ^15^N values. A small function (`fitSWModels`) is written to prepare each simulation for fitting and then actually fit the GAM plus CAR(1) model using the updated age information.
 
 ```{r, dependson = -1}
 ## simulate from age model; each column is a simulation
-ageSims <- simulate(swAgeMod, nsim = 100, newdata = small, seed = 42)
-ageSims <- as.data.frame(ageSims)
+ageSims <- smooth_samples(swAgeMod, n = 100, data = small, seed = 42)
 
 fitSWModels <- function(x, y, knots) {
-    dat <- data.frame(d15N = y, Year = x)
+    dat <- data.frame(d15N = y,
+        Year = pull(x, value) + coef(swAgeMod, parameterized = TRUE)[1L])
     m <- gamm(d15N ~ s(Year, k = 15), data = dat, method = "REML",
               correlation = corCAR1(form = ~ Year), knots = knots)
 }
 
 ## generate new trends using draws from age-model posterior
-simTrendMods <- lapply(ageSims, fitSWModels, y = small$d15N, knots = knots)
-
+simTrendMods <- lapply(ageSims %>% split(ageSims$draw), fitSWModels,
+    y = small$d15N, knots = knots)
 
 ## function wrapper to predict new trends at locations over the
 ## range of `Year`
@@ -728,8 +713,8 @@ The next chunk does the final step in the process. For each of the models we jus
 ```{r, dependson = -1}
 ## wrapper to simulate from a fitted GAM with the required arguments
 simulateSWModels <- function(mod, newdata, nsim, seed = 42) {
-    sims <- simulate(mod, nsim = nsim, newdata = newdata, seed = seed)
-    as.vector(sims)
+    sims <- fitted_samples(mod, n = nsim, data = newdata, seed = seed)
+    pull(sims, .fitted)
 }
 
 ## now do the posterior simulation
@@ -752,9 +737,9 @@ Each of the steps is visualized using the plot code shown below.
 ## plot the estimated age model ad posterior simulations from it
 plt1 <- ggplot(swAge, aes(y = Date, x = Depth)) +
     geom_line(data = newSims,
-              mapping = aes(y = Age, x = Depth, group = Simulation),
+              mapping = aes(y = value, x = Depth, group = draw),
               alpha = 1, colour = "grey80") +
-    geom_line(data = newAge, mapping = aes(y = fitted, x = Depth)) +
+    geom_line(data = newAgeFit, mapping = aes(y = .fitted, x = Depth)) +
     geom_point(size = 1.5, colour = "red") +
     geom_errorbar(aes(ymin = Date - Error, ymax = Date + Error, width = 0),
                   colour = "red") +

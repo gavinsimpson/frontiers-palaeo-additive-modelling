@@ -1,3 +1,6 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
 \documentclass[12pt,]{article}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -6,12 +9,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
     \setmainfont[]{TeX Gyre Pagella}
 \fi
@@ -19,12 +19,17 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage{microtype}
+\usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
 \usepackage{hyperref}
-\hypersetup{unicode=true,
+\hypersetup{
             pdftitle={Supplementary materials for: Modelling palaeoecological time series using generalized additive models},
             pdfauthor={Gavin L. Simpson},
             pdfkeywords={time series; generalized additive model; simultaneous interval; spline;
@@ -32,6 +37,7 @@ environmental change},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -41,37 +47,37 @@ environmental change},
 \usepackage{framed}
 \definecolor{shadecolor}{RGB}{248,248,248}
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{{#1}}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\ImportTok}[1]{{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{{#1}}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{{#1}}}}
-\newcommand{\BuiltInTok}[1]{{#1}}
-\newcommand{\ExtensionTok}[1]{{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{{#1}}}
-\newcommand{\RegionMarkerTok}[1]{{#1}}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{{#1}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{{#1}}}}
-\newcommand{\NormalTok}[1]{{#1}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -81,12 +87,6 @@ environmental change},
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -101,32 +101,10 @@ environmental change},
 \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
 
-%%% Use protect on footnotes to avoid problems with footnotes in titles
-\let\rmarkdownfootnote\footnote%
-\def\footnote{\protect\rmarkdownfootnote}
-
-%%% Change title format to be more compact
-\usepackage{titling}
-
-% Create subtitle command for use in maketitle
-\newcommand{\subtitle}[1]{
-  \posttitle{
-    \begin{center}\large#1\end{center}
-    }
-}
-
-\setlength{\droptitle}{-2em}
-
-  \title{Supplementary materials for: Modelling palaeoecological time series
-using generalized additive models}
-    \pretitle{\vspace{\droptitle}\centering\huge}
-  \posttitle{\par}
-    \author{Gavin L. Simpson}
-    \preauthor{\centering\large\emph}
-  \postauthor{\par}
-      \predate{\centering\large\emph}
-  \postdate{\par}
-    \date{August 16, 2018}
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
 
 %\setromanfont{Constantia}
 %\setromanfont{texgyrepagella.otf}
@@ -142,19 +120,25 @@ using generalized additive models}
 
 \newcommand{\loess}{\textsc{Loess}}
 
-\usepackage{lineno}
-\linenumbers
+%\usepackage{lineno}
+%\linenumbers
+
+\title{Supplementary materials for: Modelling palaeoecological time series
+using generalized additive models}
+\author{Gavin L. Simpson}
+\date{October 16, 2023}
 
 \begin{document}
 \maketitle
 
-\section{Introduction}\label{introduction}
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
 
 This document is an annotated version of the R code used to fit the GAMs
 and related analyses to the Small Water and Braya-Sø example data sets.
 
 The following packages are required: \emph{mgcv}, \emph{scam},
-\emph{ggplot2}, \emph{cowplot}, and \emph{tidyr}.
+\emph{ggplot2}, \emph{cowplot}, \emph{dplyr}, and \emph{tidyr}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -167,7 +151,7 @@ The following packages are required: \emph{mgcv}, \emph{scam},
 \end{verbatim}
 
 \begin{verbatim}
-#> This is mgcv 1.8-24. For overview type 'help("mgcv-package")'.
+#> This is mgcv 1.9-0. For overview type 'help("mgcv-package")'.
 \end{verbatim}
 
 \begin{Shaded}
@@ -177,45 +161,50 @@ The following packages are required: \emph{mgcv}, \emph{scam},
 \end{Shaded}
 
 \begin{verbatim}
-#> This is scam 1.2-2.
+#> This is scam 1.2-14.
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(}\StringTok{"ggplot2"}\NormalTok{)}
 \KeywordTok{library}\NormalTok{(}\StringTok{"cowplot"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-#> 
-#> Attaching package: 'cowplot'
-\end{verbatim}
-
-\begin{verbatim}
-#> The following object is masked from 'package:ggplot2':
-#> 
-#>     ggsave
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(}\StringTok{"tidyr"}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(}\StringTok{"dplyr"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-In addition, the \emph{gratia} package is required; this in-development
-package is not on CRAN but can be installed directly from GitHub using
-functions from the \emph{devtools} package. To install the package,
-install \emph{devtools} and then use
-\texttt{devtools::install\_github()} to install \emph{gratia}, as shown
-below:
+\begin{verbatim}
+#> 
+#> Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+#> The following object is masked from 'package:nlme':
+#> 
+#>     collapse
+\end{verbatim}
+
+\begin{verbatim}
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
+\end{verbatim}
+
+In addition, the \emph{gratia} package is required; install
+\emph{gratia}, using:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## gratia is not on CRAN, install from github:}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"devtools"}\NormalTok{)}
-\NormalTok{devtools::}\KeywordTok{install_github}\NormalTok{(}\StringTok{"gavinsimpson/gratia"}\NormalTok{)}
+\CommentTok{## requires development version of gratia that is not on CRAN, install from github:}
+\KeywordTok{install.packages}\NormalTok{(}\StringTok{"gratia"}\NormalTok{, }\DataTypeTok{repos =} \KeywordTok{c}\NormalTok{(}\StringTok{"https://gavinsimpson.r-universe.dev"}\NormalTok{,}
+    \StringTok{"https://cloud.r-project.org"}\NormalTok{))}
+\KeywordTok{stopifnot}\NormalTok{(}\KeywordTok{packageVersion}\NormalTok{(}\StringTok{"gratia"}\NormalTok{) }\OperatorTok{>=}\StringTok{ "0.8.1.42"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -235,12 +224,13 @@ over-ridden. Here I use the more-minimal black-and-white theme
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## Default ggplot theme}
+\CommentTok{## Default ggplot theme}
 \KeywordTok{theme_set}\NormalTok{(}\KeywordTok{theme_bw}\NormalTok{())}
 \end{Highlighting}
 \end{Shaded}
 
-\section{Load the data sets}\label{load-the-data-sets}
+\hypertarget{load-the-data-sets}{%
+\section{Load the data sets}\label{load-the-data-sets}}
 
 The example data sets are also stored on GitHub;
 \url{https://github.com/gavinsimpson/frontiers-palaeo-additive-modelling}.
@@ -248,7 +238,7 @@ Once downloaded the data are read in and processed a little
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## source Small Water data}
+\CommentTok{## source Small Water data}
 \NormalTok{small <-}\StringTok{ }\KeywordTok{readRDS}\NormalTok{(}\StringTok{"./data/small-water/small-water-isotope-data.rds"}\NormalTok{)}
 \KeywordTok{head}\NormalTok{(small)}
 \end{Highlighting}
@@ -266,40 +256,33 @@ Once downloaded the data are read in and processed a little
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## load braya so data set}
+\CommentTok{## load braya so data set}
 \NormalTok{braya <-}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\StringTok{"./data/braya-so/DAndrea.2011.Lake Braya So.txt"}\NormalTok{,}
                     \DataTypeTok{skip =} \DecValTok{84}\NormalTok{)}
-\NormalTok{## clean up variable names}
+\CommentTok{## clean up variable names}
 \KeywordTok{names}\NormalTok{(braya) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Depth"}\NormalTok{, }\StringTok{"DepthUpper"}\NormalTok{, }\StringTok{"DepthLower"}\NormalTok{, }\StringTok{"Year"}\NormalTok{, }\StringTok{"YearYoung"}\NormalTok{,}
                   \StringTok{"YearOld"}\NormalTok{, }\StringTok{"UK37"}\NormalTok{)}
-\NormalTok{## add a variable for the amount of time per sediment sample}
-\NormalTok{braya <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(braya, }\DataTypeTok{sampleInterval =} \NormalTok{YearYoung -}\StringTok{ }\NormalTok{YearOld)}
+\CommentTok{## add a variable for the amount of time per sediment sample}
+\NormalTok{braya <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(braya, }\DataTypeTok{sampleInterval =}\NormalTok{ YearYoung }\OperatorTok{-}\StringTok{ }\NormalTok{YearOld)}
 \KeywordTok{head}\NormalTok{(braya)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-#>   Depth DepthUpper DepthLower     Year YearYoung YearOld   UK37
-#> 1  0.25        0.0        0.5 1999.125   2006.00 1992.25 -0.640
-#> 2  0.75        0.5        1.0 1985.375   1992.25 1978.50 -0.637
-#> 3  1.25        1.0        1.5 1971.525   1978.50 1964.55 -0.614
-#> 4  1.75        1.5        2.0 1957.575   1964.55 1950.60 -0.627
-#> 5  2.25        2.0        2.5 1943.150   1950.60 1935.70 -0.633
-#> 6  2.75        2.5        3.0 1928.250   1935.70 1920.80 -0.616
-#>   sampleInterval
-#> 1          13.75
-#> 2          13.75
-#> 3          13.95
-#> 4          13.95
-#> 5          14.90
-#> 6          14.90
+#>   Depth DepthUpper DepthLower     Year YearYoung YearOld   UK37 sampleInterval
+#> 1  0.25        0.0        0.5 1999.125   2006.00 1992.25 -0.640          13.75
+#> 2  0.75        0.5        1.0 1985.375   1992.25 1978.50 -0.637          13.75
+#> 3  1.25        1.0        1.5 1971.525   1978.50 1964.55 -0.614          13.95
+#> 4  1.75        1.5        2.0 1957.575   1964.55 1950.60 -0.627          13.95
+#> 5  2.25        2.0        2.5 1943.150   1950.60 1935.70 -0.633          14.90
+#> 6  2.75        2.5        3.0 1928.250   1935.70 1920.80 -0.616          14.90
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## plot labels}
-\NormalTok{d15n_label <-}\StringTok{ }\KeywordTok{expression}\NormalTok{(delta^\{}\DecValTok{15}\NormalTok{\}*N)}
-\NormalTok{braya_ylabel <-}\StringTok{ }\KeywordTok{expression}\NormalTok{(}\KeywordTok{italic}\NormalTok{(U)[}\DecValTok{37}\NormalTok{]^\{}\KeywordTok{italic}\NormalTok{(k)\})}
+\CommentTok{## plot labels}
+\NormalTok{d15n_label <-}\StringTok{ }\KeywordTok{expression}\NormalTok{(delta}\OperatorTok{^}\NormalTok{\{}\DecValTok{15}\NormalTok{\}}\OperatorTok{*}\NormalTok{N)}
+\NormalTok{braya_ylabel <-}\StringTok{ }\KeywordTok{expression}\NormalTok{(}\KeywordTok{italic}\NormalTok{(U)[}\DecValTok{37}\NormalTok{]}\OperatorTok{^}\NormalTok{\{}\KeywordTok{italic}\NormalTok{(k)\})}
 \end{Highlighting}
 \end{Shaded}
 
@@ -307,18 +290,18 @@ Plots of the two data sets are prepared using \emph{ggplot2}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## plot Small Water data}
-\NormalTok{small_plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(small, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{d15N)) +}
-\StringTok{    }\KeywordTok{geom_point}\NormalTok{() +}
-\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \NormalTok{d15n_label, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
+\CommentTok{## plot Small Water data}
+\NormalTok{small_plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(small, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ d15N)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ d15n_label, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
 
-\NormalTok{## plot Braya-So data}
-\NormalTok{braya_plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(braya, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{UK37)) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"grey"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_point}\NormalTok{() +}
-\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \NormalTok{braya_ylabel, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
+\CommentTok{## plot Braya-So data}
+\NormalTok{braya_plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(braya, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ UK37)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"grey"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ braya_ylabel, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
 
-\NormalTok{## Recreate plot from manuscript}
+\CommentTok{## Recreate plot from manuscript}
 \KeywordTok{plot_grid}\NormalTok{(small_plt, braya_plt, }\DataTypeTok{ncol =} \DecValTok{1}\NormalTok{, }\DataTypeTok{labels =} \StringTok{"auto"}\NormalTok{, }\DataTypeTok{align =} \StringTok{"hv"}\NormalTok{,}
           \DataTypeTok{axis =} \StringTok{"lr"}\NormalTok{)}
 \end{Highlighting}
@@ -326,13 +309,15 @@ Plots of the two data sets are prepared using \emph{ggplot2}
 
 \begin{center}\includegraphics[width=0.8\linewidth]{supplementary-materials_files/figure-latex/data-figure-1} \end{center}
 
-\section{Fitting GAMs}\label{fitting-gams}
+\hypertarget{fitting-gams}{%
+\section{Fitting GAMs}\label{fitting-gams}}
 
 Instead of following the structure of the paper exactly, the subsequent
 sections focus on the two example data sets in turn, beginning with
 Small Water.
 
-\subsection{Small Water}\label{small-water}
+\hypertarget{small-water}{%
+\subsection{Small Water}\label{small-water}}
 
 A GAM is typically fitted using the \texttt{gam()} function from the
 \emph{mgcv} package. The typical call includes a formula describing the
@@ -349,7 +334,7 @@ simple GAM to the Small Water isotope data
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{m <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(d15N ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{15}\NormalTok{), }\DataTypeTok{data =} \NormalTok{small, }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{)}
+\NormalTok{m <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(d15N }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{15}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ small, }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -370,9 +355,9 @@ specify the ordering of samples via the \texttt{Year} variable in
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## fit small water GAM using gamm() with a CAR(1)}
-\NormalTok{mod <-}\StringTok{ }\KeywordTok{gamm}\NormalTok{(d15N ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{15}\NormalTok{), }\DataTypeTok{data =} \NormalTok{small,}
-            \DataTypeTok{correlation =} \KeywordTok{corCAR1}\NormalTok{(}\DataTypeTok{form =} \NormalTok{~}\StringTok{ }\NormalTok{Year), }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{)}
+\CommentTok{## fit small water GAM using gamm() with a CAR(1)}
+\NormalTok{mod <-}\StringTok{ }\KeywordTok{gamm}\NormalTok{(d15N }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{15}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ small,}
+            \DataTypeTok{correlation =} \KeywordTok{corCAR1}\NormalTok{(}\DataTypeTok{form =} \OperatorTok{~}\StringTok{ }\NormalTok{Year), }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -382,15 +367,15 @@ correlation structure component.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## estimate of phi and confidence interval}
-\NormalTok{smallPhi <-}\StringTok{ }\KeywordTok{intervals}\NormalTok{(mod$lme, }\DataTypeTok{which =} \StringTok{"var-cov"}\NormalTok{)$corStruct}
+\CommentTok{## estimate of phi and confidence interval}
+\NormalTok{smallPhi <-}\StringTok{ }\KeywordTok{intervals}\NormalTok{(mod}\OperatorTok{$}\NormalTok{lme, }\DataTypeTok{which =} \StringTok{"var-cov"}\NormalTok{)}\OperatorTok{$}\NormalTok{corStruct}
 \NormalTok{smallPhi}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-#>        lower      est.     upper
-#> Phi 0.282388 0.6026967 0.8539689
+#>         lower      est.     upper
+#> Phi 0.2811374 0.6026967 0.8547379
 #> attr(,"label")
 #> [1] "Correlation structure:"
 \end{verbatim}
@@ -403,8 +388,8 @@ the \texttt{\$gam} component of the fitted model
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## summary object}
-\KeywordTok{summary}\NormalTok{(mod$gam)}
+\CommentTok{## summary object}
+\KeywordTok{summary}\NormalTok{(mod}\OperatorTok{$}\NormalTok{gam)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -443,18 +428,18 @@ using
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## plot CAR(1) process}
+\CommentTok{## plot CAR(1) process}
 \NormalTok{S <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{50}\NormalTok{, }\DataTypeTok{length =} \DecValTok{100}\NormalTok{)}
 \NormalTok{car1 <-}\StringTok{ }\KeywordTok{setNames}\NormalTok{(}\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{t}\NormalTok{(}\KeywordTok{outer}\NormalTok{(smallPhi, S, }\DataTypeTok{FUN =} \StringTok{`}\DataTypeTok{^}\StringTok{`}\NormalTok{)[}\DecValTok{1}\NormalTok{, , ])),}
                  \KeywordTok{c}\NormalTok{(}\StringTok{"Lower"}\NormalTok{,}\StringTok{"Correlation"}\NormalTok{,}\StringTok{"Upper"}\NormalTok{))}
-\NormalTok{car1 <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(car1, }\DataTypeTok{S =} \NormalTok{S)}
+\NormalTok{car1 <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(car1, }\DataTypeTok{S =}\NormalTok{ S)}
 
-\NormalTok{car1Plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(car1, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{S, }\DataTypeTok{y =} \NormalTok{Correlation)) +}
-\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymax =} \NormalTok{Upper, }\DataTypeTok{ymin =} \NormalTok{Lower),}
-                \DataTypeTok{fill =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{alpha =} \FloatTok{0.2}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() +}
-\StringTok{    }\KeywordTok{ylab}\NormalTok{(}\KeywordTok{expression}\NormalTok{(}\KeywordTok{italic}\NormalTok{(h) *}\StringTok{ }\NormalTok{(}\KeywordTok{list}\NormalTok{(Delta[t], varphi)))) +}
-\StringTok{    }\KeywordTok{xlab}\NormalTok{(}\KeywordTok{expression}\NormalTok{(Delta[t] ~}\StringTok{ }\NormalTok{(years)))}
+\NormalTok{car1Plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(car1, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ S, }\DataTypeTok{y =}\NormalTok{ Correlation)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymax =}\NormalTok{ Upper, }\DataTypeTok{ymin =}\NormalTok{ Lower),}
+                \DataTypeTok{fill =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{alpha =} \FloatTok{0.2}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{ylab}\NormalTok{(}\KeywordTok{expression}\NormalTok{(}\KeywordTok{italic}\NormalTok{(c) }\OperatorTok{*}\StringTok{ }\NormalTok{(}\KeywordTok{list}\NormalTok{(h, varphi)))) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{xlab}\NormalTok{(}\KeywordTok{expression}\NormalTok{(h }\OperatorTok{~}\StringTok{ }\NormalTok{(years)))}
 \NormalTok{car1Plt}
 \end{Highlighting}
 \end{Shaded}
@@ -475,64 +460,60 @@ asymptotic normality
 \begin{Highlighting}[]
 \NormalTok{N <-}\StringTok{ }\DecValTok{300}   \CommentTok{# number of points at which to evaluate the smooth}
 
-\NormalTok{## create new data to predict at; 200 evenly-spaced values over `Year`}
+\CommentTok{## create new data to predict at; 200 evenly-spaced values over `Year`}
 \NormalTok{newYear <-}\StringTok{ }\KeywordTok{with}\NormalTok{(small, }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Year =} \KeywordTok{seq}\NormalTok{(}\KeywordTok{min}\NormalTok{(Year), }\KeywordTok{max}\NormalTok{(Year),}
                                              \DataTypeTok{length.out =} \DecValTok{200}\NormalTok{)))}
-\NormalTok{## Predict from the fitted model; note we predict from the $gam part}
+\CommentTok{## Predict from the fitted model; note we predict from the $gam part}
 \NormalTok{newYear <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(newYear,}
-                 \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{predict}\NormalTok{(mod$gam, newYear, }\DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{)))}
-\NormalTok{## Create the confidence interval}
-\NormalTok{crit.t <-}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\DataTypeTok{df =} \KeywordTok{df.residual}\NormalTok{(mod$gam))}
+                 \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{predict}\NormalTok{(mod}\OperatorTok{$}\NormalTok{gam, newYear, }\DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{)))}
+\CommentTok{## Create the confidence interval}
+\NormalTok{crit.t <-}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\DataTypeTok{df =} \KeywordTok{df.residual}\NormalTok{(mod}\OperatorTok{$}\NormalTok{gam))}
 \NormalTok{newYear <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(newYear,}
-                     \DataTypeTok{upper =} \NormalTok{fit +}\StringTok{ }\NormalTok{(crit.t *}\StringTok{ }\NormalTok{se.fit),}
-                     \DataTypeTok{lower =} \NormalTok{fit -}\StringTok{ }\NormalTok{(crit.t *}\StringTok{ }\NormalTok{se.fit))}
+                     \DataTypeTok{upper =}\NormalTok{ fit }\OperatorTok{+}\StringTok{ }\NormalTok{(crit.t }\OperatorTok{*}\StringTok{ }\NormalTok{se.fit),}
+                     \DataTypeTok{lower =}\NormalTok{ fit }\OperatorTok{-}\StringTok{ }\NormalTok{(crit.t }\OperatorTok{*}\StringTok{ }\NormalTok{se.fit))}
 
-\NormalTok{## Plot estimated trend}
-\NormalTok{small_fitted <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(newYear, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{fit)) +}
-\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =} \NormalTok{lower, }\DataTypeTok{ymax =} \NormalTok{upper, }\DataTypeTok{x =} \NormalTok{Year), }\DataTypeTok{alpha =} \FloatTok{0.2}\NormalTok{,}
-                \DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"black"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data =} \NormalTok{small, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{d15N),}
-               \DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() +}
-\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \NormalTok{d15n_label, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
+\CommentTok{## Plot estimated trend}
+\NormalTok{small_fitted <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(newYear, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ fit)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =}\NormalTok{ lower, }\DataTypeTok{ymax =}\NormalTok{ upper, }\DataTypeTok{x =}\NormalTok{ Year), }\DataTypeTok{alpha =} \FloatTok{0.2}\NormalTok{,}
+                \DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ small, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ d15N),}
+               \DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ d15n_label, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
 \NormalTok{small_fitted}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics[width=0.8\linewidth]{supplementary-materials_files/figure-latex/small-plot-fitted-models-1} \end{center}
 
-\subsection{Braya-Sø}\label{braya-s}
+\hypertarget{braya-suxf8}{%
+\subsection{Braya-Sø}\label{braya-suxf8}}
 
 The same model as used for Small Water was also initially attempted with
-the Braya-Sø data. However, in order to even fit the model with both a
-smooth and the CAR(1) process, I had to change the default optimizer
-used to estimate the model parameters, and reduce the basis dimension,
-\texttt{k}, to a small number. I also fit the model using GCV, which is,
-at the time of writing, the default in \texttt{gam()}, hence no
-\texttt{method} argument
+the Braya-Sø data. I also fit the model using GCV, which is, at the time
+of writing, the default in \texttt{gam()}, hence no \texttt{method}
+argument
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## fit the car(1) model --- needs optim as this is not a stable fit!}
-\NormalTok{## also needs k setting lower than default}
-\NormalTok{braya.car1 <-}\StringTok{ }\KeywordTok{gamm}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{5}\NormalTok{), }\DataTypeTok{data =} \NormalTok{braya, }
-                   \DataTypeTok{correlation =} \KeywordTok{corCAR1}\NormalTok{(}\DataTypeTok{form =} \NormalTok{~}\StringTok{ }\NormalTok{Year),}
-                   \DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
-                   \DataTypeTok{control =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{niterEM =} \DecValTok{0}\NormalTok{, }\DataTypeTok{optimMethod =} \StringTok{"BFGS"}\NormalTok{, }
-                                  \DataTypeTok{opt =} \StringTok{"optim"}\NormalTok{))}
+\CommentTok{## fit the car(1) model --- needs optim as this is not a stable fit!}
+\CommentTok{## also needs k setting lower than default}
+\NormalTok{braya.car1 <-}\StringTok{ }\KeywordTok{gamm}\NormalTok{(UK37 }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{10}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ braya,}
+                   \DataTypeTok{correlation =} \KeywordTok{corCAR1}\NormalTok{(}\DataTypeTok{form =} \OperatorTok{~}\StringTok{ }\NormalTok{Year),}
+                   \DataTypeTok{method =} \StringTok{"REML"}\NormalTok{)}
 
-\NormalTok{## fit model using GCV}
-\NormalTok{braya.gcv <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{30}\NormalTok{), }\DataTypeTok{data =} \NormalTok{braya)}
+\CommentTok{## fit model using GCV}
+\NormalTok{braya.gcv <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{30}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ braya)}
 
-\NormalTok{## estimate of phi and confidence interval}
-\NormalTok{brayaPhi <-}\StringTok{ }\KeywordTok{intervals}\NormalTok{(braya.car1$lme)$corStruct}
+\CommentTok{## estimate of phi and confidence interval}
+\NormalTok{brayaPhi <-}\StringTok{ }\KeywordTok{intervals}\NormalTok{(braya.car1}\OperatorTok{$}\NormalTok{lme)}\OperatorTok{$}\NormalTok{corStruct}
 \NormalTok{brayaPhi}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 #>            lower      est. upper
-#> Phi 2.680033e-31 0.2000156     1
+#> Phi 1.239228e-18 0.2000199     1
 #> attr(,"label")
 #> [1] "Correlation structure:"
 \end{verbatim}
@@ -552,45 +533,45 @@ distribution to form the confidence interval
 \begin{Highlighting}[]
 \NormalTok{N <-}\StringTok{ }\DecValTok{300}   \CommentTok{# number of points at which to evaluate the smooth}
 
-\NormalTok{## data to predict at}
+\CommentTok{## data to predict at}
 \NormalTok{newBraya <-}\StringTok{ }\KeywordTok{with}\NormalTok{(braya, }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Year =} \KeywordTok{seq}\NormalTok{(}\KeywordTok{min}\NormalTok{(Year), }\KeywordTok{max}\NormalTok{(Year),}
-                                              \DataTypeTok{length.out =} \NormalTok{N)))}
-\NormalTok{## add predictions from GAMM + CAR(1) model}
+                                              \DataTypeTok{length.out =}\NormalTok{ N)))}
+\CommentTok{## add predictions from GAMM + CAR(1) model}
 \NormalTok{newBraya <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(newBraya,}
-                  \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{predict}\NormalTok{(braya.car1$gam, newBraya,}
+                  \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{predict}\NormalTok{(braya.car1}\OperatorTok{$}\NormalTok{gam, newBraya,}
                                      \DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{)))}
-\NormalTok{crit.t <-}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\DataTypeTok{df =} \KeywordTok{df.residual}\NormalTok{(braya.car1$gam))}
+\NormalTok{crit.t <-}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\DataTypeTok{df =} \KeywordTok{df.residual}\NormalTok{(braya.car1}\OperatorTok{$}\NormalTok{gam))}
 \NormalTok{newBraya <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(newBraya,}
-                      \DataTypeTok{upper =} \NormalTok{fit +}\StringTok{ }\NormalTok{(crit.t *}\StringTok{ }\NormalTok{se.fit),}
-                      \DataTypeTok{lower =} \NormalTok{fit -}\StringTok{ }\NormalTok{(crit.t *}\StringTok{ }\NormalTok{se.fit))}
+                      \DataTypeTok{upper =}\NormalTok{ fit }\OperatorTok{+}\StringTok{ }\NormalTok{(crit.t }\OperatorTok{*}\StringTok{ }\NormalTok{se.fit),}
+                      \DataTypeTok{lower =}\NormalTok{ fit }\OperatorTok{-}\StringTok{ }\NormalTok{(crit.t }\OperatorTok{*}\StringTok{ }\NormalTok{se.fit))}
 
-\NormalTok{## add GAM GCV results}
-\NormalTok{fit_gcv <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(braya.gcv, }\DataTypeTok{newdata =} \NormalTok{newBraya, }\DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{)}
+\CommentTok{## add GAM GCV results}
+\NormalTok{fit_gcv <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(braya.gcv, }\DataTypeTok{newdata =}\NormalTok{ newBraya, }\DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{)}
 \NormalTok{crit.t <-}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\KeywordTok{df.residual}\NormalTok{(braya.gcv))}
-\NormalTok{newGCV <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Year   =} \NormalTok{newBraya[[}\StringTok{"Year"}\NormalTok{]],}
-                     \DataTypeTok{fit    =} \NormalTok{fit_gcv$fit,}
-                     \DataTypeTok{se.fit =} \NormalTok{fit_gcv$se.fit)}
+\NormalTok{newGCV <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Year   =}\NormalTok{ newBraya[[}\StringTok{"Year"}\NormalTok{]],}
+                     \DataTypeTok{fit    =}\NormalTok{ fit_gcv}\OperatorTok{$}\NormalTok{fit,}
+                     \DataTypeTok{se.fit =}\NormalTok{ fit_gcv}\OperatorTok{$}\NormalTok{se.fit)}
 \NormalTok{newGCV <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(newGCV,}
-                    \DataTypeTok{upper =} \NormalTok{fit +}\StringTok{ }\NormalTok{(crit.t *}\StringTok{ }\NormalTok{se.fit),}
-                    \DataTypeTok{lower =} \NormalTok{fit -}\StringTok{ }\NormalTok{(crit.t *}\StringTok{ }\NormalTok{se.fit))}
+                    \DataTypeTok{upper =}\NormalTok{ fit }\OperatorTok{+}\StringTok{ }\NormalTok{(crit.t }\OperatorTok{*}\StringTok{ }\NormalTok{se.fit),}
+                    \DataTypeTok{lower =}\NormalTok{ fit }\OperatorTok{-}\StringTok{ }\NormalTok{(crit.t }\OperatorTok{*}\StringTok{ }\NormalTok{se.fit))}
 \NormalTok{newBraya <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(newBraya, newGCV)                }\CommentTok{# bind on GCV results}
-\NormalTok{## Add indicator variable for model}
+\CommentTok{## Add indicator variable for model}
 \NormalTok{newBraya <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(newBraya,}
                       \DataTypeTok{Method =} \KeywordTok{rep}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"GAMM (CAR(1))"}\NormalTok{, }\StringTok{"GAM (GCV)"}\NormalTok{), }
-                                   \DataTypeTok{each =} \NormalTok{N))}
+                                   \DataTypeTok{each =}\NormalTok{ N))}
 
-\NormalTok{## plot CAR(1) and GCV fits}
-\NormalTok{braya_fitted <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(braya, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =} \NormalTok{UK37, }\DataTypeTok{x =} \NormalTok{Year)) +}
-\StringTok{    }\KeywordTok{geom_point}\NormalTok{() +}
-\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{newBraya,}
-                \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{ymax =} \NormalTok{upper, }\DataTypeTok{ymin =} \NormalTok{lower,}
-                              \DataTypeTok{fill =} \NormalTok{Method),}
-                \DataTypeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =} \NormalTok{newBraya,}
-              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =} \NormalTok{fit, }\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{colour =} \NormalTok{Method)) +}
-\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \NormalTok{braya_ylabel, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{scale_color_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#5e3c99"}\NormalTok{, }\StringTok{"#e66101"}\NormalTok{)) +}
-\StringTok{    }\KeywordTok{scale_fill_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#5e3c99"}\NormalTok{, }\StringTok{"#e66101"}\NormalTok{)) +}
+\CommentTok{## plot CAR(1) and GCV fits}
+\NormalTok{braya_fitted <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(braya, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ UK37, }\DataTypeTok{x =}\NormalTok{ Year)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ newBraya,}
+                \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{ymax =}\NormalTok{ upper, }\DataTypeTok{ymin =}\NormalTok{ lower,}
+                              \DataTypeTok{fill =}\NormalTok{ Method),}
+                \DataTypeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ newBraya,}
+              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ fit, }\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{colour =}\NormalTok{ Method)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ braya_ylabel, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{scale_color_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#5e3c99"}\NormalTok{, }\StringTok{"#e66101"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{scale_fill_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#5e3c99"}\NormalTok{, }\StringTok{"#e66101"}\NormalTok{)) }\OperatorTok{+}
 \StringTok{    }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"right"}\NormalTok{)}
 \NormalTok{braya_fitted}
 \end{Highlighting}
@@ -607,8 +588,9 @@ Figure 6 in the manuscript was produced using:
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{checking-if-the-size-of-the-basis-expansion-is-sufficient}{%
 \subsubsection{Checking if the size of the basis expansion is
-sufficient}\label{checking-if-the-size-of-the-basis-expansion-is-sufficient}
+sufficient}\label{checking-if-the-size-of-the-basis-expansion-is-sufficient}}
 
 For the Braya-Sø data, clearly we are not able to identify both the
 wiggly trend and the CAR(1) process in a single model. We proceed by
@@ -618,7 +600,7 @@ and a moderate number of basis functions --- here we set
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{braya_low_k <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{15}\NormalTok{), }\DataTypeTok{data =} \NormalTok{braya, }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{)}
+\NormalTok{braya_low_k <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{15}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ braya, }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -636,7 +618,7 @@ the data. This test is provided by \texttt{gam.check()}
 #> 
 #> Method: REML   Optimizer: outer newton
 #> full convergence after 6 iterations.
-#> Gradient range [-4.468978e-08,8.696768e-10]
+#> Gradient range [-4.468969e-08,8.696457e-10]
 #> (score -187.2524 & scale 0.000689802).
 #> Hessian positive definite, eigenvalue range [0.5525272,43.5153].
 #> Model rank =  15 / 15 
@@ -691,8 +673,9 @@ the \texttt{edf} of the model changes little as you continue to increase
 particular instance and that the estimated smooth is not dependent on
 the value of \texttt{k} chosen.
 
+\hypertarget{accounting-for-heteroscedasticity-due-to-time-averaging}{%
 \subsection{Accounting for heteroscedasticity due to time
-averaging}\label{accounting-for-heteroscedasticity-due-to-time-averaging}
+averaging}\label{accounting-for-heteroscedasticity-due-to-time-averaging}}
 
 To proceed with the Braya-Sø example, we need to increase the basis
 dimension, fit using \texttt{method\ =\ "REML"}. As discussed in the
@@ -714,9 +697,9 @@ changing the model likelihood, the weights use are the values of
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{braya_reml <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{40}\NormalTok{), }\DataTypeTok{data =} \NormalTok{braya,}
+\NormalTok{braya_reml <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{40}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ braya,}
                   \DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
-                  \DataTypeTok{weights =} \NormalTok{sampleInterval /}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
+                  \DataTypeTok{weights =}\NormalTok{ sampleInterval }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
 \KeywordTok{summary}\NormalTok{(braya_reml)}
 \end{Highlighting}
 \end{Shaded}
@@ -766,7 +749,7 @@ If we now check if 39 (\texttt{k\ =\ 40}) basis functions is sufficient
 #> indicate that k is too low, especially if edf is close to k'.
 #> 
 #>           k'  edf k-index p-value
-#> s(Year) 39.0 27.5    1.27    0.99
+#> s(Year) 39.0 27.5    1.27       1
 \end{verbatim}
 
 we note that the value of \texttt{k-index} is now greater than 1 and the
@@ -786,7 +769,8 @@ a given complexity (\texttt{edf}) to be represented using this larger
 set of basis functions, which may improve the model fit to the data
 without changing the \texttt{edf} too much.
 
-\section{Posterior simulation}\label{posterior-simulation}
+\hypertarget{posterior-simulation}{%
+\section{Posterior simulation}\label{posterior-simulation}}
 
 Samples from the posterior distribution of a GAM can be drawn using the
 \texttt{simulate()} methods from the \emph{gratia} package.
@@ -796,22 +780,18 @@ Samples from the posterior distribution of a GAM can be drawn using the
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{) }\CommentTok{# set the random seed to make this reproducible}
 \NormalTok{nsim <-}\StringTok{ }\DecValTok{20}  \CommentTok{# how many simulations to draw}
 
-\NormalTok{## do the simulations}
-\NormalTok{sims <-}\StringTok{ }\KeywordTok{simulate}\NormalTok{(mod, }\DataTypeTok{nsim =} \NormalTok{nsim, }\DataTypeTok{newdata =} \NormalTok{newYear, }\DataTypeTok{unconditional =} \OtherTok{TRUE}\NormalTok{)}
+\CommentTok{## do the simulations}
+\NormalTok{sims <-}\StringTok{ }\KeywordTok{smooth_samples}\NormalTok{(mod}\OperatorTok{$}\NormalTok{gam, }\DataTypeTok{n =}\NormalTok{ nsim, }\DataTypeTok{data =}\NormalTok{ newYear,}
+    \DataTypeTok{unconditional =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{sims <-}\StringTok{ }\KeywordTok{mutate}\NormalTok{(sims, }\DataTypeTok{value =}\NormalTok{ value }\OperatorTok{+}\StringTok{ }\KeywordTok{coef}\NormalTok{(mod}\OperatorTok{$}\NormalTok{gam)[1L]) }\CommentTok{# add intercept}
 
-\NormalTok{## rearrange the output into a long/tidy format}
-\KeywordTok{colnames}\NormalTok{(sims) <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}\StringTok{"sim"}\NormalTok{, }\KeywordTok{seq_len}\NormalTok{(nsim))}
-\NormalTok{sims <-}\StringTok{ }\KeywordTok{setNames}\NormalTok{(}\KeywordTok{stack}\NormalTok{(}\KeywordTok{as.data.frame}\NormalTok{(sims)), }\KeywordTok{c}\NormalTok{(}\StringTok{"simulated"}\NormalTok{, }\StringTok{"run"}\NormalTok{))}
-\NormalTok{sims <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(sims, }\DataTypeTok{Year =} \KeywordTok{rep}\NormalTok{(newYear$Year, nsim),}
-                  \DataTypeTok{simulated =} \NormalTok{simulated)}
-
-\NormalTok{## Plot simulated trends}
-\NormalTok{smallSim.plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(newYear, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{fit)) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =} \NormalTok{sims,}
-              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =} \NormalTok{simulated, }\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{group =} \NormalTok{run),}
-              \DataTypeTok{colour =} \StringTok{"grey80"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd =} \DecValTok{1}\NormalTok{) +}
-\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \NormalTok{d15n_label, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
+\CommentTok{## Plot simulated trends}
+\NormalTok{smallSim.plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(newYear, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ fit)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sims,}
+              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{group =}\NormalTok{ draw),}
+              \DataTypeTok{colour =} \StringTok{"grey80"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd =} \DecValTok{1}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ d15n_label, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
 \NormalTok{smallSim.plt}
 \end{Highlighting}
 \end{Shaded}
@@ -822,32 +802,26 @@ We repeat the same simulation for Braya-Sø
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## data points to simulate at}
+\CommentTok{## data points to simulate at}
 \NormalTok{newBraya <-}\StringTok{ }\KeywordTok{with}\NormalTok{(braya,}
                  \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Year =} \KeywordTok{seq}\NormalTok{(}\KeywordTok{min}\NormalTok{(Year), }\KeywordTok{max}\NormalTok{(Year),}
-                                       \DataTypeTok{length.out =} \NormalTok{N)))}
+                                       \DataTypeTok{length.out =}\NormalTok{ N)))}
 \NormalTok{braya_pred <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(newBraya,}
                     \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{predict}\NormalTok{(braya_reml, newBraya,}
                                        \DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{)))}
 
-\NormalTok{## simulate}
+\CommentTok{## simulate}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{sims2 <-}\StringTok{ }\KeywordTok{simulate}\NormalTok{(braya_reml, }\DataTypeTok{nsim =} \NormalTok{nsim, }\DataTypeTok{newdata =} \NormalTok{newBraya,}
-                  \DataTypeTok{unconditional =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{sims2 <-}\StringTok{ }\KeywordTok{smooth_samples}\NormalTok{(braya_reml, }\DataTypeTok{n =}\NormalTok{ nsim, }\DataTypeTok{data =}\NormalTok{ newBraya,}
+    \DataTypeTok{unconditional =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{sims2 <-}\StringTok{ }\KeywordTok{mutate}\NormalTok{(sims2, }\DataTypeTok{value =}\NormalTok{ value }\OperatorTok{+}\StringTok{ }\KeywordTok{coef}\NormalTok{(braya_reml)[1L]) }\CommentTok{# add intercept}
 
-\NormalTok{## rearrange the output into a long/tidy format}
-\KeywordTok{colnames}\NormalTok{(sims2) <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}\StringTok{"sim"}\NormalTok{, }\KeywordTok{seq_len}\NormalTok{(nsim))}
-\NormalTok{sims2 <-}\StringTok{ }\KeywordTok{setNames}\NormalTok{(}\KeywordTok{stack}\NormalTok{(}\KeywordTok{as.data.frame}\NormalTok{(sims2)),}
-                  \KeywordTok{c}\NormalTok{(}\StringTok{"simulated"}\NormalTok{, }\StringTok{"run"}\NormalTok{))}
-\NormalTok{sims2 <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(sims2, }\DataTypeTok{Year =} \KeywordTok{rep}\NormalTok{(newBraya$Year, nsim),}
-                   \DataTypeTok{simulated =} \NormalTok{simulated)}
-
-\NormalTok{brayaSim.plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(braya_pred, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{fit)) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =} \NormalTok{sims2,}
-              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =} \NormalTok{simulated, }\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{group =} \NormalTok{run),}
-              \DataTypeTok{colour =} \StringTok{"grey80"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd =} \DecValTok{1}\NormalTok{) +}
-\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \NormalTok{braya_ylabel, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
+\NormalTok{brayaSim.plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(braya_pred, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ fit)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sims2,}
+              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{group =}\NormalTok{ draw),}
+              \DataTypeTok{colour =} \StringTok{"grey80"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd =} \DecValTok{1}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ braya_ylabel, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
 \NormalTok{brayaSim.plt}
 \end{Highlighting}
 \end{Shaded}
@@ -863,8 +837,9 @@ Figure 8 in the manuscript was prepared using
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{confidence-and-simultaneous-intervals}{%
 \section{Confidence and simultaneous
-intervals}\label{confidence-and-simultaneous-intervals}
+intervals}\label{confidence-and-simultaneous-intervals}}
 
 Across-the-function and simultaneous confidence intervals are computed
 using the \texttt{confint()} method. The type of interval required is
@@ -873,22 +848,27 @@ and \texttt{"simultaneous"}. For example, for Small Water we would use
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sw.cint <-}\StringTok{ }\KeywordTok{confint}\NormalTok{(mod, }\DataTypeTok{parm =} \StringTok{"Year"}\NormalTok{, }\DataTypeTok{newdata =} \NormalTok{newYear,}
-                   \DataTypeTok{type =} \StringTok{"confidence"}\NormalTok{)}
-\NormalTok{sw.sint <-}\StringTok{ }\KeywordTok{confint}\NormalTok{(mod, }\DataTypeTok{parm =} \StringTok{"Year"}\NormalTok{, }\DataTypeTok{newdata =} \NormalTok{newYear,}
-                   \DataTypeTok{type =} \StringTok{"simultaneous"}\NormalTok{)}
-\KeywordTok{head}\NormalTok{(sw.sint)}
+\NormalTok{sw.cint <-}\StringTok{ }\KeywordTok{confint}\NormalTok{(mod, }\DataTypeTok{parm =} \StringTok{"s(Year)"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ newYear, }\DataTypeTok{type =} \StringTok{"confidence"}\NormalTok{)}
+\NormalTok{sw.sint <-}\StringTok{ }\KeywordTok{confint}\NormalTok{(mod, }\DataTypeTok{parm =} \StringTok{"s(Year)"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ newYear, }\DataTypeTok{type =} \StringTok{"simultaneous"}\NormalTok{)}
+\NormalTok{sw.sint}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-#>    smooth     Year      est        se     crit    lower    upper
-#> 1 s(Year) 1846.319 3.787215 0.1616144 3.072403 3.290671 4.283760
-#> 2 s(Year) 1847.128 3.789747 0.1509100 3.072403 3.326090 4.253403
-#> 3 s(Year) 1847.937 3.792304 0.1411439 3.072403 3.358653 4.225955
-#> 4 s(Year) 1848.745 3.794914 0.1324961 3.072403 3.387832 4.201995
-#> 5 s(Year) 1849.554 3.797602 0.1251070 3.072403 3.413222 4.181981
-#> 6 s(Year) 1850.363 3.800394 0.1190552 3.072403 3.434608 4.166180
+#> # A tibble: 200 x 9
+#>    smooth  type  by     Year .estimate   .se .crit .lower_ci .upper_ci
+#>    <chr>   <chr> <chr> <dbl>     <dbl> <dbl> <dbl>     <dbl>     <dbl>
+#>  1 s(Year) TPRS  <NA>  1846.     0.478 0.163  2.92   0.00222     0.954
+#>  2 s(Year) TPRS  <NA>  1847.     0.481 0.152  2.92   0.0357      0.926
+#>  3 s(Year) TPRS  <NA>  1848.     0.483 0.143  2.92   0.0665      0.900
+#>  4 s(Year) TPRS  <NA>  1849.     0.486 0.134  2.92   0.0940      0.878
+#>  5 s(Year) TPRS  <NA>  1850.     0.489 0.127  2.92   0.118       0.859
+#>  6 s(Year) TPRS  <NA>  1850.     0.491 0.121  2.92   0.138       0.845
+#>  7 s(Year) TPRS  <NA>  1851.     0.494 0.116  2.92   0.154       0.834
+#>  8 s(Year) TPRS  <NA>  1852.     0.497 0.113  2.92   0.167       0.827
+#>  9 s(Year) TPRS  <NA>  1853.     0.501 0.111  2.92   0.178       0.824
+#> 10 s(Year) TPRS  <NA>  1854.     0.504 0.109  2.92   0.186       0.823
+#> # i 190 more rows
 \end{verbatim}
 
 The \texttt{confint()} methods return data frames suitable for
@@ -900,14 +880,14 @@ requested interval. The intervals can be plotted as follows
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{smallInt.plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(sw.cint, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{est)) +}
-\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{sw.sint,}
-                \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =} \NormalTok{lower, }\DataTypeTok{ymax =} \NormalTok{upper, }\DataTypeTok{x =} \NormalTok{Year),}
-                \DataTypeTok{fill =} \StringTok{"grey80"}\NormalTok{, }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =} \NormalTok{lower, }\DataTypeTok{ymax =} \NormalTok{upper, }\DataTypeTok{x =} \NormalTok{Year),}
-                \DataTypeTok{fill =} \StringTok{"grey60"}\NormalTok{, }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd =} \DecValTok{1}\NormalTok{) +}
-\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \NormalTok{d15n_label, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
+\NormalTok{smallInt.plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(sw.cint, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ .estimate)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sw.sint,}
+                \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =}\NormalTok{ .lower_ci, }\DataTypeTok{ymax =}\NormalTok{ .upper_ci, }\DataTypeTok{x =}\NormalTok{ Year),}
+                \DataTypeTok{fill =} \StringTok{"grey80"}\NormalTok{, }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =}\NormalTok{ .lower_ci, }\DataTypeTok{ymax =}\NormalTok{ .upper_ci, }\DataTypeTok{x =}\NormalTok{ Year),}
+                \DataTypeTok{fill =} \StringTok{"grey60"}\NormalTok{, }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd =} \DecValTok{1}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ d15n_label, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
 \NormalTok{smallInt.plt}
 \end{Highlighting}
 \end{Shaded}
@@ -918,9 +898,9 @@ The intervals for Braya-Sø are created
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{bs.cint <-}\StringTok{ }\KeywordTok{confint}\NormalTok{(braya_reml, }\DataTypeTok{parm =} \StringTok{"Year"}\NormalTok{, }\DataTypeTok{newdata =} \NormalTok{newBraya,}
+\NormalTok{bs.cint <-}\StringTok{ }\KeywordTok{confint}\NormalTok{(braya_reml, }\DataTypeTok{parm =} \StringTok{"s(Year)"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ newBraya,}
                    \DataTypeTok{type =} \StringTok{"confidence"}\NormalTok{)}
-\NormalTok{bs.sint <-}\StringTok{ }\KeywordTok{confint}\NormalTok{(braya_reml, }\DataTypeTok{parm =} \StringTok{"Year"}\NormalTok{, }\DataTypeTok{newdata =} \NormalTok{newBraya,}
+\NormalTok{bs.sint <-}\StringTok{ }\KeywordTok{confint}\NormalTok{(braya_reml, }\DataTypeTok{parm =} \StringTok{"s(Year)"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ newBraya,}
                    \DataTypeTok{type =} \StringTok{"simultaneous"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -929,14 +909,14 @@ and plotted
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{brayaInt.plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(bs.cint, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{est)) +}
-\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{data =} \NormalTok{bs.sint,}
-                \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =} \NormalTok{lower, }\DataTypeTok{ymax =} \NormalTok{upper, }\DataTypeTok{x =} \NormalTok{Year),}
-                \DataTypeTok{fill =} \StringTok{"grey80"}\NormalTok{, }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =} \NormalTok{lower, }\DataTypeTok{ymax =} \NormalTok{upper, }\DataTypeTok{x =} \NormalTok{Year),}
-                \DataTypeTok{fill =} \StringTok{"grey60"}\NormalTok{, }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd =} \DecValTok{1}\NormalTok{) +}
-\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \NormalTok{braya_ylabel, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
+\NormalTok{brayaInt.plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(bs.cint, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ .estimate)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ bs.sint,}
+                \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =}\NormalTok{ .lower_ci, }\DataTypeTok{ymax =}\NormalTok{ .upper_ci, }\DataTypeTok{x =}\NormalTok{ Year),}
+                \DataTypeTok{fill =} \StringTok{"grey80"}\NormalTok{, }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =}\NormalTok{ .lower_ci, }\DataTypeTok{ymax =}\NormalTok{ .upper_ci, }\DataTypeTok{x =}\NormalTok{ Year),}
+                \DataTypeTok{fill =} \StringTok{"grey60"}\NormalTok{, }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd =} \DecValTok{1}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ braya_ylabel, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
 \NormalTok{brayaInt.plt}
 \end{Highlighting}
 \end{Shaded}
@@ -954,8 +934,9 @@ Figure 9 in the manuscript was prepared using
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{derivatives-of-the-estimated-trend}{%
 \section{Derivatives of the estimated
-trend}\label{derivatives-of-the-estimated-trend}
+trend}\label{derivatives-of-the-estimated-trend}}
 
 The first derivative of the estimated trend is calculated using finite
 differences using the \texttt{fderiv()} function. There is also a
@@ -965,16 +946,28 @@ Small Water trend were computed and plotted using
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{small.d <-}\StringTok{ }\KeywordTok{fderiv}\NormalTok{(mod, }\DataTypeTok{newdata =} \NormalTok{newYear, }\DataTypeTok{n =} \NormalTok{N)}
-\NormalTok{small.sint <-}\StringTok{ }\KeywordTok{with}\NormalTok{(newYear,}
-                   \KeywordTok{cbind}\NormalTok{(}\KeywordTok{confint}\NormalTok{(small.d, }\DataTypeTok{nsim =} \NormalTok{nsim,}
-                                 \DataTypeTok{type =} \StringTok{"simultaneous"}\NormalTok{),}
-                         \DataTypeTok{Year =} \NormalTok{Year))}
+\NormalTok{small.d <-}\StringTok{ }\KeywordTok{fderiv}\NormalTok{(mod, }\DataTypeTok{newdata =}\NormalTok{ newYear, }\DataTypeTok{n =}\NormalTok{ N)}
+\end{Highlighting}
+\end{Shaded}
 
-\NormalTok{small_deriv_plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(small.sint, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{est)) +}
-\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =} \NormalTok{lower, }\DataTypeTok{ymax =} \NormalTok{upper), }\DataTypeTok{alpha =} \FloatTok{0.2}\NormalTok{,}
-                \DataTypeTok{fill =} \StringTok{"black"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() +}
+\begin{verbatim}
+#> Warning: `fderiv()` was deprecated in gratia 0.7.0.
+#> i Please use `derivatives()` instead.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{small.sint <-}\StringTok{ }\KeywordTok{with}\NormalTok{(newYear,}
+                   \KeywordTok{cbind}\NormalTok{(}\KeywordTok{confint}\NormalTok{(small.d, }\DataTypeTok{nsim =}\NormalTok{ nsim,}
+                                 \DataTypeTok{type =} \StringTok{"simultaneous"}\NormalTok{),}
+                         \DataTypeTok{Year =}\NormalTok{ Year))}
+
+\NormalTok{small_deriv_plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(small.sint, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ est)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =}\NormalTok{ lower, }\DataTypeTok{ymax =}\NormalTok{ upper), }\DataTypeTok{alpha =} \FloatTok{0.2}\NormalTok{,}
+                \DataTypeTok{fill =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
 \StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"First derivative"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -983,16 +976,16 @@ whilst for Braya-Sø, the following was used
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{braya.d <-}\StringTok{ }\KeywordTok{fderiv}\NormalTok{(braya_reml, }\DataTypeTok{newdata =} \NormalTok{newBraya, }\DataTypeTok{n =} \NormalTok{N)}
+\NormalTok{braya.d <-}\StringTok{ }\KeywordTok{fderiv}\NormalTok{(braya_reml, }\DataTypeTok{newdata =}\NormalTok{ newBraya, }\DataTypeTok{n =}\NormalTok{ N)}
 \NormalTok{braya.sint <-}\StringTok{ }\KeywordTok{with}\NormalTok{(newBraya,}
-                   \KeywordTok{cbind}\NormalTok{(}\KeywordTok{confint}\NormalTok{(braya.d, }\DataTypeTok{nsim =} \NormalTok{nsim,}
+                   \KeywordTok{cbind}\NormalTok{(}\KeywordTok{confint}\NormalTok{(braya.d, }\DataTypeTok{nsim =}\NormalTok{ nsim,}
                                  \DataTypeTok{type =} \StringTok{"simultaneous"}\NormalTok{),}
-                         \DataTypeTok{Year =} \NormalTok{Year))}
+                         \DataTypeTok{Year =}\NormalTok{ Year))}
 
-\NormalTok{braya_deriv_plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(braya.sint, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{est)) +}
-\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =} \NormalTok{lower, }\DataTypeTok{ymax =} \NormalTok{upper),}
-                \DataTypeTok{alpha =} \FloatTok{0.2}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"black"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() +}
+\NormalTok{braya_deriv_plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(braya.sint, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ est)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_ribbon}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =}\NormalTok{ lower, }\DataTypeTok{ymax =}\NormalTok{ upper),}
+                \DataTypeTok{alpha =} \FloatTok{0.2}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
 \StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"First derivative"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1008,7 +1001,8 @@ Figure 10 in the manuscript was prepared using
 
 \begin{center}\includegraphics[width=0.8\linewidth]{supplementary-materials_files/figure-latex/figure-10-1} \end{center}
 
-\section{Gaussian process smooths}\label{gaussian-process-smooths}
+\hypertarget{gaussian-process-smooths}{%
+\section{Gaussian process smooths}\label{gaussian-process-smooths}}
 
 For the Gaussian process smooth to fit within the GAM framework
 described in the manuscript, we need to supply the value of \(\phi\) for
@@ -1026,25 +1020,25 @@ with \emph{ggplot2}.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{nn <-}\StringTok{ }\DecValTok{200}    \CommentTok{# number of points at which to evaluate profile likelihood}
-\NormalTok{dseq <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DecValTok{15}\NormalTok{, }\DecValTok{500}\NormalTok{, }\DataTypeTok{length.out =} \NormalTok{nn)  }\CommentTok{# effective ranges to fit at}
-\NormalTok{Mat <-}\StringTok{ }\NormalTok{SEx <-}\StringTok{ }\KeywordTok{numeric}\NormalTok{(}\DataTypeTok{length =} \NormalTok{nn)     }\CommentTok{# object to hold model fits}
+\NormalTok{dseq <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DecValTok{15}\NormalTok{, }\DecValTok{500}\NormalTok{, }\DataTypeTok{length.out =}\NormalTok{ nn)  }\CommentTok{# effective ranges to fit at}
+\NormalTok{Mat <-}\StringTok{ }\NormalTok{SEx <-}\StringTok{ }\KeywordTok{numeric}\NormalTok{(}\DataTypeTok{length =}\NormalTok{ nn)     }\CommentTok{# object to hold model fits}
 
-\NormalTok{## loop over the sequence of deparation distances and fit the models}
-\NormalTok{for (i in }\KeywordTok{seq_along}\NormalTok{(dseq)) \{ }
-    \NormalTok{## iterate over dseq, fit GP GAM w Matérn covariance}
-    \NormalTok{Mat[i] <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"gp"}\NormalTok{, }\DataTypeTok{m =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, dseq[i])),}
-                  \DataTypeTok{weights =} \NormalTok{sampleInterval /}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval),}
-                  \DataTypeTok{data =} \NormalTok{braya, }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
+\CommentTok{## loop over the sequence of deparation distances and fit the models}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \KeywordTok{seq_along}\NormalTok{(dseq)) \{ }
+    \CommentTok{## iterate over dseq, fit GP GAM w Matérn covariance}
+\NormalTok{    Mat[i] <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"gp"}\NormalTok{, }\DataTypeTok{m =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, dseq[i])),}
+                  \DataTypeTok{weights =}\NormalTok{ sampleInterval }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval),}
+                  \DataTypeTok{data =}\NormalTok{ braya, }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
                   \DataTypeTok{family =} \KeywordTok{gaussian}\NormalTok{())[[}\StringTok{"gcv.ubre"}\NormalTok{]]}
-    \NormalTok{## fit squared exponential}
-    \NormalTok{SEx[i] <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"gp"}\NormalTok{, }\DataTypeTok{m =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, dseq[i], }\DecValTok{1}\NormalTok{)),}
-                  \DataTypeTok{weights =} \NormalTok{sampleInterval /}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval),}
-                  \DataTypeTok{data =} \NormalTok{braya, }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
+    \CommentTok{## fit squared exponential}
+\NormalTok{    SEx[i] <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"gp"}\NormalTok{, }\DataTypeTok{m =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, dseq[i], }\DecValTok{1}\NormalTok{)),}
+                  \DataTypeTok{weights =}\NormalTok{ sampleInterval }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval),}
+                  \DataTypeTok{data =}\NormalTok{ braya, }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
                   \DataTypeTok{family =} \KeywordTok{gaussian}\NormalTok{())[[}\StringTok{"gcv.ubre"}\NormalTok{]]}
 \NormalTok{\}}
 
-\NormalTok{## extract the REML score into ggplot-friendly object}
-\NormalTok{reml.scr <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{cor =} \KeywordTok{rep}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Matérn"}\NormalTok{,}\StringTok{"Exponential"}\NormalTok{), }\DataTypeTok{each =} \NormalTok{nn),}
+\CommentTok{## extract the REML score into ggplot-friendly object}
+\NormalTok{reml.scr <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{cor =} \KeywordTok{rep}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Matérn"}\NormalTok{,}\StringTok{"Exponential"}\NormalTok{), }\DataTypeTok{each =}\NormalTok{ nn),}
                        \DataTypeTok{effrange =} \KeywordTok{rep}\NormalTok{(dseq, }\DecValTok{2}\NormalTok{),}
                        \DataTypeTok{reml =} \KeywordTok{c}\NormalTok{(Mat, SEx))}
 \end{Highlighting}
@@ -1054,11 +1048,11 @@ The REML scores for the models are plotted with \emph{ggplot2} using
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## profile-likelihood plot}
-\NormalTok{proflik.plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(reml.scr, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{effrange, }\DataTypeTok{y =} \NormalTok{reml, }\DataTypeTok{colour =} \NormalTok{cor)) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() +}
-\StringTok{    }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{name =} \StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#e66101"}\NormalTok{,}\StringTok{"#5e3c99"}\NormalTok{)) +}
-\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{"REML score"}\NormalTok{, }\DataTypeTok{x =} \KeywordTok{expression}\NormalTok{(Effective ~}\StringTok{ }\NormalTok{range ~}\StringTok{ }\NormalTok{(varphi)))}
+\CommentTok{## profile-likelihood plot}
+\NormalTok{proflik.plt <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(reml.scr, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ effrange, }\DataTypeTok{y =}\NormalTok{ reml, }\DataTypeTok{colour =}\NormalTok{ cor)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{name =} \StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#e66101"}\NormalTok{,}\StringTok{"#5e3c99"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{"REML score"}\NormalTok{, }\DataTypeTok{x =} \KeywordTok{expression}\NormalTok{(Effective }\OperatorTok{~}\StringTok{ }\NormalTok{range }\OperatorTok{~}\StringTok{ }\NormalTok{(varphi)))}
 \NormalTok{proflik.plt}
 \end{Highlighting}
 \end{Shaded}
@@ -1074,32 +1068,32 @@ fitted models to visualize the trends.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## effective range minima from profile likelihood}
-\NormalTok{effRange2 <-}\StringTok{ }\KeywordTok{with}\NormalTok{(}\KeywordTok{subset}\NormalTok{(reml.scr, cor ==}\StringTok{ "Matérn"}\NormalTok{), dseq[}\KeywordTok{which.min}\NormalTok{(reml)])}
-\NormalTok{effRange3 <-}\StringTok{ }\KeywordTok{with}\NormalTok{(}\KeywordTok{subset}\NormalTok{(reml.scr, cor ==}\StringTok{ "Exponential"}\NormalTok{), dseq[}\KeywordTok{which.min}\NormalTok{(reml)])}
+\CommentTok{## effective range minima from profile likelihood}
+\NormalTok{effRange2 <-}\StringTok{ }\KeywordTok{with}\NormalTok{(}\KeywordTok{subset}\NormalTok{(reml.scr, cor }\OperatorTok{==}\StringTok{ "Matérn"}\NormalTok{), dseq[}\KeywordTok{which.min}\NormalTok{(reml)])}
+\NormalTok{effRange3 <-}\StringTok{ }\KeywordTok{with}\NormalTok{(}\KeywordTok{subset}\NormalTok{(reml.scr, cor }\OperatorTok{==}\StringTok{ "Exponential"}\NormalTok{), dseq[}\KeywordTok{which.min}\NormalTok{(reml)])}
 
-\NormalTok{## Refit these models: Matern}
-\NormalTok{gp2 <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"gp"}\NormalTok{, }\DataTypeTok{m =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, effRange2)),}
-           \DataTypeTok{data =} \NormalTok{braya,}
-           \DataTypeTok{method =} \StringTok{"REML"}\NormalTok{, }\DataTypeTok{weights =} \NormalTok{sampleInterval /}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
-\NormalTok{## Refit these models: Power exponential}
-\NormalTok{gp3 <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"gp"}\NormalTok{, }\DataTypeTok{m =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, effRange3, }\DecValTok{1}\NormalTok{)),}
-           \DataTypeTok{data =} \NormalTok{braya,}
-           \DataTypeTok{method =} \StringTok{"REML"}\NormalTok{, }\DataTypeTok{weights =} \NormalTok{sampleInterval /}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
+\CommentTok{## Refit these models: Matern}
+\NormalTok{gp2 <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"gp"}\NormalTok{, }\DataTypeTok{m =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, effRange2)),}
+           \DataTypeTok{data =}\NormalTok{ braya,}
+           \DataTypeTok{method =} \StringTok{"REML"}\NormalTok{, }\DataTypeTok{weights =}\NormalTok{ sampleInterval }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
+\CommentTok{## Refit these models: Power exponential}
+\NormalTok{gp3 <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"gp"}\NormalTok{, }\DataTypeTok{m =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, effRange3, }\DecValTok{1}\NormalTok{)),}
+           \DataTypeTok{data =}\NormalTok{ braya,}
+           \DataTypeTok{method =} \StringTok{"REML"}\NormalTok{, }\DataTypeTok{weights =}\NormalTok{ sampleInterval }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
 
-\NormalTok{## data to predict at}
+\CommentTok{## data to predict at}
 \NormalTok{newd <-}\StringTok{ }\KeywordTok{with}\NormalTok{(braya, }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Year =} \KeywordTok{seq}\NormalTok{(}\KeywordTok{min}\NormalTok{(Year), }\KeywordTok{max}\NormalTok{(Year),}
                                \DataTypeTok{length.out =} \DecValTok{1000}\NormalTok{)))}
-\NormalTok{## create predictions on response scale for both covariance functions}
+\CommentTok{## create predictions on response scale for both covariance functions}
 \NormalTok{p.gp2 <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(newd,}
-                   \DataTypeTok{fitted =} \KeywordTok{predict}\NormalTok{(gp2, }\DataTypeTok{newdata =} \NormalTok{newd, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{),}
+                   \DataTypeTok{fitted =} \KeywordTok{predict}\NormalTok{(gp2, }\DataTypeTok{newdata =}\NormalTok{ newd, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{),}
                    \DataTypeTok{effRange =} \KeywordTok{round}\NormalTok{(effRange2))}
 \NormalTok{p.gp3 <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(newd,}
-                   \DataTypeTok{fitted =} \KeywordTok{predict}\NormalTok{(gp3, }\DataTypeTok{newdata =} \NormalTok{newd, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{),}
+                   \DataTypeTok{fitted =} \KeywordTok{predict}\NormalTok{(gp3, }\DataTypeTok{newdata =}\NormalTok{ newd, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{),}
                    \DataTypeTok{effRange =} \KeywordTok{round}\NormalTok{(effRange3))}
-\NormalTok{## joint the two sets of predictions together}
+\CommentTok{## joint the two sets of predictions together}
 \NormalTok{pred <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(p.gp2, p.gp3)}
-\NormalTok{## add some categorical variables for plotting}
+\CommentTok{## add some categorical variables for plotting}
 \NormalTok{pred <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(pred,}
                   \DataTypeTok{effRange =} \KeywordTok{factor}\NormalTok{(effRange),}
                   \DataTypeTok{cor =} \KeywordTok{rep}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Matérn"}\NormalTok{, }\StringTok{"Exponential"}\NormalTok{), }\DataTypeTok{each =} \KeywordTok{nrow}\NormalTok{(newd)))}
@@ -1110,11 +1104,11 @@ The estimated Gaussian process trends are plotted using
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{gp.plt2 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(pred, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{fitted, }\DataTypeTok{colour =} \NormalTok{cor)) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() +}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"right"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{UK37), }\DataTypeTok{data =} \NormalTok{braya, }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) +}
-\StringTok{    }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{name =} \StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#e66101"}\NormalTok{,}\StringTok{"#5e3c99"}\NormalTok{)) +}
-\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \NormalTok{braya_ylabel, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
+\NormalTok{gp.plt2 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(pred, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ fitted, }\DataTypeTok{colour =}\NormalTok{ cor)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"right"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ UK37), }\DataTypeTok{data =}\NormalTok{ braya, }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{name =} \StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#e66101"}\NormalTok{,}\StringTok{"#5e3c99"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ braya_ylabel, }\DataTypeTok{x =} \StringTok{"Year CE"}\NormalTok{)}
 \NormalTok{gp.plt2}
 \end{Highlighting}
 \end{Shaded}
@@ -1130,7 +1124,8 @@ whilst Figure 13 in the manuscript was prepared using
 \end{Highlighting}
 \end{Shaded}
 
-\section{Adaptive smooths}\label{adaptive-smooths}
+\hypertarget{adaptive-smooths}{%
+\section{Adaptive smooths}\label{adaptive-smooths}}
 
 The adaptive smooth was fitted to the Braya-Sø data by adding
 \texttt{bs\ =\ "ad"} to the \texttt{s()} term in the model formula. The
@@ -1139,14 +1134,15 @@ REML smoothness selection and observational weights:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## Adaptive spline, weights as sampleInterval}
-\NormalTok{mod_ad <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"ad"}\NormalTok{), }\DataTypeTok{data =} \NormalTok{braya,}
+\CommentTok{## Adaptive spline, weights as sampleInterval}
+\NormalTok{mod_ad <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"ad"}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ braya,}
               \DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
-              \DataTypeTok{weights =} \NormalTok{sampleInterval /}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
+              \DataTypeTok{weights =}\NormalTok{ sampleInterval }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
 \end{Highlighting}
 \end{Shaded}
 
-\section{Comparing trends}\label{comparing-trends}
+\hypertarget{comparing-trends}{%
+\section{Comparing trends}\label{comparing-trends}}
 
 For the model comparison I refitted all the models for consistency; the
 code to fit each of the
@@ -1166,24 +1162,24 @@ is shown below.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## effective range parameter from profile-likelihood of Matern model}
+\CommentTok{## effective range parameter from profile-likelihood of Matern model}
 \NormalTok{effRange <-}\StringTok{ }\NormalTok{effRange2}
 
-\NormalTok{## TPRS, weights as sampleInterval}
-\NormalTok{mod_tprs <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"tp"}\NormalTok{), }\DataTypeTok{data =} \NormalTok{braya,}
+\CommentTok{## TPRS, weights as sampleInterval}
+\NormalTok{mod_tprs <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"tp"}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ braya,}
                 \DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
-                \DataTypeTok{weights =} \NormalTok{sampleInterval /}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
+                \DataTypeTok{weights =}\NormalTok{ sampleInterval }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
 
-\NormalTok{## Gaussian process, Matern, kappa = 1.5, weights as sampleInterval}
-\NormalTok{mod_gp <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"gp"}\NormalTok{, }\DataTypeTok{m =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, effRange)),}
-              \DataTypeTok{data =} \NormalTok{braya,}
+\CommentTok{## Gaussian process, Matern, kappa = 1.5, weights as sampleInterval}
+\NormalTok{mod_gp <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"gp"}\NormalTok{, }\DataTypeTok{m =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, effRange)),}
+              \DataTypeTok{data =}\NormalTok{ braya,}
               \DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
-              \DataTypeTok{weights =} \NormalTok{sampleInterval /}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
+              \DataTypeTok{weights =}\NormalTok{ sampleInterval }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
 
-\NormalTok{## Adaptive spline, weights as sampleInterval}
-\NormalTok{mod_ad <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"ad"}\NormalTok{), }\DataTypeTok{data =} \NormalTok{braya,}
+\CommentTok{## Adaptive spline, weights as sampleInterval}
+\NormalTok{mod_ad <-}\StringTok{ }\KeywordTok{gam}\NormalTok{(UK37 }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{45}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"ad"}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ braya,}
               \DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
-              \DataTypeTok{weights =} \NormalTok{sampleInterval /}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
+              \DataTypeTok{weights =}\NormalTok{ sampleInterval }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(sampleInterval))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1192,34 +1188,34 @@ I wrote a small function to predict from each model over the range of
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## wrap this in a function that will return all the plots & derived objects}
-\NormalTok{processGAM <-}\StringTok{ }\NormalTok{function(mod) \{}
-    \NormalTok{## Predict from model}
-    \NormalTok{N <-}\StringTok{ }\DecValTok{500}
-    \NormalTok{newYear <-}\StringTok{ }\KeywordTok{with}\NormalTok{(braya,}
+\CommentTok{## wrap this in a function that will return all the plots & derived objects}
+\NormalTok{processGAM <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(mod) \{}
+    \CommentTok{## Predict from model}
+\NormalTok{    N <-}\StringTok{ }\DecValTok{500}
+\NormalTok{    newYear <-}\StringTok{ }\KeywordTok{with}\NormalTok{(braya,}
                     \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Year =} \KeywordTok{seq}\NormalTok{(}\KeywordTok{min}\NormalTok{(Year), }\KeywordTok{max}\NormalTok{(Year),}
-                                          \DataTypeTok{length.out =} \NormalTok{N)))}
-    \NormalTok{newYear <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(newYear,}
+                                          \DataTypeTok{length.out =}\NormalTok{ N)))}
+\NormalTok{    newYear <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(newYear,}
                      \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{predict}\NormalTok{(mod, newYear, }\DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{)))}
     
-    \NormalTok{out <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{objects =} \NormalTok{newYear)}
-    \NormalTok{out}
+\NormalTok{    out <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{objects =}\NormalTok{ newYear)}
+\NormalTok{    out}
 \NormalTok{\}}
 
-\NormalTok{plts_gp   <-}\StringTok{ }\KeywordTok{processGAM}\NormalTok{(}\DataTypeTok{mod =} \NormalTok{mod_gp) }\CommentTok{# Gaussian process smooth with weights}
-\NormalTok{plts_ad   <-}\StringTok{ }\KeywordTok{processGAM}\NormalTok{(}\DataTypeTok{mod =} \NormalTok{mod_ad) }\CommentTok{# Adaptive smooth with weights}
-\NormalTok{plts_tprs <-}\StringTok{ }\KeywordTok{processGAM}\NormalTok{(}\DataTypeTok{mod =} \NormalTok{mod_tprs) }\CommentTok{# TPRS with weights}
+\NormalTok{plts_gp   <-}\StringTok{ }\KeywordTok{processGAM}\NormalTok{(}\DataTypeTok{mod =}\NormalTok{ mod_gp) }\CommentTok{# Gaussian process smooth with weights}
+\NormalTok{plts_ad   <-}\StringTok{ }\KeywordTok{processGAM}\NormalTok{(}\DataTypeTok{mod =}\NormalTok{ mod_ad) }\CommentTok{# Adaptive smooth with weights}
+\NormalTok{plts_tprs <-}\StringTok{ }\KeywordTok{processGAM}\NormalTok{(}\DataTypeTok{mod =}\NormalTok{ mod_tprs) }\CommentTok{# TPRS with weights}
 
 \NormalTok{pltData <-}\StringTok{ }\KeywordTok{do.call}\NormalTok{(}\StringTok{"rbind"}\NormalTok{, }\KeywordTok{lapply}\NormalTok{(}\KeywordTok{list}\NormalTok{(plts_gp, plts_ad, plts_tprs),}
                                    \StringTok{`}\DataTypeTok{[[}\StringTok{`}\NormalTok{, }\StringTok{"objects"}\NormalTok{))}
 \NormalTok{pltData <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(pltData,}
                      \DataTypeTok{Model =} \KeywordTok{rep}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"GP"}\NormalTok{, }\StringTok{"Adaptive"}\NormalTok{, }\StringTok{"TPRS"}\NormalTok{),}
-                                 \DataTypeTok{each =} \KeywordTok{nrow}\NormalTok{(plts_gp$objects)))}
+                                 \DataTypeTok{each =} \KeywordTok{nrow}\NormalTok{(plts_gp}\OperatorTok{$}\NormalTok{objects)))}
 
-\NormalTok{allFits <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(pltData, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{fit)) +}
-\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{UK37), }\DataTypeTok{data =} \NormalTok{braya) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =} \NormalTok{Model)) +}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \NormalTok{braya_ylabel, }\DataTypeTok{x =} \StringTok{"Year"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"right"}\NormalTok{) +}
+\NormalTok{allFits <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(pltData, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ fit)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ UK37), }\DataTypeTok{data =}\NormalTok{ braya) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =}\NormalTok{ Model)) }\OperatorTok{+}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ braya_ylabel, }\DataTypeTok{x =} \StringTok{"Year"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"right"}\NormalTok{) }\OperatorTok{+}
 \StringTok{    }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{name =} \StringTok{""}\NormalTok{,}
                         \DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"#e66101"}\NormalTok{, }\StringTok{"#fdb863"}\NormalTok{, }\StringTok{"#5e3c99"}\NormalTok{))}
 \NormalTok{allFits}
@@ -1230,8 +1226,9 @@ I wrote a small function to predict from each model over the range of
 
 The plot produced reproduces Figure 14 in the manuscript.
 
+\hypertarget{accounting-for-age-model-uncertainty}{%
 \section{Accounting for age-model
-uncertainty}\label{accounting-for-age-model-uncertainty}
+uncertainty}\label{accounting-for-age-model-uncertainty}}
 
 The manuscript proposed to simulate from the posterior distribution of
 the fitted age model as a way to account for age-model uncertainty. The
@@ -1255,9 +1252,9 @@ fitting the GAM
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{knots <-}\StringTok{ }\KeywordTok{with}\NormalTok{(small, }\KeywordTok{list}\NormalTok{(}\DataTypeTok{Year =} \KeywordTok{seq}\NormalTok{(}\KeywordTok{min}\NormalTok{(Year), }\KeywordTok{max}\NormalTok{(Year), }\DataTypeTok{length =} \DecValTok{14}\NormalTok{)))}
-\NormalTok{mod <-}\StringTok{ }\KeywordTok{gamm}\NormalTok{(d15N ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{15}\NormalTok{), }\DataTypeTok{data =} \NormalTok{small, }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
-            \DataTypeTok{correlation =} \KeywordTok{corCAR1}\NormalTok{(}\DataTypeTok{form =} \NormalTok{~}\StringTok{ }\NormalTok{Year),}
-            \DataTypeTok{knots =} \NormalTok{knots)}
+\NormalTok{mod <-}\StringTok{ }\KeywordTok{gamm}\NormalTok{(d15N }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{15}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ small, }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
+            \DataTypeTok{correlation =} \KeywordTok{corCAR1}\NormalTok{(}\DataTypeTok{form =} \OperatorTok{~}\StringTok{ }\NormalTok{Year),}
+            \DataTypeTok{knots =}\NormalTok{ knots)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1283,10 +1280,10 @@ as 1.4 degrees of freedom in the GCV score.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## monotonic spline age-depth model}
-\NormalTok{swAge$Error[}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\FloatTok{1.1}
-\NormalTok{swAgeMod <-}\StringTok{ }\KeywordTok{scam}\NormalTok{(Date ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Depth, }\DataTypeTok{k =} \DecValTok{5}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"mpd"}\NormalTok{), }\DataTypeTok{data =} \NormalTok{swAge,}
-                 \DataTypeTok{weights =} \DecValTok{1} \NormalTok{/}\StringTok{ }\NormalTok{swAge$Error, }\DataTypeTok{gamma =} \FloatTok{1.4}\NormalTok{)}
+\CommentTok{## monotonic spline age-depth model}
+\NormalTok{swAge}\OperatorTok{$}\NormalTok{Error[}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\DecValTok{1}
+\NormalTok{swAgeMod <-}\StringTok{ }\KeywordTok{scam}\NormalTok{(Date }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Depth, }\DataTypeTok{k =} \DecValTok{5}\NormalTok{, }\DataTypeTok{bs =} \StringTok{"cv"}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ swAge,}
+    \DataTypeTok{weights =}\NormalTok{ (}\DecValTok{1} \OperatorTok{/}\StringTok{ }\NormalTok{swAge}\OperatorTok{$}\NormalTok{Error) }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(}\DecValTok{1} \OperatorTok{/}\StringTok{ }\NormalTok{swAge}\OperatorTok{$}\NormalTok{Error), }\DataTypeTok{gamma =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1294,28 +1291,24 @@ Note that I added a small amount of error to the surface sample age as
 the model cannot be fitted if an observation has \texttt{0} weight.
 
 Next, predict from the estimated age model, and draw 25 samples from the
-posterior distribution using \texttt{simulate()}. The results are tidied
-into a format suitable for further processing and plotting. Note that
-the posterior samples here are only used for plotting.
+posterior distribution using \texttt{smooth\_samples()}. Note that the
+posterior samples here are only used for plotting.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## predict from the age model for a smooth set of points in `Depth`}
-\NormalTok{newAge <-}\StringTok{ }\KeywordTok{with}\NormalTok{(swAge, }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Depth =} \KeywordTok{seq}\NormalTok{(}\KeywordTok{min}\NormalTok{(Depth), }\KeywordTok{max}\NormalTok{(Depth),}
-                                             \DataTypeTok{length.out =} \DecValTok{200}\NormalTok{)))}
-\NormalTok{newAge <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(newAge,}
-                    \DataTypeTok{fitted =} \KeywordTok{predict}\NormalTok{(swAgeMod, }\DataTypeTok{newdata =} \NormalTok{newAge, }
-                                     \DataTypeTok{type =} \StringTok{"response"}\NormalTok{))}
-\NormalTok{newSims <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{simulate}\NormalTok{(swAgeMod, }\DataTypeTok{nsim =} \DecValTok{25}\NormalTok{, }\DataTypeTok{newdata =} \NormalTok{newAge))}
-\NormalTok{newSims <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DataTypeTok{Depth =} \NormalTok{newAge$Depth, newSims)}
-\NormalTok{newSims <-}\StringTok{ }\KeywordTok{gather}\NormalTok{(newSims, Simulation, Age, -Depth)}
+\CommentTok{## predict from the age model for a smooth set of points in `Depth`}
+\NormalTok{newAge <-}\StringTok{ }\KeywordTok{data_slice}\NormalTok{(swAgeMod, }\DataTypeTok{Depth =} \KeywordTok{evenly}\NormalTok{(Depth, }\DataTypeTok{n =} \DecValTok{200}\NormalTok{))}
+\NormalTok{newAgeFit <-}\StringTok{ }\KeywordTok{fitted_values}\NormalTok{(swAgeMod, }\DataTypeTok{data =}\NormalTok{ newAge)}
+\NormalTok{newSims <-}\StringTok{ }\KeywordTok{smooth_samples}\NormalTok{(swAgeMod, }\DataTypeTok{n =} \DecValTok{25}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ newAge) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{value =}\NormalTok{ value }\OperatorTok{+}\StringTok{ }\KeywordTok{coef}\NormalTok{(swAgeMod)[1L]) }\CommentTok{# %>%}
+    \CommentTok{#left_join(mutate(newAge, .row = row_number()), by = join_by(.row == .row))}
 \end{Highlighting}
 \end{Shaded}
 
 In the next code chunk, I draw 100 samples from the posterior
 distribution of the age model, but notice that I pass in the
-\texttt{small} data to \texttt{newdata} in the call to
-\texttt{simulate()} as the locations I want new age estimates for are
+\texttt{small} data to \texttt{data} in the call to
+\texttt{smooth\_samples()} as the locations I want new age estimates for
 the depths for which we have δ\textsuperscript{15}N values. A small
 function (\texttt{fitSWModels}) is written to prepare each simulation
 for fitting and then actually fit the GAM plus CAR(1) model using the
@@ -1323,31 +1316,31 @@ updated age information.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## simulate from age model; each column is a simulation}
-\NormalTok{ageSims <-}\StringTok{ }\KeywordTok{simulate}\NormalTok{(swAgeMod, }\DataTypeTok{nsim =} \DecValTok{100}\NormalTok{, }\DataTypeTok{newdata =} \NormalTok{small, }\DataTypeTok{seed =} \DecValTok{42}\NormalTok{)}
-\NormalTok{ageSims <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(ageSims)}
+\CommentTok{## simulate from age model; each column is a simulation}
+\NormalTok{ageSims <-}\StringTok{ }\KeywordTok{smooth_samples}\NormalTok{(swAgeMod, }\DataTypeTok{n =} \DecValTok{100}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ small, }\DataTypeTok{seed =} \DecValTok{42}\NormalTok{)}
 
-\NormalTok{fitSWModels <-}\StringTok{ }\NormalTok{function(x, y, knots) \{}
-    \NormalTok{dat <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{d15N =} \NormalTok{y, }\DataTypeTok{Year =} \NormalTok{x)}
-    \NormalTok{m <-}\StringTok{ }\KeywordTok{gamm}\NormalTok{(d15N ~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{15}\NormalTok{), }\DataTypeTok{data =} \NormalTok{dat, }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
-              \DataTypeTok{correlation =} \KeywordTok{corCAR1}\NormalTok{(}\DataTypeTok{form =} \NormalTok{~}\StringTok{ }\NormalTok{Year), }\DataTypeTok{knots =} \NormalTok{knots)}
+\NormalTok{fitSWModels <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x, y, knots) \{}
+\NormalTok{    dat <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{d15N =}\NormalTok{ y,}
+        \DataTypeTok{Year =} \KeywordTok{pull}\NormalTok{(x, value) }\OperatorTok{+}\StringTok{ }\KeywordTok{coef}\NormalTok{(swAgeMod, }\DataTypeTok{parameterized =} \OtherTok{TRUE}\NormalTok{)[1L])}
+\NormalTok{    m <-}\StringTok{ }\KeywordTok{gamm}\NormalTok{(d15N }\OperatorTok{~}\StringTok{ }\KeywordTok{s}\NormalTok{(Year, }\DataTypeTok{k =} \DecValTok{15}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ dat, }\DataTypeTok{method =} \StringTok{"REML"}\NormalTok{,}
+              \DataTypeTok{correlation =} \KeywordTok{corCAR1}\NormalTok{(}\DataTypeTok{form =} \OperatorTok{~}\StringTok{ }\NormalTok{Year), }\DataTypeTok{knots =}\NormalTok{ knots)}
 \NormalTok{\}}
 
-\NormalTok{## generate new trends using draws from age-model posterior}
-\NormalTok{simTrendMods <-}\StringTok{ }\KeywordTok{lapply}\NormalTok{(ageSims, fitSWModels, }\DataTypeTok{y =} \NormalTok{small$d15N, }\DataTypeTok{knots =} \NormalTok{knots)}
+\CommentTok{## generate new trends using draws from age-model posterior}
+\NormalTok{simTrendMods <-}\StringTok{ }\KeywordTok{lapply}\NormalTok{(ageSims }\OperatorTok{%>%}\StringTok{ }\KeywordTok{split}\NormalTok{(ageSims}\OperatorTok{$}\NormalTok{draw), fitSWModels,}
+    \DataTypeTok{y =}\NormalTok{ small}\OperatorTok{$}\NormalTok{d15N, }\DataTypeTok{knots =}\NormalTok{ knots)}
 
-
-\NormalTok{## function wrapper to predict new trends at locations over the}
-\NormalTok{## range of `Year`}
-\NormalTok{predSWModels <-}\StringTok{ }\NormalTok{function(mod, newdata) \{}
-    \KeywordTok{predict}\NormalTok{(mod$gam, }\DataTypeTok{newdata =} \NormalTok{newdata, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\CommentTok{## function wrapper to predict new trends at locations over the}
+\CommentTok{## range of `Year`}
+\NormalTok{predSWModels <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(mod, newdata) \{}
+    \KeywordTok{predict}\NormalTok{(mod}\OperatorTok{$}\NormalTok{gam, }\DataTypeTok{newdata =}\NormalTok{ newdata, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
 \NormalTok{\}}
 
-\NormalTok{## predict from fitted model to produce a smooth trend for each posterior}
-\NormalTok{## sample}
-\NormalTok{simTrends <-}\StringTok{ }\KeywordTok{lapply}\NormalTok{(simTrendMods, predSWModels, }\DataTypeTok{newdata =} \NormalTok{newYear)}
+\CommentTok{## predict from fitted model to produce a smooth trend for each posterior}
+\CommentTok{## sample}
+\NormalTok{simTrends <-}\StringTok{ }\KeywordTok{lapply}\NormalTok{(simTrendMods, predSWModels, }\DataTypeTok{newdata =}\NormalTok{ newYear)}
 
-\NormalTok{## arrange in a tidy format form plottings}
+\CommentTok{## arrange in a tidy format form plottings}
 \NormalTok{simTrends <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Year  =} \KeywordTok{with}\NormalTok{(newYear, }\KeywordTok{rep}\NormalTok{(Year, }\KeywordTok{length}\NormalTok{(simTrends))),}
                         \DataTypeTok{Trend =} \KeywordTok{unlist}\NormalTok{(simTrends),}
                         \DataTypeTok{Group =} \KeywordTok{rep}\NormalTok{(}\KeywordTok{seq_along}\NormalTok{(simTrends),}
@@ -1364,23 +1357,23 @@ step just arranges data for plotting.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## wrapper to simulate from a fitted GAM with the required arguments}
-\NormalTok{simulateSWModels <-}\StringTok{ }\NormalTok{function(mod, newdata, nsim, }\DataTypeTok{seed =} \DecValTok{42}\NormalTok{) \{}
-    \NormalTok{sims <-}\StringTok{ }\KeywordTok{simulate}\NormalTok{(mod, }\DataTypeTok{nsim =} \NormalTok{nsim, }\DataTypeTok{newdata =} \NormalTok{newdata, }\DataTypeTok{seed =} \NormalTok{seed)}
-    \KeywordTok{as.vector}\NormalTok{(sims)}
+\CommentTok{## wrapper to simulate from a fitted GAM with the required arguments}
+\NormalTok{simulateSWModels <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(mod, newdata, nsim, }\DataTypeTok{seed =} \DecValTok{42}\NormalTok{) \{}
+\NormalTok{    sims <-}\StringTok{ }\KeywordTok{fitted_samples}\NormalTok{(mod, }\DataTypeTok{n =}\NormalTok{ nsim, }\DataTypeTok{data =}\NormalTok{ newdata, }\DataTypeTok{seed =}\NormalTok{ seed)}
+    \KeywordTok{pull}\NormalTok{(sims, .fitted)}
 \NormalTok{\}}
 
-\NormalTok{## now do the posterior simulation}
+\CommentTok{## now do the posterior simulation}
 \NormalTok{NSIM <-}\StringTok{ }\DecValTok{50}     \CommentTok{# number of posterior samples *per* model}
-\NormalTok{simSimulate <-}\StringTok{ }\KeywordTok{lapply}\NormalTok{(simTrendMods, simulateSWModels, }\DataTypeTok{newdata =} \NormalTok{newYear,}
-                      \DataTypeTok{nsim =} \NormalTok{NSIM, }\DataTypeTok{seed =} \DecValTok{42}\NormalTok{)}
+\NormalTok{simSimulate <-}\StringTok{ }\KeywordTok{lapply}\NormalTok{(simTrendMods, simulateSWModels, }\DataTypeTok{newdata =}\NormalTok{ newYear,}
+                      \DataTypeTok{nsim =}\NormalTok{ NSIM, }\DataTypeTok{seed =} \DecValTok{42}\NormalTok{)}
 
-\NormalTok{## arrange in a tidy format}
+\CommentTok{## arrange in a tidy format}
 \NormalTok{simSimulate <-}
 \StringTok{  }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Year  =} \KeywordTok{with}\NormalTok{(newYear,}
-                          \KeywordTok{rep}\NormalTok{(Year, }\DataTypeTok{times =} \NormalTok{NSIM *}\StringTok{ }\KeywordTok{length}\NormalTok{(simSimulate))),}
+                          \KeywordTok{rep}\NormalTok{(Year, }\DataTypeTok{times =}\NormalTok{ NSIM }\OperatorTok{*}\StringTok{ }\KeywordTok{length}\NormalTok{(simSimulate))),}
              \DataTypeTok{Trend =} \KeywordTok{unlist}\NormalTok{(simSimulate),}
-             \DataTypeTok{Group =} \KeywordTok{rep}\NormalTok{(}\KeywordTok{seq_len}\NormalTok{(NSIM *}\StringTok{ }\KeywordTok{length}\NormalTok{(simSimulate)),}
+             \DataTypeTok{Group =} \KeywordTok{rep}\NormalTok{(}\KeywordTok{seq_len}\NormalTok{(NSIM }\OperatorTok{*}\StringTok{ }\KeywordTok{length}\NormalTok{(simSimulate)),}
                          \DataTypeTok{each =} \KeywordTok{nrow}\NormalTok{(newYear)))}
 \end{Highlighting}
 \end{Shaded}
@@ -1389,50 +1382,50 @@ Each of the steps is visualized using the plot code shown below.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{## plot the estimated age model ad posterior simulations from it}
-\NormalTok{plt1 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(swAge, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =} \NormalTok{Date, }\DataTypeTok{x =} \NormalTok{Depth)) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =} \NormalTok{newSims,}
-              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =} \NormalTok{Age, }\DataTypeTok{x =} \NormalTok{Depth, }\DataTypeTok{group =} \NormalTok{Simulation),}
-              \DataTypeTok{alpha =} \DecValTok{1}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"grey80"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =} \NormalTok{newAge, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =} \NormalTok{fitted, }\DataTypeTok{x =} \NormalTok{Depth)) +}
-\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{size =} \FloatTok{1.5}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_errorbar}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =} \NormalTok{Date -}\StringTok{ }\NormalTok{Error, }\DataTypeTok{ymax =} \NormalTok{Date +}\StringTok{ }\NormalTok{Error, }\DataTypeTok{width =} \DecValTok{0}\NormalTok{),}
-                  \DataTypeTok{colour =} \StringTok{"red"}\NormalTok{) +}
+\CommentTok{## plot the estimated age model ad posterior simulations from it}
+\NormalTok{plt1 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(swAge, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ Date, }\DataTypeTok{x =}\NormalTok{ Depth)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ newSims,}
+              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{x =}\NormalTok{ Depth, }\DataTypeTok{group =}\NormalTok{ draw),}
+              \DataTypeTok{alpha =} \DecValTok{1}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"grey80"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ newAgeFit, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ .fitted, }\DataTypeTok{x =}\NormalTok{ Depth)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{size =} \FloatTok{1.5}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_errorbar}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =}\NormalTok{ Date }\OperatorTok{-}\StringTok{ }\NormalTok{Error, }\DataTypeTok{ymax =}\NormalTok{ Date }\OperatorTok{+}\StringTok{ }\NormalTok{Error, }\DataTypeTok{width =} \DecValTok{0}\NormalTok{),}
+                  \DataTypeTok{colour =} \StringTok{"red"}\NormalTok{) }\OperatorTok{+}
 \StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{"Year CE"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Depth (cm)"}\NormalTok{)}
 
-\NormalTok{## plot the simulated trends showing the effect of age-model uncertainty}
-\NormalTok{plt2 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(simTrends, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{Trend, }\DataTypeTok{group =} \NormalTok{Group)) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"grey80"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =} \NormalTok{newYear,}
-              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{fit), }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data =} \NormalTok{small,}
-               \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{d15N),}
-               \DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{size =} \FloatTok{0.7}\NormalTok{) +}
-\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Year"}\NormalTok{, }\DataTypeTok{y =} \NormalTok{d15n_label)}
+\CommentTok{## plot the simulated trends showing the effect of age-model uncertainty}
+\NormalTok{plt2 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(simTrends, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ Trend, }\DataTypeTok{group =}\NormalTok{ Group)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"grey80"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ newYear,}
+              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ fit), }\DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ small,}
+               \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ d15N),}
+               \DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{size =} \FloatTok{0.7}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Year"}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ d15n_label)}
 
-\NormalTok{## plot simulated trends showing the effect of age-model uncertainty and}
-\NormalTok{## the effect of uncertainty in the estimated trend itself}
-\NormalTok{plt3 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(simSimulate, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{Trend, }\DataTypeTok{group =} \NormalTok{Group)) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.2}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"grey80"}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data =} \NormalTok{small,}
-               \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{d15N),}
+\CommentTok{## plot simulated trends showing the effect of age-model uncertainty and}
+\CommentTok{## the effect of uncertainty in the estimated trend itself}
+\NormalTok{plt3 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(simSimulate, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ Trend, }\DataTypeTok{group =}\NormalTok{ Group)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.2}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"grey80"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ small,}
+               \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ d15N),}
                \DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{,}
-               \DataTypeTok{size =} \FloatTok{0.7}\NormalTok{) +}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =} \NormalTok{newYear,}
-              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Year, }\DataTypeTok{y =} \NormalTok{fit),}
-              \DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) +}
-\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Year"}\NormalTok{, }\DataTypeTok{y =} \NormalTok{d15n_label)}
+               \DataTypeTok{size =} \FloatTok{0.7}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ newYear,}
+              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ fit),}
+              \DataTypeTok{inherit.aes =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Year"}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ d15n_label)}
 
-\NormalTok{## align all plots vertically}
+\CommentTok{## align all plots vertically}
 \NormalTok{plots <-}\StringTok{ }\KeywordTok{align_plots}\NormalTok{(plt1, plt2, plt3, }\DataTypeTok{align =} \StringTok{'v'}\NormalTok{, }\DataTypeTok{axis =} \StringTok{'l'}\NormalTok{)}
 
 
-\NormalTok{## create the two rows of figures, from `plots`}
+\CommentTok{## create the two rows of figures, from `plots`}
 \NormalTok{top_row <-}\StringTok{ }\KeywordTok{plot_grid}\NormalTok{(plots[[}\DecValTok{1}\NormalTok{]], }\OtherTok{NULL}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{2}\NormalTok{, }\DataTypeTok{labels =} \StringTok{"a"}\NormalTok{)}
 \NormalTok{bot_row <-}\StringTok{ }\KeywordTok{plot_grid}\NormalTok{(plots[[}\DecValTok{2}\NormalTok{]], plots[[}\DecValTok{3}\NormalTok{]], }\DataTypeTok{ncol =} \DecValTok{1}\NormalTok{, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"b"}\NormalTok{, }\StringTok{"c"}\NormalTok{))}
 
-\NormalTok{## combine the two rows, top row has 1 plot row, bottom row has 2, hence}
-\NormalTok{## the rel_heights to even this out}
+\CommentTok{## combine the two rows, top row has 1 plot row, bottom row has 2, hence}
+\CommentTok{## the rel_heights to even this out}
 \KeywordTok{plot_grid}\NormalTok{(top_row, bot_row, }\DataTypeTok{ncol =} \DecValTok{1}\NormalTok{, }\DataTypeTok{rel_heights =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\DecValTok{1}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
@@ -1441,93 +1434,110 @@ Each of the steps is visualized using the plot code shown below.
 
 This reproduces Figure 15 from the manuscript.
 
-\section{Session information}\label{session-information}
+\hypertarget{session-information}{%
+\section{Session information}\label{session-information}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{devtools::}\KeywordTok{session_info}\NormalTok{()}
+\NormalTok{devtools}\OperatorTok{::}\KeywordTok{session_info}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-#> Session info -------------------------------------------------------------
+#> - Session info -----------------------------------------------------------------------------------
+#>  setting  value
+#>  version  R version 4.3.1 (2023-06-16)
+#>  os       Ubuntu 20.04.6 LTS
+#>  system   x86_64, linux-gnu
+#>  ui       X11
+#>  language en_GB:en
+#>  collate  en_GB.UTF-8
+#>  ctype    en_GB.UTF-8
+#>  tz       Europe/Copenhagen
+#>  date     2023-10-16
+#>  pandoc   2.5 @ /usr/bin/ (via rmarkdown)
+#> 
+#> - Packages ---------------------------------------------------------------------------------------
+#>  package     * version  date (UTC) lib source
+#>  cachem        1.0.8    2023-05-01 [1] RSPM (R 4.3.0)
+#>  callr         3.7.3    2022-11-02 [1] RSPM (R 4.3.0)
+#>  cli           3.6.1    2023-03-23 [1] RSPM (R 4.3.0)
+#>  codetools     0.2-19   2023-02-01 [1] RSPM (R 4.3.0)
+#>  colorspace    2.1-0    2023-01-23 [1] RSPM (R 4.3.0)
+#>  cowplot     * 1.1.1    2020-12-30 [1] RSPM (R 4.3.0)
+#>  crayon        1.5.2    2022-09-29 [1] RSPM (R 4.3.0)
+#>  devtools      2.4.5    2022-10-11 [1] RSPM (R 4.3.0)
+#>  digest        0.6.33   2023-07-07 [1] RSPM (R 4.3.1)
+#>  dplyr       * 1.1.3    2023-09-03 [1] RSPM (R 4.3.1)
+#>  ellipsis      0.3.2    2021-04-29 [1] RSPM (R 4.3.0)
+#>  evaluate      0.21     2023-05-05 [1] RSPM (R 4.3.0)
+#>  fansi         1.0.5    2023-10-08 [1] CRAN (R 4.3.1)
+#>  farver        2.1.1    2022-07-06 [1] RSPM (R 4.3.0)
+#>  fastmap       1.1.1    2023-02-24 [1] RSPM (R 4.3.0)
+#>  fs            1.6.3    2023-07-20 [1] RSPM (R 4.3.1)
+#>  generics      0.1.3    2022-07-05 [1] RSPM (R 4.3.0)
+#>  ggokabeito    0.1.0    2021-10-18 [1] RSPM (R 4.3.0)
+#>  ggplot2     * 3.4.3    2023-08-14 [1] RSPM (R 4.3.1)
+#>  glue          1.6.2    2022-02-24 [1] RSPM (R 4.3.0)
+#>  gratia      * 0.8.1.41 2023-10-16 [1] local
+#>  gtable        0.3.4    2023-08-21 [1] RSPM (R 4.3.1)
+#>  htmltools     0.5.6    2023-08-10 [1] RSPM (R 4.3.1)
+#>  htmlwidgets   1.6.2    2023-03-17 [1] RSPM (R 4.3.0)
+#>  httpuv        1.6.11   2023-05-11 [1] RSPM (R 4.3.0)
+#>  knitr         1.44     2023-09-11 [1] RSPM (R 4.3.1)
+#>  labeling      0.4.3    2023-08-29 [1] RSPM (R 4.3.1)
+#>  later         1.3.1    2023-05-02 [1] RSPM (R 4.3.0)
+#>  lattice       0.21-8   2023-04-05 [1] RSPM (R 4.3.0)
+#>  lifecycle     1.0.3    2022-10-07 [1] RSPM (R 4.3.0)
+#>  magrittr      2.0.3    2022-03-30 [1] RSPM (R 4.3.0)
+#>  Matrix        1.6-1.1  2023-09-18 [1] RSPM (R 4.3.1)
+#>  memoise       2.0.1    2021-11-26 [1] RSPM (R 4.3.0)
+#>  mgcv        * 1.9-0    2023-07-11 [1] RSPM (R 4.3.1)
+#>  mime          0.12     2021-09-28 [1] RSPM (R 4.3.0)
+#>  miniUI        0.1.1.1  2018-05-18 [1] RSPM (R 4.3.0)
+#>  munsell       0.5.0    2018-06-12 [1] RSPM (R 4.3.0)
+#>  mvnfast       0.2.8    2023-02-23 [1] RSPM (R 4.3.0)
+#>  nlme        * 3.1-163  2023-08-09 [1] RSPM (R 4.3.1)
+#>  patchwork     1.1.3    2023-08-14 [1] RSPM (R 4.3.1)
+#>  pillar        1.9.0    2023-03-22 [1] RSPM (R 4.3.0)
+#>  pkgbuild      1.4.2    2023-06-26 [1] RSPM (R 4.3.1)
+#>  pkgconfig     2.0.3    2019-09-22 [1] RSPM (R 4.3.0)
+#>  pkgload       1.3.3    2023-09-22 [1] CRAN (R 4.3.1)
+#>  prettyunits   1.2.0    2023-09-24 [1] CRAN (R 4.3.1)
+#>  processx      3.8.2    2023-06-30 [1] RSPM (R 4.3.1)
+#>  profvis       0.3.8    2023-05-02 [1] RSPM (R 4.3.0)
+#>  promises      1.2.1    2023-08-10 [1] RSPM (R 4.3.1)
+#>  ps            1.7.5    2023-04-18 [1] RSPM (R 4.3.0)
+#>  purrr         1.0.2    2023-08-10 [1] RSPM (R 4.3.1)
+#>  R6            2.5.1    2021-08-19 [1] RSPM (R 4.3.0)
+#>  Rcpp          1.0.11   2023-07-06 [1] RSPM (R 4.3.1)
+#>  remotes       2.4.2.1  2023-07-18 [1] RSPM (R 4.3.1)
+#>  rlang         1.1.1    2023-04-28 [1] RSPM (R 4.3.0)
+#>  rmarkdown   * 2.25     2023-09-18 [1] RSPM (R 4.3.1)
+#>  scales        1.2.1    2022-08-20 [1] RSPM (R 4.3.0)
+#>  scam        * 1.2-14   2023-04-14 [1] RSPM (R 4.3.0)
+#>  sessioninfo   1.2.2    2021-12-06 [1] RSPM (R 4.3.0)
+#>  shiny         1.7.5    2023-08-12 [1] RSPM (R 4.3.1)
+#>  stringi       1.7.12   2023-01-11 [1] RSPM (R 4.3.0)
+#>  stringr       1.5.0    2022-12-02 [1] CRAN (R 4.3.0)
+#>  tibble        3.2.1    2023-03-20 [1] CRAN (R 4.3.0)
+#>  tidyr       * 1.3.0    2023-01-24 [1] RSPM (R 4.3.0)
+#>  tidyselect    1.2.0    2022-10-10 [1] RSPM (R 4.3.0)
+#>  urlchecker    1.0.1    2021-11-30 [1] RSPM (R 4.3.0)
+#>  usethis       2.2.2    2023-07-06 [1] RSPM (R 4.3.1)
+#>  utf8          1.2.3    2023-01-31 [1] RSPM (R 4.3.0)
+#>  vctrs         0.6.3    2023-06-14 [1] RSPM (R 4.3.0)
+#>  withr         2.5.1    2023-09-26 [1] RSPM (R 4.3.1)
+#>  xfun          0.40     2023-08-09 [1] RSPM (R 4.3.1)
+#>  xtable        1.8-4    2019-04-21 [1] RSPM (R 4.3.0)
+#>  yaml          2.3.7    2023-01-23 [1] RSPM (R 4.3.0)
+#> 
+#>  [1] /home/au690221/R/x86_64-pc-linux-gnu-library/4.3
+#>  [2] /usr/local/lib/R/site-library
+#>  [3] /usr/lib/R/site-library
+#>  [4] /usr/lib/R/library
+#> 
+#> --------------------------------------------------------------------------------------------------
 \end{verbatim}
-
-\begin{verbatim}
-#>  setting  value                                      
-#>  version  R version 3.4.3 Patched (2018-01-16 r74126)
-#>  system   x86_64, linux-gnu                          
-#>  ui       X11                                        
-#>  language (EN)                                       
-#>  collate  en_CA.UTF-8                                
-#>  tz       America/Regina                             
-#>  date     2018-08-16
-\end{verbatim}
-
-\begin{verbatim}
-#> Packages -----------------------------------------------------------------
-\end{verbatim}
-
-\begin{verbatim}
-#>  package    * version date       source        
-#>  assertthat   0.2.0   2017-04-11 CRAN (R 3.4.3)
-#>  backports    1.1.2   2017-12-13 CRAN (R 3.4.3)
-#>  base       * 3.4.3   2018-01-16 local         
-#>  bindr        0.1.1   2018-03-13 CRAN (R 3.4.3)
-#>  bindrcpp     0.2.2   2018-03-29 CRAN (R 3.4.3)
-#>  codetools    0.2-15  2016-10-05 CRAN (R 3.4.3)
-#>  colorspace   1.3-2   2016-12-14 CRAN (R 3.4.3)
-#>  compiler     3.4.3   2018-01-16 local         
-#>  cowplot    * 0.9.3   2018-07-15 CRAN (R 3.4.3)
-#>  crayon       1.3.4   2017-09-16 CRAN (R 3.4.3)
-#>  datasets   * 3.4.3   2018-01-16 local         
-#>  devtools     1.13.6  2018-06-27 CRAN (R 3.4.3)
-#>  digest       0.6.15  2018-01-28 CRAN (R 3.4.3)
-#>  dplyr        0.7.6   2018-06-29 CRAN (R 3.4.3)
-#>  evaluate     0.11    2018-07-17 CRAN (R 3.4.3)
-#>  ggplot2    * 3.0.0   2018-07-03 CRAN (R 3.4.3)
-#>  glue         1.3.0   2018-07-17 CRAN (R 3.4.3)
-#>  graphics   * 3.4.3   2018-01-16 local         
-#>  gratia     * 0.0-6   2018-08-16 local         
-#>  grDevices  * 3.4.3   2018-01-16 local         
-#>  grid         3.4.3   2018-01-16 local         
-#>  gtable       0.2.0   2016-02-26 CRAN (R 3.4.3)
-#>  htmltools    0.3.6   2017-04-28 CRAN (R 3.4.3)
-#>  knitr        1.20    2018-02-20 CRAN (R 3.4.3)
-#>  labeling     0.3     2014-08-23 CRAN (R 3.4.3)
-#>  lattice      0.20-35 2017-03-25 CRAN (R 3.4.3)
-#>  lazyeval     0.2.1   2017-10-29 CRAN (R 3.4.3)
-#>  magrittr     1.5     2014-11-22 CRAN (R 3.4.3)
-#>  MASS         7.3-50  2018-04-30 CRAN (R 3.4.3)
-#>  Matrix       1.2-14  2018-04-09 CRAN (R 3.4.3)
-#>  memoise      1.1.0   2017-04-21 CRAN (R 3.4.3)
-#>  methods      3.4.3   2018-01-16 local         
-#>  mgcv       * 1.8-24  2018-06-18 CRAN (R 3.4.3)
-#>  munsell      0.5.0   2018-06-12 CRAN (R 3.4.3)
-#>  nlme       * 3.1-137 2018-04-07 CRAN (R 3.4.3)
-#>  pillar       1.3.0   2018-07-14 CRAN (R 3.4.3)
-#>  pkgconfig    2.0.1   2017-03-21 CRAN (R 3.4.3)
-#>  plyr         1.8.4   2016-06-08 CRAN (R 3.4.3)
-#>  purrr        0.2.5   2018-05-29 CRAN (R 3.4.3)
-#>  R6           2.2.2   2017-06-17 CRAN (R 3.4.3)
-#>  Rcpp         0.12.18 2018-07-23 CRAN (R 3.4.3)
-#>  rlang        0.2.1   2018-05-30 CRAN (R 3.4.3)
-#>  rmarkdown  * 1.10    2018-06-11 CRAN (R 3.4.3)
-#>  rprojroot    1.3-2   2018-01-03 CRAN (R 3.4.3)
-#>  scales       0.5.0   2017-08-24 CRAN (R 3.4.3)
-#>  scam       * 1.2-2   2017-09-24 CRAN (R 3.4.3)
-#>  splines      3.4.3   2018-01-16 local         
-#>  stats      * 3.4.3   2018-01-16 local         
-#>  stringi      1.2.4   2018-07-20 CRAN (R 3.4.3)
-#>  stringr      1.3.1   2018-05-10 CRAN (R 3.4.3)
-#>  tibble       1.4.2   2018-01-22 CRAN (R 3.4.3)
-#>  tidyr      * 0.8.1   2018-05-18 CRAN (R 3.4.3)
-#>  tidyselect   0.2.4   2018-02-26 CRAN (R 3.4.3)
-#>  tools        3.4.3   2018-01-16 local         
-#>  utils      * 3.4.3   2018-01-16 local         
-#>  withr        2.1.2   2018-03-15 CRAN (R 3.4.3)
-#>  yaml         2.2.0   2018-07-25 CRAN (R 3.4.3)
-\end{verbatim}
-
 
 \end{document}

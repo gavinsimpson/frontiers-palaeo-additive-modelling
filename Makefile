@@ -19,7 +19,7 @@ braya: braya-example braya-fail
 correlfun: ./analysis/other/correlation-functions.R
 	Rscript ./analysis/other/correlation-functions.R
 
-manuscript:
+manuscript:  header.tex manuscript.Rmd
 	Rscript -e "library(rmarkdown); render('manuscript.Rmd')"
 
 markdown:
@@ -34,7 +34,7 @@ word:
 script: manuscript.Rmd
 	Rscript -e "knitr::purl('manuscript.Rmd')"
 
-supplement:
+supplement: header.tex supplementary-materials.Rmd
 	Rscript -e "library(rmarkdown); render('supplementary-materials.Rmd')"
 
 preprint: manuscript.pdf supplementary-materials.pdf
